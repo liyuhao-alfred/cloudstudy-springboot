@@ -44,7 +44,7 @@ public class ValidateUtil implements Serializable {
 		Validator validator = factory.getValidator();
 		Set<ConstraintViolation<T>> constraintViolations = validator.validate(t);
 
-		List<String> messageList = new ArrayList<>();
+		List<String> messageList = new ArrayList<String>();
 		for (ConstraintViolation<T> constraintViolation : constraintViolations) {
 			String message = "验证失败[" + constraintViolation.getPropertyPath() + "]约束是:"
 					+ constraintViolation.getMessage() + ",接受的数据是:" + constraintViolation.getInvalidValue();
