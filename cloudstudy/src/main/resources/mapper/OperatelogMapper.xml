@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudstudy.mapper.OperatelogMapper">
+  <resultMap id="BaseResultMap" type="com.cloudstudy.bo.Operatelog">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="operator_no" jdbcType="VARCHAR" property="operatorNo" />
+    <result column="operator_type" jdbcType="INTEGER" property="operatorType" />
+    <result column="operator_name" jdbcType="VARCHAR" property="operatorName" />
+    <result column="request_ip" jdbcType="VARCHAR" property="requestIp" />
+    <result column="request_uri" jdbcType="VARCHAR" property="requestUri" />
+    <result column="operation_start_time" jdbcType="TIMESTAMP" property="operationStartTime" />
+    <result column="operation_end_time" jdbcType="TIMESTAMP" property="operationEndTime" />
+    <result column="operation_description" jdbcType="VARCHAR" property="operationDescription" />
+    <result column="operation_result_flage" jdbcType="INTEGER" property="operationResultFlage" />
+    <result column="operation_error_code" jdbcType="VARCHAR" property="operationErrorCode" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.cloudstudy.bo.Operatelog">
+    <result column="request_content" jdbcType="LONGVARCHAR" property="requestContent" />
+    <result column="operation_result" jdbcType="LONGVARCHAR" property="operationResult" />
+    <result column="operation_error_message" jdbcType="LONGVARCHAR" property="operationErrorMessage" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, operator_no, operator_type, operator_name, request_ip, request_uri, operation_start_time, 
+    operation_end_time, operation_description, operation_result_flage, operation_error_code
+  </sql>
+  <sql id="Blob_Column_List">
+    request_content, operation_result, operation_error_message
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.cloudstudy.bo.example.OperatelogExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tboperatelog
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+   <select id="selectByExample" parameterType="com.cloudstudy.bo.example.OperatelogExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from tboperatelog
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tboperatelog
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tboperatelog
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.cloudstudy.bo.example.OperatelogExample">
+    delete from tboperatelog
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.cloudstudy.bo.Operatelog">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into tboperatelog (operator_no, operator_type, operator_name, 
+      request_ip, request_uri, operation_start_time, 
+      operation_end_time, operation_description, 
+      operation_result_flage, operation_error_code, 
+      request_content, operation_result, 
+      operation_error_message)
+    values (#{operatorNo,jdbcType=VARCHAR}, #{operatorType,jdbcType=INTEGER}, #{operatorName,jdbcType=VARCHAR}, 
+      #{requestIp,jdbcType=VARCHAR}, #{requestUri,jdbcType=VARCHAR}, #{operationStartTime,jdbcType=TIMESTAMP}, 
+      #{operationEndTime,jdbcType=TIMESTAMP}, #{operationDescription,jdbcType=VARCHAR}, 
+      #{operationResultFlage,jdbcType=INTEGER}, #{operationErrorCode,jdbcType=VARCHAR}, 
+      #{requestContent,jdbcType=LONGVARCHAR}, #{operationResult,jdbcType=LONGVARCHAR}, 
+      #{operationErrorMessage,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cloudstudy.bo.Operatelog">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into tboperatelog
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="operatorNo != null">
+        operator_no,
+      </if>
+      <if test="operatorType != null">
+        operator_type,
+      </if>
+      <if test="operatorName != null">
+        operator_name,
+      </if>
+      <if test="requestIp != null">
+        request_ip,
+      </if>
+      <if test="requestUri != null">
+        request_uri,
+      </if>
+      <if test="operationStartTime != null">
+        operation_start_time,
+      </if>
+      <if test="operationEndTime != null">
+        operation_end_time,
+      </if>
+      <if test="operationDescription != null">
+        operation_description,
+      </if>
+      <if test="operationResultFlage != null">
+        operation_result_flage,
+      </if>
+      <if test="operationErrorCode != null">
+        operation_error_code,
+      </if>
+      <if test="requestContent != null">
+        request_content,
+      </if>
+      <if test="operationResult != null">
+        operation_result,
+      </if>
+      <if test="operationErrorMessage != null">
+        operation_error_message,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="operatorNo != null">
+        #{operatorNo,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorType != null">
+        #{operatorType,jdbcType=INTEGER},
+      </if>
+      <if test="operatorName != null">
+        #{operatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="requestIp != null">
+        #{requestIp,jdbcType=VARCHAR},
+      </if>
+      <if test="requestUri != null">
+        #{requestUri,jdbcType=VARCHAR},
+      </if>
+      <if test="operationStartTime != null">
+        #{operationStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operationEndTime != null">
+        #{operationEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operationDescription != null">
+        #{operationDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="operationResultFlage != null">
+        #{operationResultFlage,jdbcType=INTEGER},
+      </if>
+      <if test="operationErrorCode != null">
+        #{operationErrorCode,jdbcType=VARCHAR},
+      </if>
+      <if test="requestContent != null">
+        #{requestContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="operationResult != null">
+        #{operationResult,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="operationErrorMessage != null">
+        #{operationErrorMessage,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.cloudstudy.bo.example.OperatelogExample" resultType="java.lang.Long">
+    select count(*) from tboperatelog
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update tboperatelog
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.operatorNo != null">
+        operator_no = #{record.operatorNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operatorType != null">
+        operator_type = #{record.operatorType,jdbcType=INTEGER},
+      </if>
+      <if test="record.operatorName != null">
+        operator_name = #{record.operatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.requestIp != null">
+        request_ip = #{record.requestIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.requestUri != null">
+        request_uri = #{record.requestUri,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operationStartTime != null">
+        operation_start_time = #{record.operationStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.operationEndTime != null">
+        operation_end_time = #{record.operationEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.operationDescription != null">
+        operation_description = #{record.operationDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operationResultFlage != null">
+        operation_result_flage = #{record.operationResultFlage,jdbcType=INTEGER},
+      </if>
+      <if test="record.operationErrorCode != null">
+        operation_error_code = #{record.operationErrorCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.requestContent != null">
+        request_content = #{record.requestContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.operationResult != null">
+        operation_result = #{record.operationResult,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.operationErrorMessage != null">
+        operation_error_message = #{record.operationErrorMessage,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update tboperatelog
+    set id = #{record.id,jdbcType=INTEGER},
+      operator_no = #{record.operatorNo,jdbcType=VARCHAR},
+      operator_type = #{record.operatorType,jdbcType=INTEGER},
+      operator_name = #{record.operatorName,jdbcType=VARCHAR},
+      request_ip = #{record.requestIp,jdbcType=VARCHAR},
+      request_uri = #{record.requestUri,jdbcType=VARCHAR},
+      operation_start_time = #{record.operationStartTime,jdbcType=TIMESTAMP},
+      operation_end_time = #{record.operationEndTime,jdbcType=TIMESTAMP},
+      operation_description = #{record.operationDescription,jdbcType=VARCHAR},
+      operation_result_flage = #{record.operationResultFlage,jdbcType=INTEGER},
+      operation_error_code = #{record.operationErrorCode,jdbcType=VARCHAR},
+      request_content = #{record.requestContent,jdbcType=LONGVARCHAR},
+      operation_result = #{record.operationResult,jdbcType=LONGVARCHAR},
+      operation_error_message = #{record.operationErrorMessage,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update tboperatelog
+    set id = #{record.id,jdbcType=INTEGER},
+      operator_no = #{record.operatorNo,jdbcType=VARCHAR},
+      operator_type = #{record.operatorType,jdbcType=INTEGER},
+      operator_name = #{record.operatorName,jdbcType=VARCHAR},
+      request_ip = #{record.requestIp,jdbcType=VARCHAR},
+      request_uri = #{record.requestUri,jdbcType=VARCHAR},
+      operation_start_time = #{record.operationStartTime,jdbcType=TIMESTAMP},
+      operation_end_time = #{record.operationEndTime,jdbcType=TIMESTAMP},
+      operation_description = #{record.operationDescription,jdbcType=VARCHAR},
+      operation_result_flage = #{record.operationResultFlage,jdbcType=INTEGER},
+      operation_error_code = #{record.operationErrorCode,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cloudstudy.bo.Operatelog">
+    update tboperatelog
+    <set>
+      <if test="operatorNo != null">
+        operator_no = #{operatorNo,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorType != null">
+        operator_type = #{operatorType,jdbcType=INTEGER},
+      </if>
+      <if test="operatorName != null">
+        operator_name = #{operatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="requestIp != null">
+        request_ip = #{requestIp,jdbcType=VARCHAR},
+      </if>
+      <if test="requestUri != null">
+        request_uri = #{requestUri,jdbcType=VARCHAR},
+      </if>
+      <if test="operationStartTime != null">
+        operation_start_time = #{operationStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operationEndTime != null">
+        operation_end_time = #{operationEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operationDescription != null">
+        operation_description = #{operationDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="operationResultFlage != null">
+        operation_result_flage = #{operationResultFlage,jdbcType=INTEGER},
+      </if>
+      <if test="operationErrorCode != null">
+        operation_error_code = #{operationErrorCode,jdbcType=VARCHAR},
+      </if>
+      <if test="requestContent != null">
+        request_content = #{requestContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="operationResult != null">
+        operation_result = #{operationResult,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="operationErrorMessage != null">
+        operation_error_message = #{operationErrorMessage,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.cloudstudy.bo.Operatelog">
+    update tboperatelog
+    set operator_no = #{operatorNo,jdbcType=VARCHAR},
+      operator_type = #{operatorType,jdbcType=INTEGER},
+      operator_name = #{operatorName,jdbcType=VARCHAR},
+      request_ip = #{requestIp,jdbcType=VARCHAR},
+      request_uri = #{requestUri,jdbcType=VARCHAR},
+      operation_start_time = #{operationStartTime,jdbcType=TIMESTAMP},
+      operation_end_time = #{operationEndTime,jdbcType=TIMESTAMP},
+      operation_description = #{operationDescription,jdbcType=VARCHAR},
+      operation_result_flage = #{operationResultFlage,jdbcType=INTEGER},
+      operation_error_code = #{operationErrorCode,jdbcType=VARCHAR},
+      request_content = #{requestContent,jdbcType=LONGVARCHAR},
+      operation_result = #{operationResult,jdbcType=LONGVARCHAR},
+      operation_error_message = #{operationErrorMessage,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cloudstudy.bo.Operatelog">
+    update tboperatelog
+    set operator_no = #{operatorNo,jdbcType=VARCHAR},
+      operator_type = #{operatorType,jdbcType=INTEGER},
+      operator_name = #{operatorName,jdbcType=VARCHAR},
+      request_ip = #{requestIp,jdbcType=VARCHAR},
+      request_uri = #{requestUri,jdbcType=VARCHAR},
+      operation_start_time = #{operationStartTime,jdbcType=TIMESTAMP},
+      operation_end_time = #{operationEndTime,jdbcType=TIMESTAMP},
+      operation_description = #{operationDescription,jdbcType=VARCHAR},
+      operation_result_flage = #{operationResultFlage,jdbcType=INTEGER},
+      operation_error_code = #{operationErrorCode,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

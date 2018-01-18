@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudstudy.mapper.CourserelstudentMapper">
+  <resultMap id="BaseResultMap" type="com.cloudstudy.bo.Courserelstudent">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="courserelteacher_id" jdbcType="INTEGER" property="courserelteacherId" />
+    <result column="student_no" jdbcType="VARCHAR" property="studentNo" />
+    <result column="grade" jdbcType="INTEGER" property="grade" />
+    <result column="task_declare_num" jdbcType="INTEGER" property="taskDeclareNum" />
+    <result column="task_accept_num" jdbcType="INTEGER" property="taskAcceptNum" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="last_modify_time" jdbcType="TIMESTAMP" property="lastModifyTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, courserelteacher_id, student_no, grade, task_declare_num, task_accept_num, create_time, 
+    last_modify_time, status
+  </sql>
+   <select id="selectByExample" parameterType="com.cloudstudy.bo.example.CourserelstudentExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from tbcourserelstudent
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tbcourserelstudent
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tbcourserelstudent
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.cloudstudy.bo.example.CourserelstudentExample">
+    delete from tbcourserelstudent
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.cloudstudy.bo.Courserelstudent">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into tbcourserelstudent (courserelteacher_id, student_no, grade, 
+      task_declare_num, task_accept_num, create_time, 
+      last_modify_time, status)
+    values (#{courserelteacherId,jdbcType=INTEGER}, #{studentNo,jdbcType=VARCHAR}, #{grade,jdbcType=INTEGER}, 
+      #{taskDeclareNum,jdbcType=INTEGER}, #{taskAcceptNum,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{lastModifyTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cloudstudy.bo.Courserelstudent">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into tbcourserelstudent
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="courserelteacherId != null">
+        courserelteacher_id,
+      </if>
+      <if test="studentNo != null">
+        student_no,
+      </if>
+      <if test="grade != null">
+        grade,
+      </if>
+      <if test="taskDeclareNum != null">
+        task_declare_num,
+      </if>
+      <if test="taskAcceptNum != null">
+        task_accept_num,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="lastModifyTime != null">
+        last_modify_time,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="courserelteacherId != null">
+        #{courserelteacherId,jdbcType=INTEGER},
+      </if>
+      <if test="studentNo != null">
+        #{studentNo,jdbcType=VARCHAR},
+      </if>
+      <if test="grade != null">
+        #{grade,jdbcType=INTEGER},
+      </if>
+      <if test="taskDeclareNum != null">
+        #{taskDeclareNum,jdbcType=INTEGER},
+      </if>
+      <if test="taskAcceptNum != null">
+        #{taskAcceptNum,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyTime != null">
+        #{lastModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.cloudstudy.bo.example.CourserelstudentExample" resultType="java.lang.Long">
+    select count(*) from tbcourserelstudent
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update tbcourserelstudent
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.courserelteacherId != null">
+        courserelteacher_id = #{record.courserelteacherId,jdbcType=INTEGER},
+      </if>
+      <if test="record.studentNo != null">
+        student_no = #{record.studentNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.grade != null">
+        grade = #{record.grade,jdbcType=INTEGER},
+      </if>
+      <if test="record.taskDeclareNum != null">
+        task_declare_num = #{record.taskDeclareNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.taskAcceptNum != null">
+        task_accept_num = #{record.taskAcceptNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.lastModifyTime != null">
+        last_modify_time = #{record.lastModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update tbcourserelstudent
+    set id = #{record.id,jdbcType=INTEGER},
+      courserelteacher_id = #{record.courserelteacherId,jdbcType=INTEGER},
+      student_no = #{record.studentNo,jdbcType=VARCHAR},
+      grade = #{record.grade,jdbcType=INTEGER},
+      task_declare_num = #{record.taskDeclareNum,jdbcType=INTEGER},
+      task_accept_num = #{record.taskAcceptNum,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      last_modify_time = #{record.lastModifyTime,jdbcType=TIMESTAMP},
+      status = #{record.status,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cloudstudy.bo.Courserelstudent">
+    update tbcourserelstudent
+    <set>
+      <if test="courserelteacherId != null">
+        courserelteacher_id = #{courserelteacherId,jdbcType=INTEGER},
+      </if>
+      <if test="studentNo != null">
+        student_no = #{studentNo,jdbcType=VARCHAR},
+      </if>
+      <if test="grade != null">
+        grade = #{grade,jdbcType=INTEGER},
+      </if>
+      <if test="taskDeclareNum != null">
+        task_declare_num = #{taskDeclareNum,jdbcType=INTEGER},
+      </if>
+      <if test="taskAcceptNum != null">
+        task_accept_num = #{taskAcceptNum,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyTime != null">
+        last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cloudstudy.bo.Courserelstudent">
+    update tbcourserelstudent
+    set courserelteacher_id = #{courserelteacherId,jdbcType=INTEGER},
+      student_no = #{studentNo,jdbcType=VARCHAR},
+      grade = #{grade,jdbcType=INTEGER},
+      task_declare_num = #{taskDeclareNum,jdbcType=INTEGER},
+      task_accept_num = #{taskAcceptNum,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudstudy.mapper.SystemlogMapper">
+  <resultMap id="BaseResultMap" type="com.cloudstudy.bo.Systemlog">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="log_level" jdbcType="VARCHAR" property="logLevel" />
+    <result column="log_time" jdbcType="TIMESTAMP" property="logTime" />
+    <result column="log_type" jdbcType="INTEGER" property="logType" />
+    <result column="remote_call_ip" jdbcType="VARCHAR" property="remoteCallIp" />
+    <result column="thread_id" jdbcType="VARCHAR" property="threadId" />
+    <result column="thread_name" jdbcType="VARCHAR" property="threadName" />
+    <result column="service_class" jdbcType="VARCHAR" property="serviceClass" />
+    <result column="service_method" jdbcType="VARCHAR" property="serviceMethod" />
+    <result column="service_result_flage" jdbcType="INTEGER" property="serviceResultFlage" />
+    <result column="service_error_code" jdbcType="VARCHAR" property="serviceErrorCode" />
+    <result column="service_running_time" jdbcType="VARCHAR" property="serviceRunningTime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.cloudstudy.bo.Systemlog">
+    <result column="service_args" jdbcType="LONGVARCHAR" property="serviceArgs" />
+    <result column="service_result" jdbcType="LONGVARCHAR" property="serviceResult" />
+    <result column="service_error_message" jdbcType="LONGVARCHAR" property="serviceErrorMessage" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, log_level, log_time, log_type, remote_call_ip, thread_id, thread_name, service_class, 
+    service_method, service_result_flage, service_error_code, service_running_time
+  </sql>
+  <sql id="Blob_Column_List">
+    service_args, service_result, service_error_message
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.cloudstudy.bo.example.SystemlogExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tbsystemlog
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+   <select id="selectByExample" parameterType="com.cloudstudy.bo.example.SystemlogExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from tbsystemlog
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tbsystemlog
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tbsystemlog
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.cloudstudy.bo.example.SystemlogExample">
+    delete from tbsystemlog
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.cloudstudy.bo.Systemlog">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into tbsystemlog (log_level, log_time, log_type, 
+      remote_call_ip, thread_id, thread_name, 
+      service_class, service_method, service_result_flage, 
+      service_error_code, service_running_time, service_args, 
+      service_result, service_error_message
+      )
+    values (#{logLevel,jdbcType=VARCHAR}, #{logTime,jdbcType=TIMESTAMP}, #{logType,jdbcType=INTEGER}, 
+      #{remoteCallIp,jdbcType=VARCHAR}, #{threadId,jdbcType=VARCHAR}, #{threadName,jdbcType=VARCHAR}, 
+      #{serviceClass,jdbcType=VARCHAR}, #{serviceMethod,jdbcType=VARCHAR}, #{serviceResultFlage,jdbcType=INTEGER}, 
+      #{serviceErrorCode,jdbcType=VARCHAR}, #{serviceRunningTime,jdbcType=VARCHAR}, #{serviceArgs,jdbcType=LONGVARCHAR}, 
+      #{serviceResult,jdbcType=LONGVARCHAR}, #{serviceErrorMessage,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cloudstudy.bo.Systemlog">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into tbsystemlog
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="logLevel != null">
+        log_level,
+      </if>
+      <if test="logTime != null">
+        log_time,
+      </if>
+      <if test="logType != null">
+        log_type,
+      </if>
+      <if test="remoteCallIp != null">
+        remote_call_ip,
+      </if>
+      <if test="threadId != null">
+        thread_id,
+      </if>
+      <if test="threadName != null">
+        thread_name,
+      </if>
+      <if test="serviceClass != null">
+        service_class,
+      </if>
+      <if test="serviceMethod != null">
+        service_method,
+      </if>
+      <if test="serviceResultFlage != null">
+        service_result_flage,
+      </if>
+      <if test="serviceErrorCode != null">
+        service_error_code,
+      </if>
+      <if test="serviceRunningTime != null">
+        service_running_time,
+      </if>
+      <if test="serviceArgs != null">
+        service_args,
+      </if>
+      <if test="serviceResult != null">
+        service_result,
+      </if>
+      <if test="serviceErrorMessage != null">
+        service_error_message,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="logLevel != null">
+        #{logLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="logTime != null">
+        #{logTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logType != null">
+        #{logType,jdbcType=INTEGER},
+      </if>
+      <if test="remoteCallIp != null">
+        #{remoteCallIp,jdbcType=VARCHAR},
+      </if>
+      <if test="threadId != null">
+        #{threadId,jdbcType=VARCHAR},
+      </if>
+      <if test="threadName != null">
+        #{threadName,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceClass != null">
+        #{serviceClass,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceMethod != null">
+        #{serviceMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceResultFlage != null">
+        #{serviceResultFlage,jdbcType=INTEGER},
+      </if>
+      <if test="serviceErrorCode != null">
+        #{serviceErrorCode,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceRunningTime != null">
+        #{serviceRunningTime,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceArgs != null">
+        #{serviceArgs,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="serviceResult != null">
+        #{serviceResult,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="serviceErrorMessage != null">
+        #{serviceErrorMessage,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.cloudstudy.bo.example.SystemlogExample" resultType="java.lang.Long">
+    select count(*) from tbsystemlog
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update tbsystemlog
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.logLevel != null">
+        log_level = #{record.logLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.logTime != null">
+        log_time = #{record.logTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.logType != null">
+        log_type = #{record.logType,jdbcType=INTEGER},
+      </if>
+      <if test="record.remoteCallIp != null">
+        remote_call_ip = #{record.remoteCallIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.threadId != null">
+        thread_id = #{record.threadId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.threadName != null">
+        thread_name = #{record.threadName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.serviceClass != null">
+        service_class = #{record.serviceClass,jdbcType=VARCHAR},
+      </if>
+      <if test="record.serviceMethod != null">
+        service_method = #{record.serviceMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="record.serviceResultFlage != null">
+        service_result_flage = #{record.serviceResultFlage,jdbcType=INTEGER},
+      </if>
+      <if test="record.serviceErrorCode != null">
+        service_error_code = #{record.serviceErrorCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.serviceRunningTime != null">
+        service_running_time = #{record.serviceRunningTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.serviceArgs != null">
+        service_args = #{record.serviceArgs,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.serviceResult != null">
+        service_result = #{record.serviceResult,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.serviceErrorMessage != null">
+        service_error_message = #{record.serviceErrorMessage,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update tbsystemlog
+    set id = #{record.id,jdbcType=INTEGER},
+      log_level = #{record.logLevel,jdbcType=VARCHAR},
+      log_time = #{record.logTime,jdbcType=TIMESTAMP},
+      log_type = #{record.logType,jdbcType=INTEGER},
+      remote_call_ip = #{record.remoteCallIp,jdbcType=VARCHAR},
+      thread_id = #{record.threadId,jdbcType=VARCHAR},
+      thread_name = #{record.threadName,jdbcType=VARCHAR},
+      service_class = #{record.serviceClass,jdbcType=VARCHAR},
+      service_method = #{record.serviceMethod,jdbcType=VARCHAR},
+      service_result_flage = #{record.serviceResultFlage,jdbcType=INTEGER},
+      service_error_code = #{record.serviceErrorCode,jdbcType=VARCHAR},
+      service_running_time = #{record.serviceRunningTime,jdbcType=VARCHAR},
+      service_args = #{record.serviceArgs,jdbcType=LONGVARCHAR},
+      service_result = #{record.serviceResult,jdbcType=LONGVARCHAR},
+      service_error_message = #{record.serviceErrorMessage,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update tbsystemlog
+    set id = #{record.id,jdbcType=INTEGER},
+      log_level = #{record.logLevel,jdbcType=VARCHAR},
+      log_time = #{record.logTime,jdbcType=TIMESTAMP},
+      log_type = #{record.logType,jdbcType=INTEGER},
+      remote_call_ip = #{record.remoteCallIp,jdbcType=VARCHAR},
+      thread_id = #{record.threadId,jdbcType=VARCHAR},
+      thread_name = #{record.threadName,jdbcType=VARCHAR},
+      service_class = #{record.serviceClass,jdbcType=VARCHAR},
+      service_method = #{record.serviceMethod,jdbcType=VARCHAR},
+      service_result_flage = #{record.serviceResultFlage,jdbcType=INTEGER},
+      service_error_code = #{record.serviceErrorCode,jdbcType=VARCHAR},
+      service_running_time = #{record.serviceRunningTime,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cloudstudy.bo.Systemlog">
+    update tbsystemlog
+    <set>
+      <if test="logLevel != null">
+        log_level = #{logLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="logTime != null">
+        log_time = #{logTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logType != null">
+        log_type = #{logType,jdbcType=INTEGER},
+      </if>
+      <if test="remoteCallIp != null">
+        remote_call_ip = #{remoteCallIp,jdbcType=VARCHAR},
+      </if>
+      <if test="threadId != null">
+        thread_id = #{threadId,jdbcType=VARCHAR},
+      </if>
+      <if test="threadName != null">
+        thread_name = #{threadName,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceClass != null">
+        service_class = #{serviceClass,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceMethod != null">
+        service_method = #{serviceMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceResultFlage != null">
+        service_result_flage = #{serviceResultFlage,jdbcType=INTEGER},
+      </if>
+      <if test="serviceErrorCode != null">
+        service_error_code = #{serviceErrorCode,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceRunningTime != null">
+        service_running_time = #{serviceRunningTime,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceArgs != null">
+        service_args = #{serviceArgs,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="serviceResult != null">
+        service_result = #{serviceResult,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="serviceErrorMessage != null">
+        service_error_message = #{serviceErrorMessage,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.cloudstudy.bo.Systemlog">
+    update tbsystemlog
+    set log_level = #{logLevel,jdbcType=VARCHAR},
+      log_time = #{logTime,jdbcType=TIMESTAMP},
+      log_type = #{logType,jdbcType=INTEGER},
+      remote_call_ip = #{remoteCallIp,jdbcType=VARCHAR},
+      thread_id = #{threadId,jdbcType=VARCHAR},
+      thread_name = #{threadName,jdbcType=VARCHAR},
+      service_class = #{serviceClass,jdbcType=VARCHAR},
+      service_method = #{serviceMethod,jdbcType=VARCHAR},
+      service_result_flage = #{serviceResultFlage,jdbcType=INTEGER},
+      service_error_code = #{serviceErrorCode,jdbcType=VARCHAR},
+      service_running_time = #{serviceRunningTime,jdbcType=VARCHAR},
+      service_args = #{serviceArgs,jdbcType=LONGVARCHAR},
+      service_result = #{serviceResult,jdbcType=LONGVARCHAR},
+      service_error_message = #{serviceErrorMessage,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cloudstudy.bo.Systemlog">
+    update tbsystemlog
+    set log_level = #{logLevel,jdbcType=VARCHAR},
+      log_time = #{logTime,jdbcType=TIMESTAMP},
+      log_type = #{logType,jdbcType=INTEGER},
+      remote_call_ip = #{remoteCallIp,jdbcType=VARCHAR},
+      thread_id = #{threadId,jdbcType=VARCHAR},
+      thread_name = #{threadName,jdbcType=VARCHAR},
+      service_class = #{serviceClass,jdbcType=VARCHAR},
+      service_method = #{serviceMethod,jdbcType=VARCHAR},
+      service_result_flage = #{serviceResultFlage,jdbcType=INTEGER},
+      service_error_code = #{serviceErrorCode,jdbcType=VARCHAR},
+      service_running_time = #{serviceRunningTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
