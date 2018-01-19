@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cloudstudy.bo.Admin;
 import com.cloudstudy.dto.AdminDto;
+import com.cloudstudy.exception.CloudStudyException;
 import com.cloudstudy.service.AdminService;
 
 @RestController
@@ -26,6 +27,12 @@ public class AdminController {
 	public @ResponseBody String find(@PathVariable("no") String no) {
 		Admin admin = adminService.findAdmin(no);
 		return admin.toString();
+	}
+
+	@RequestMapping(value = "/api/admin/exception", produces = { "application/json; charset=UTF-8" }, method = {
+			RequestMethod.POST, RequestMethod.GET })
+	public @ResponseBody String exception() {
+		throw new CloudStudyException("101", "错误");
 	}
 
 	@RequestMapping(value = "/api/adminList", produces = { "application/json; charset=UTF-8" }, method = {
