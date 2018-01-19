@@ -1,6 +1,7 @@
 package com.cloudstudy.shiro;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -17,6 +18,7 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
+import org.springframework.util.StringUtils;
 
 import com.cloudstudy.bo.Permission;
 import com.cloudstudy.bo.Role;
@@ -24,7 +26,9 @@ import com.cloudstudy.dto.UserDto;
 import com.cloudstudy.service.PermissionService;
 import com.cloudstudy.service.RoleService;
 import com.cloudstudy.service.UserService;
-import com.cloudstudy.shiro.token.AuthcToken;
+import com.cloudstudy.shiro.token.UserToken;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * 实现Realm,继承AuthorizingRealm，并重写doGetAuthorizationInfo(用于获取认证成功后的角色、权限等信息) 和
@@ -44,29 +48,27 @@ public class UserRealm extends AuthorizingRealm {
 	private PermissionService permissionService;
 
 	/**
-	 * 验证当前登录的Subject LoginController.login()方法中执行Subject.login()时 执行此方法
+	 * 认证信息.(身份验证) : Authentication 是用来验证用户身份
+	 * 
+	 * Subject.login()执行此方法
 	 */
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken)
 			throws AuthenticationException {
 		System.out.println("###【开始认证[SessionId]】" + SecurityUtils.getSubject().getSession().getId());
 
-		UserDto loginUserDto = (UserDto) ((AuthcToken) authcToken).getPrincipal();
-		if (loginUserDto == null) {
-			throw new UnknownAccountException();// 没找到帐号
-		}
+		UserToken token = (UserToken) authcToken;
+		String loginAccount = token.getUserAccount();
+		String loginPassword = token.getUserPassword();
 
-		String loginAccount = loginUserDto.getAccount();
-		String loginPassword = loginUserDto.getPassword();
-		loginUserDto = userService.login(loginAccount, loginPassword);
-
+		UserDto loginUserDto = userService.login(loginAccount, loginPassword);
 		if (loginUserDto == null) {
 			throw new UnknownAccountException();// 没找到帐号
 		}
 
 		// 交给AuthenticatingRealm使用CredentialsMatcher进行密码匹配
 		SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(loginUserDto, // 用户
-				loginUserDto.getPassword(), // 密码
+				loginUserDto.getPassword(), // 账号
 				ByteSource.Util.bytes(loginUserDto.getCredentialsSalt()), // salt=account+salt
 				getName() // realm name
 		);
@@ -81,8 +83,8 @@ public class UserRealm extends AuthorizingRealm {
 		}
 
 		String loginAccount = loginUserDto.getAccount();
-		List<String> userRoles = new ArrayList<String>();
-		List<String> userPermissions = new ArrayList<String>();
+		HashSet<String> userRoleSet = new HashSet<String>();
+		HashSet<String> userPermissionSet = new HashSet<String>();
 		// 从数据库中获取当前登录用户的详细信息
 		loginUserDto = userService.findByAccount(loginAccount);
 		if (null != loginUserDto) {
@@ -90,24 +92,35 @@ public class UserRealm extends AuthorizingRealm {
 			// 获取当前用户下拥有的所有角色列表
 			List<Role> roles = roleService.findByUserNo(loginUserDto.getNo());
 			for (int i = 0; i < roles.size(); i++) {
-				userRoles.add(roles.get(i).getCode());
+				String roleCode = roles.get(i).getCode();
+				if (!StringUtils.isEmpty(roleCode)) {
+					userRoleSet.add(roleCode);
+				}
 
 				List<Permission> userTempPermissions = new ArrayList<Permission>();
 				userTempPermissions = permissionService.findByRoleId(roles.get(i).getId());
 				for (int j = 0; j < userTempPermissions.size(); j++) {
-					userPermissions.add(userTempPermissions.get(i).getCode());
+					String permissionCode = userTempPermissions.get(j).getCode();
+					if (!StringUtils.isEmpty(permissionCode)) {
+						userPermissionSet.add(permissionCode);
+					}
 				}
-
 			}
 		} else {
 			throw new AuthorizationException();
 		}
-		System.out.println("#######获取角色：" + userRoles);
-		System.out.println("#######获取权限：" + userPermissions);
+
+		try {
+			System.out.println("#######获取角色：" + new ObjectMapper().writeValueAsString(userRoleSet));
+			System.out.println("#######获取权限：" + new ObjectMapper().writeValueAsString(userPermissionSet));
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+
 		// 为当前用户设置角色和权限
 		SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-		authorizationInfo.addRoles(userRoles);
-		authorizationInfo.addStringPermissions(userPermissions);
+		authorizationInfo.addRoles(userRoleSet);
+		authorizationInfo.addStringPermissions(userPermissionSet);
 		return authorizationInfo;
 	}
 

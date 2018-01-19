@@ -172,4 +172,41 @@ public class UserDto {
 	public String getCredentialsSalt() {
 		return this.getAccount() + this.salt;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("UserDto [no=");
+		builder.append(no);
+		builder.append(", account=");
+		builder.append(account);
+		builder.append(", password=");
+		builder.append(password);
+		builder.append(", salt=");
+		builder.append(salt);
+		builder.append(", name=");
+		builder.append(name);
+		builder.append(", phone=");
+		builder.append(phone);
+		builder.append(", email=");
+		builder.append(email);
+		builder.append(", sex=");
+		builder.append(sex);
+		builder.append(", age=");
+		builder.append(age);
+		builder.append(", birthday=");
+		builder.append(birthday);
+		builder.append(", createTime=");
+		builder.append(createTime);
+		builder.append(", lastModifyTime=");
+		builder.append(lastModifyTime);
+		builder.append(", registTime=");
+		builder.append(registTime);
+		builder.append(", status=");
+		builder.append(status);
+		builder.append(", description=");
+		builder.append(description);
+		builder.append("]");
+		return builder.toString();
+	}
 }

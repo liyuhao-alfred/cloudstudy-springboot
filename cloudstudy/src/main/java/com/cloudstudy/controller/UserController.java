@@ -2,9 +2,6 @@ package com.cloudstudy.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
@@ -23,7 +20,6 @@ import com.cloudstudy.dto.UserQueryParamDto;
 import com.cloudstudy.dto.WebResult;
 import com.cloudstudy.exception.CloudStudyException;
 import com.cloudstudy.service.UserService;
-import com.cloudstudy.shiro.token.AuthcToken;
 import com.cloudstudy.util.WebResultUtil;
 
 import io.swagger.annotations.Api;
@@ -96,28 +92,6 @@ public class UserController {
 			@RequestParam(value = "keyword", required = true) String keyword) {
 		List<UserDto> userDtoList = userService.find(userQueryParamDto, keyword);
 		return WebResultUtil.success(userDtoList);
-	}
-
-	/**
-	 * 登录
-	 * 
-	 * @param account
-	 * @param password
-	 * @return
-	 */
-	@ApiOperation(value = "登录", notes = "使用账号和密码进行登录")
-	@RequestMapping(value = "/login", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
-			RequestMethod.GET })
-	@LogPointcut(description = "用户登录")
-	public @ResponseBody WebResult<?> login(HttpSession session, HttpServletResponse response,
-			@RequestParam(value = "account", required = true) String account,
-			@RequestParam(value = "password", required = true) String password) {
-		String salt = (String) session.getAttribute("salt");
-		AuthcToken token = new AuthcToken(account, password, salt);
-		Subject subject = SecurityUtils.getSubject();
-		subject.login(token);
-
-		return WebResultUtil.success(subject.getPrincipal());
 	}
 
 	/**
