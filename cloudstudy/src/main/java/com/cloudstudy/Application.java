@@ -5,6 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * Spring Boot 应用启动类
@@ -12,6 +13,7 @@ import org.springframework.cache.annotation.EnableCaching;
  * Created by liyuhao 2018年1月19日08:38:34
  */
 
+@EnableScheduling // 定时任务
 @ServletComponentScan // 添加的注解
 @SpringBootApplication // Spring Boot 应用的标识
 @MapperScan("com.cloudstudy.mapper") // mapper 接口类扫描包配置
