@@ -126,8 +126,8 @@ public class AdminController {
 	 */
 	@ApiOperation(value = "删除管理员", notes = "通过管理员no删除管理员")
 	@ApiImplicitParam(name = "no", value = "管理员no", required = true, paramType = "body", dataType = "String")
-	@RequestMapping(value = "/api/delete", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
-			RequestMethod.GET })
+	@RequestMapping(value = "/api/delete", produces = { "application/json; charset=UTF-8" }, method = {
+			RequestMethod.POST, RequestMethod.GET })
 	public @ResponseBody String delete(@RequestParam(value = "no", required = true) String no) {
 		adminService.deleteAdmin(no);
 		return "success 删除Admin" + no;
