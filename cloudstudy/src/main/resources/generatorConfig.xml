@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE generatorConfiguration  
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"  
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+	<properties resource="application.properties" />
+	<classPathEntry
+		location="C:\Users\alfred\ws_default\mysql-connector-java-5.0.5-bin.jar" />
+	<context id="DB2Tables" defaultModelType="flat" targetRuntime="MyBatis3">
+
+		<!-- 生成的Java文件的编码 -->
+		<property name="javaFileEncoding" value="UTF-8" />
+
+		<!-- 格式化java代码 -->
+		<property name="javaFormatter"
+			value="org.mybatis.generator.api.dom.DefaultJavaFormatter" />
+
+		<!-- 格式化XML代码 -->
+		<property name="xmlFormatter"
+			value="org.mybatis.generator.api.dom.DefaultXmlFormatter" />
+
+		<commentGenerator>
+			<property name="+" value="true" />
+			<!-- 是否去除自动生成的注释 true：是， false:否 -->
+			<property name="suppressAllComments" value="true" />
+			<!-- 是否去除自动生成注释代时间戳 -->
+			<property name="suppressDate" value="true" />
+		</commentGenerator>
+
+		<jdbcConnection driverClass="${spring.datasource.driver-class-name}"
+			connectionURL="${spring.datasource.url}" userId="${spring.datasource.username}"
+			password="${spring.datasource.password}">
+		</jdbcConnection>
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<!-- 生成bo的位置，需要加上项目名，否则会报src not exist的错误 -->
+		<javaModelGenerator targetPackage="com.cloudstudy.bo"
+			targetProject="cloudstudy\src\main\java">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+
+		<!-- 生成mapper的位置，需要加上项目名，否则会报src not exist的错误 -->
+		<sqlMapGenerator targetPackage="mapper"
+			targetProject="cloudstudy\src\main\resources">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+
+		<!-- 生成dao的位置，需要加上项目名，否则会报src not exist的错误 -->
+		<javaClientGenerator type="XMLMAPPER"
+			targetPackage="com.cloudstudy.mapper" targetProject="cloudstudy\src\main\java">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+
+
+<!--
+		<table tableName="tbuser" domainObjectName="User"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<property name="useActualColumnNames" value="false" />
+		</table>
+-->	
+
+
+
+<!--
+		<table tableName="tbrole" domainObjectName="Role"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<property name="useActualColumnNames" value="false" />
+		</table>
+		<table tableName="tbpermission" domainObjectName="Permission"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<property name="useActualColumnNames" value="false" />
+		</table>
+		<table tableName="tbrolerelpermission" domainObjectName="Rolerelpermission"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<property name="useActualColumnNames" value="false" />
+		</table>
+-->
+
+
+		<table tableName="tbrolereluser" domainObjectName="Rolereluser"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<property name="useActualColumnNames" value="false" />
+		</table>
+
+
+<!--
+		<table tableName="tbadmin" domainObjectName="Admin"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<property name="useActualColumnNames" value="false" />
+			<generatedKey column="no" sqlStatement="MySql" identity="true" />
+		</table>
+		<table tableName="tbcourse" domainObjectName="Course"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<property name="useActualColumnNames" value="false" />
+			<generatedKey column="id" sqlStatement="MySql" identity="true" />
+		</table>
+		<table tableName="tbcourserelstudent" domainObjectName="Courserelstudent"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<property name="useActualColumnNames" value="false" />
+			<generatedKey column="id" sqlStatement="MySql" identity="true" />
+		</table>
+		<table tableName="tbcourserelteacher" domainObjectName="Courserelteacher"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<property name="useActualColumnNames" value="false" />
+			<generatedKey column="id" sqlStatement="MySql" identity="true" />
+		</table>
+		<table tableName="tbfile" domainObjectName="File"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<property name="useActualColumnNames" value="false" />
+			<generatedKey column="id" sqlStatement="MySql" identity="true" />
+		</table>
+		<table tableName="tbfilerelcourse" domainObjectName="Filerelcourse"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<property name="useActualColumnNames" value="false" />
+			<generatedKey column="id" sqlStatement="MySql" identity="true" />
+		</table>
+		<table tableName="tbfilereljob" domainObjectName="Filereljob"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<property name="useActualColumnNames" value="false" />
+			<generatedKey column="id" sqlStatement="MySql" identity="true" />
+		</table>
+		<table tableName="tbfilereltask" domainObjectName="Filereltask"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<property name="useActualColumnNames" value="false" />
+			<generatedKey column="id" sqlStatement="MySql" identity="true" />
+		</table>
+		<table tableName="tbjob" domainObjectName="Job"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<property name="useActualColumnNames" value="false" />
+			<generatedKey column="id" sqlStatement="MySql" identity="true" />
+		</table>
+		<table tableName="tboperatelog" domainObjectName="Operatelog"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<property name="useActualColumnNames" value="false" />
+			<generatedKey column="id" sqlStatement="MySql" identity="true" />
+		</table>
+		<table tableName="tbstudent" domainObjectName="Student"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<property name="useActualColumnNames" value="false" />
+			<generatedKey column="no" sqlStatement="MySql" identity="true" />
+		</table>
+		<table tableName="tbsystemlog" domainObjectName="Systemlog"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<property name="useActualColumnNames" value="false" />
+			<generatedKey column="id" sqlStatement="MySql" identity="true" />
+		</table>
+		<table tableName="tbtask" domainObjectName="Task"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<property name="useActualColumnNames" value="false" />
+			<generatedKey column="id" sqlStatement="MySql" identity="true" />
+		</table>
+		<table tableName="tbteacher" domainObjectName="Teacher"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<property name="useActualColumnNames" value="false" />
+			<generatedKey column="no" sqlStatement="MySql" identity="true" />
+		</table>
+-->
+
+
+	</context>
+</generatorConfiguration>  
