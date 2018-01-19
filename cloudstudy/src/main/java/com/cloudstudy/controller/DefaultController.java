@@ -13,6 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 @RequestMapping("/cloudstudy") // 避免swagger文档的url被拦截
 public class DefaultController {
+	@RequestMapping({ "/", "/index" })
+	public String index() {
+		return "/index";
+	}
 
 	@RequestMapping("/**")
 	public void unmappedRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
