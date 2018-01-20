@@ -1,6 +1,5 @@
 package com.cloudstudy;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
@@ -16,7 +15,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling // 定时任务
 @ServletComponentScan // 添加的注解
 @SpringBootApplication // Spring Boot 应用的标识
-@MapperScan("com.cloudstudy.mapper") // mapper 接口类扫描包配置
 @EnableCaching // 启动缓存
 public class Application {
 	public static void main(String[] args) {
