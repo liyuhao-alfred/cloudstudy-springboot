@@ -5,7 +5,7 @@
 <generatorConfiguration>
 	<properties resource="application.properties" />
 	<classPathEntry
-		location="C:\Users\alfred\ws_default\mysql-connector-java-5.0.5-bin.jar" />
+		location="C:\Users\alfred\ws_default\mysql-connector-java-5.1.7-bin.jar" />
 	<context id="DB2Tables" defaultModelType="flat" targetRuntime="MyBatis3">
 
 		<!-- 生成的Java文件的编码 -->
@@ -87,14 +87,14 @@
 		</table>
 -->
 
-
+<!--
 		<table tableName="tbrolereluser" domainObjectName="Rolereluser"
 			enableCountByExample="true" enableUpdateByExample="true"
 			enableDeleteByExample="true" enableSelectByExample="true"
 			selectByExampleQueryId="true">
 			<property name="useActualColumnNames" value="false" />
 		</table>
-
+-->
 
 <!--
 		<table tableName="tbadmin" domainObjectName="Admin"
@@ -160,13 +160,7 @@
 			<property name="useActualColumnNames" value="false" />
 			<generatedKey column="id" sqlStatement="MySql" identity="true" />
 		</table>
-		<table tableName="tboperatelog" domainObjectName="Operatelog"
-			enableCountByExample="true" enableUpdateByExample="true"
-			enableDeleteByExample="true" enableSelectByExample="true"
-			selectByExampleQueryId="true">
-			<property name="useActualColumnNames" value="false" />
-			<generatedKey column="id" sqlStatement="MySql" identity="true" />
-		</table>
+
 		<table tableName="tbstudent" domainObjectName="Student"
 			enableCountByExample="true" enableUpdateByExample="true"
 			enableDeleteByExample="true" enableSelectByExample="true"
@@ -174,13 +168,7 @@
 			<property name="useActualColumnNames" value="false" />
 			<generatedKey column="no" sqlStatement="MySql" identity="true" />
 		</table>
-		<table tableName="tbsystemlog" domainObjectName="Systemlog"
-			enableCountByExample="true" enableUpdateByExample="true"
-			enableDeleteByExample="true" enableSelectByExample="true"
-			selectByExampleQueryId="true">
-			<property name="useActualColumnNames" value="false" />
-			<generatedKey column="id" sqlStatement="MySql" identity="true" />
-		</table>
+
 		<table tableName="tbtask" domainObjectName="Task"
 			enableCountByExample="true" enableUpdateByExample="true"
 			enableDeleteByExample="true" enableSelectByExample="true"
@@ -198,5 +186,23 @@
 -->
 
 
+
+		<table tableName="tboperatelog" domainObjectName="Operatelog"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<property name="useActualColumnNames" value="false" />
+			<generatedKey column="id" sqlStatement="MySql" identity="true" />
+		</table>
+		<table tableName="tbsystemlog" domainObjectName="Systemlog"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<property name="useActualColumnNames" value="false" />
+			<generatedKey column="id" sqlStatement="MySql" identity="true" />
+		</table>
+		
+		
+		
 	</context>
 </generatorConfiguration>  

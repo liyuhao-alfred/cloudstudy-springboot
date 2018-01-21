@@ -42,7 +42,7 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	@LogPointcut(description = "静态页面请求--跳转到登录页面")
+	@LogPointcut(description = "静态页面请求--跳转到登录页面", code = "")
 	public String loginPage() {
 		Subject subject = SecurityUtils.getSubject();
 		return subject.isAuthenticated() ? "redirect:/index" : "login";

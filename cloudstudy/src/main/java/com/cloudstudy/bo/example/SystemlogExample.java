@@ -305,52 +305,62 @@ public class SystemlogExample {
             return (Criteria) this;
         }
 
-        public Criteria andLogTypeEqualTo(Integer value) {
+        public Criteria andLogTypeEqualTo(String value) {
             addCriterion("log_type =", value, "logType");
             return (Criteria) this;
         }
 
-        public Criteria andLogTypeNotEqualTo(Integer value) {
+        public Criteria andLogTypeNotEqualTo(String value) {
             addCriterion("log_type <>", value, "logType");
             return (Criteria) this;
         }
 
-        public Criteria andLogTypeGreaterThan(Integer value) {
+        public Criteria andLogTypeGreaterThan(String value) {
             addCriterion("log_type >", value, "logType");
             return (Criteria) this;
         }
 
-        public Criteria andLogTypeGreaterThanOrEqualTo(Integer value) {
+        public Criteria andLogTypeGreaterThanOrEqualTo(String value) {
             addCriterion("log_type >=", value, "logType");
             return (Criteria) this;
         }
 
-        public Criteria andLogTypeLessThan(Integer value) {
+        public Criteria andLogTypeLessThan(String value) {
             addCriterion("log_type <", value, "logType");
             return (Criteria) this;
         }
 
-        public Criteria andLogTypeLessThanOrEqualTo(Integer value) {
+        public Criteria andLogTypeLessThanOrEqualTo(String value) {
             addCriterion("log_type <=", value, "logType");
             return (Criteria) this;
         }
 
-        public Criteria andLogTypeIn(List<Integer> values) {
+        public Criteria andLogTypeLike(String value) {
+            addCriterion("log_type like", value, "logType");
+            return (Criteria) this;
+        }
+
+        public Criteria andLogTypeNotLike(String value) {
+            addCriterion("log_type not like", value, "logType");
+            return (Criteria) this;
+        }
+
+        public Criteria andLogTypeIn(List<String> values) {
             addCriterion("log_type in", values, "logType");
             return (Criteria) this;
         }
 
-        public Criteria andLogTypeNotIn(List<Integer> values) {
+        public Criteria andLogTypeNotIn(List<String> values) {
             addCriterion("log_type not in", values, "logType");
             return (Criteria) this;
         }
 
-        public Criteria andLogTypeBetween(Integer value1, Integer value2) {
+        public Criteria andLogTypeBetween(String value1, String value2) {
             addCriterion("log_type between", value1, value2, "logType");
             return (Criteria) this;
         }
 
-        public Criteria andLogTypeNotBetween(Integer value1, Integer value2) {
+        public Criteria andLogTypeNotBetween(String value1, String value2) {
             addCriterion("log_type not between", value1, value2, "logType");
             return (Criteria) this;
         }

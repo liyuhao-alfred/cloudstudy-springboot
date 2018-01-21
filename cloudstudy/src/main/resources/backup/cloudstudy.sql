@@ -180,7 +180,7 @@ DROP TABLE IF EXISTS `tboperatelog`;
 CREATE TABLE `tboperatelog` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `operator_no` varchar(30) DEFAULT NULL COMMENT '操作员编号',
-  `operator_type` int(10) DEFAULT NULL COMMENT '操作员类型',
+  `operator_type` varchar(32) DEFAULT NULL COMMENT '操作员类型',
   `operator_name` varchar(60) DEFAULT NULL COMMENT '操作员姓名',
   `request_ip` varchar(32) DEFAULT NULL COMMENT '请求IP地址',
   `request_uri` varchar(512) DEFAULT NULL COMMENT '请求URI',
@@ -547,7 +547,7 @@ CREATE TABLE `tbsystemlog` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `log_level` varchar(8) DEFAULT NULL COMMENT '日志级别',
   `log_time` datetime DEFAULT NULL COMMENT '日志记录时间',
-  `log_type` int(11) DEFAULT NULL COMMENT '日志类型',
+  `log_type` varchar(32) DEFAULT NULL COMMENT '日志类型',
   `remote_call_ip` varchar(32) DEFAULT NULL COMMENT '远程调用的IP地址',
   `thread_id` varchar(128) DEFAULT NULL COMMENT '线程编号',
   `thread_name` varchar(128) DEFAULT NULL COMMENT '线程名称',
@@ -636,7 +636,7 @@ CREATE TABLE `tbuser` (
 /*Data for the table `tbuser` */
 
 insert  into `tbuser`(`no`,`account`,`password`,`salt`,`name`,`phone`,`email`,`sex`,`age`,`birthday`,`description`,`create_time`,`last_modify_time`,`regist_time`,`status`) values 
-('1','1','1','1','1','1','1',1,1,'2018-01-19','1','2018-01-19 11:54:27','2018-01-19 11:54:33','2018-01-19 11:54:36',0),
+('1','11111111','11111111','1','1','1','1',1,1,'2018-01-19','1','2018-01-19 11:54:27','2018-01-19 11:54:33','2018-01-19 11:54:36',0),
 ('2','2','2','2','2','2','2',0,1,'2018-01-19','2','2018-01-19 11:54:56','2018-01-19 11:54:59','2018-01-19 11:55:05',0),
 ('3','3','3','3','3','3','3',0,1,'2018-01-19','3','2018-01-19 11:55:21','2018-01-19 11:55:23','2018-01-19 11:55:25',0),
 ('4','4','4','4','4','4','4',0,1,'2018-01-19','4','2018-01-19 14:27:13','2018-01-19 14:27:15','2018-01-19 14:27:17',0);

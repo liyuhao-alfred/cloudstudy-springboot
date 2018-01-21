@@ -9,7 +9,7 @@ public class Systemlog {
 
     private Date logTime;
 
-    private Integer logType;
+    private String logType;
 
     private String remoteCallIp;
 
@@ -57,12 +57,12 @@ public class Systemlog {
         this.logTime = logTime;
     }
 
-    public Integer getLogType() {
+    public String getLogType() {
         return logType;
     }
 
-    public void setLogType(Integer logType) {
-        this.logType = logType;
+    public void setLogType(String logType) {
+        this.logType = logType == null ? null : logType.trim();
     }
 
     public String getRemoteCallIp() {

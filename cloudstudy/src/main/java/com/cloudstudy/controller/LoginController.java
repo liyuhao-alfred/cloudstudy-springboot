@@ -49,7 +49,7 @@ public class LoginController {
 	@ApiOperation(value = "登入", notes = "使用账号和密码进行登录")
 	@RequestMapping(value = "/login", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
-	@LogPointcut(description = "用户登录")
+	@LogPointcut(description = "用户登录", code = "userlogin")
 	public @ResponseBody WebResult<?> loginIn(HttpSession session, HttpServletRequest request,
 			HttpServletResponse response,
 			@ApiParam(value = "账号", required = true) @RequestParam(value = "account", required = true) String account,
@@ -80,7 +80,7 @@ public class LoginController {
 	@ApiOperation(value = "登出", notes = "进行登出")
 	@RequestMapping(value = "/logout", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
-	@LogPointcut(description = "用户登出")
+	@LogPointcut(description = "用户登出", code = "userlogout")
 	public @ResponseBody String loginOut(HttpSession session, HttpServletResponse response) {
 		Subject subject = SecurityUtils.getSubject();
 		if (subject.isAuthenticated()) {

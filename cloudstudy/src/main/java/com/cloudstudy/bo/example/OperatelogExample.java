@@ -245,52 +245,62 @@ public class OperatelogExample {
             return (Criteria) this;
         }
 
-        public Criteria andOperatorTypeEqualTo(Integer value) {
+        public Criteria andOperatorTypeEqualTo(String value) {
             addCriterion("operator_type =", value, "operatorType");
             return (Criteria) this;
         }
 
-        public Criteria andOperatorTypeNotEqualTo(Integer value) {
+        public Criteria andOperatorTypeNotEqualTo(String value) {
             addCriterion("operator_type <>", value, "operatorType");
             return (Criteria) this;
         }
 
-        public Criteria andOperatorTypeGreaterThan(Integer value) {
+        public Criteria andOperatorTypeGreaterThan(String value) {
             addCriterion("operator_type >", value, "operatorType");
             return (Criteria) this;
         }
 
-        public Criteria andOperatorTypeGreaterThanOrEqualTo(Integer value) {
+        public Criteria andOperatorTypeGreaterThanOrEqualTo(String value) {
             addCriterion("operator_type >=", value, "operatorType");
             return (Criteria) this;
         }
 
-        public Criteria andOperatorTypeLessThan(Integer value) {
+        public Criteria andOperatorTypeLessThan(String value) {
             addCriterion("operator_type <", value, "operatorType");
             return (Criteria) this;
         }
 
-        public Criteria andOperatorTypeLessThanOrEqualTo(Integer value) {
+        public Criteria andOperatorTypeLessThanOrEqualTo(String value) {
             addCriterion("operator_type <=", value, "operatorType");
             return (Criteria) this;
         }
 
-        public Criteria andOperatorTypeIn(List<Integer> values) {
+        public Criteria andOperatorTypeLike(String value) {
+            addCriterion("operator_type like", value, "operatorType");
+            return (Criteria) this;
+        }
+
+        public Criteria andOperatorTypeNotLike(String value) {
+            addCriterion("operator_type not like", value, "operatorType");
+            return (Criteria) this;
+        }
+
+        public Criteria andOperatorTypeIn(List<String> values) {
             addCriterion("operator_type in", values, "operatorType");
             return (Criteria) this;
         }
 
-        public Criteria andOperatorTypeNotIn(List<Integer> values) {
+        public Criteria andOperatorTypeNotIn(List<String> values) {
             addCriterion("operator_type not in", values, "operatorType");
             return (Criteria) this;
         }
 
-        public Criteria andOperatorTypeBetween(Integer value1, Integer value2) {
+        public Criteria andOperatorTypeBetween(String value1, String value2) {
             addCriterion("operator_type between", value1, value2, "operatorType");
             return (Criteria) this;
         }
 
-        public Criteria andOperatorTypeNotBetween(Integer value1, Integer value2) {
+        public Criteria andOperatorTypeNotBetween(String value1, String value2) {
             addCriterion("operator_type not between", value1, value2, "operatorType");
             return (Criteria) this;
         }

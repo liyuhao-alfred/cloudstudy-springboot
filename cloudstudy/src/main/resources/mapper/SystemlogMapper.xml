@@ -5,7 +5,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="log_level" jdbcType="VARCHAR" property="logLevel" />
     <result column="log_time" jdbcType="TIMESTAMP" property="logTime" />
-    <result column="log_type" jdbcType="INTEGER" property="logType" />
+    <result column="log_type" jdbcType="VARCHAR" property="logType" />
     <result column="remote_call_ip" jdbcType="VARCHAR" property="remoteCallIp" />
     <result column="thread_id" jdbcType="VARCHAR" property="threadId" />
     <result column="thread_name" jdbcType="VARCHAR" property="threadName" />
@@ -102,7 +102,7 @@
       order by ${orderByClause}
     </if>
   </select>
-   <select id="selectByExample" parameterType="com.cloudstudy.bo.example.SystemlogExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.cloudstudy.bo.example.SystemlogExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -145,7 +145,7 @@
       service_error_code, service_running_time, service_args, 
       service_result, service_error_message
       )
-    values (#{logLevel,jdbcType=VARCHAR}, #{logTime,jdbcType=TIMESTAMP}, #{logType,jdbcType=INTEGER}, 
+    values (#{logLevel,jdbcType=VARCHAR}, #{logTime,jdbcType=TIMESTAMP}, #{logType,jdbcType=VARCHAR}, 
       #{remoteCallIp,jdbcType=VARCHAR}, #{threadId,jdbcType=VARCHAR}, #{threadName,jdbcType=VARCHAR}, 
       #{serviceClass,jdbcType=VARCHAR}, #{serviceMethod,jdbcType=VARCHAR}, #{serviceResultFlage,jdbcType=INTEGER}, 
       #{serviceErrorCode,jdbcType=VARCHAR}, #{serviceRunningTime,jdbcType=VARCHAR}, #{serviceArgs,jdbcType=LONGVARCHAR}, 
@@ -209,7 +209,7 @@
         #{logTime,jdbcType=TIMESTAMP},
       </if>
       <if test="logType != null">
-        #{logType,jdbcType=INTEGER},
+        #{logType,jdbcType=VARCHAR},
       </if>
       <if test="remoteCallIp != null">
         #{remoteCallIp,jdbcType=VARCHAR},
@@ -265,7 +265,7 @@
         log_time = #{record.logTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.logType != null">
-        log_type = #{record.logType,jdbcType=INTEGER},
+        log_type = #{record.logType,jdbcType=VARCHAR},
       </if>
       <if test="record.remoteCallIp != null">
         remote_call_ip = #{record.remoteCallIp,jdbcType=VARCHAR},
@@ -310,7 +310,7 @@
     set id = #{record.id,jdbcType=INTEGER},
       log_level = #{record.logLevel,jdbcType=VARCHAR},
       log_time = #{record.logTime,jdbcType=TIMESTAMP},
-      log_type = #{record.logType,jdbcType=INTEGER},
+      log_type = #{record.logType,jdbcType=VARCHAR},
       remote_call_ip = #{record.remoteCallIp,jdbcType=VARCHAR},
       thread_id = #{record.threadId,jdbcType=VARCHAR},
       thread_name = #{record.threadName,jdbcType=VARCHAR},
@@ -331,7 +331,7 @@
     set id = #{record.id,jdbcType=INTEGER},
       log_level = #{record.logLevel,jdbcType=VARCHAR},
       log_time = #{record.logTime,jdbcType=TIMESTAMP},
-      log_type = #{record.logType,jdbcType=INTEGER},
+      log_type = #{record.logType,jdbcType=VARCHAR},
       remote_call_ip = #{record.remoteCallIp,jdbcType=VARCHAR},
       thread_id = #{record.threadId,jdbcType=VARCHAR},
       thread_name = #{record.threadName,jdbcType=VARCHAR},
@@ -354,7 +354,7 @@
         log_time = #{logTime,jdbcType=TIMESTAMP},
       </if>
       <if test="logType != null">
-        log_type = #{logType,jdbcType=INTEGER},
+        log_type = #{logType,jdbcType=VARCHAR},
       </if>
       <if test="remoteCallIp != null">
         remote_call_ip = #{remoteCallIp,jdbcType=VARCHAR},
@@ -396,7 +396,7 @@
     update tbsystemlog
     set log_level = #{logLevel,jdbcType=VARCHAR},
       log_time = #{logTime,jdbcType=TIMESTAMP},
-      log_type = #{logType,jdbcType=INTEGER},
+      log_type = #{logType,jdbcType=VARCHAR},
       remote_call_ip = #{remoteCallIp,jdbcType=VARCHAR},
       thread_id = #{threadId,jdbcType=VARCHAR},
       thread_name = #{threadName,jdbcType=VARCHAR},
@@ -414,7 +414,7 @@
     update tbsystemlog
     set log_level = #{logLevel,jdbcType=VARCHAR},
       log_time = #{logTime,jdbcType=TIMESTAMP},
-      log_type = #{logType,jdbcType=INTEGER},
+      log_type = #{logType,jdbcType=VARCHAR},
       remote_call_ip = #{remoteCallIp,jdbcType=VARCHAR},
       thread_id = #{threadId,jdbcType=VARCHAR},
       thread_name = #{threadName,jdbcType=VARCHAR},

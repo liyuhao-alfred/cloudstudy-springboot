@@ -8,6 +8,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cloudstudy.aop.annotation.LogPointcut;
 import com.cloudstudy.bo.User;
 import com.cloudstudy.bo.example.UserExample;
 import com.cloudstudy.bo.example.UserExample.Criteria;
@@ -24,6 +25,7 @@ public class UserServiceImpl implements UserService {
 	private UserMapper userMapper;
 
 	@Override
+	@LogPointcut(description = "添加用户", code = "save")
 	public UserDto save(UserDto userDto) {
 		User user = new User();
 		BeanUtils.copyProperties(userDto, user);
@@ -33,11 +35,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@LogPointcut(description = "删除用户", code = "deleteByNo")
 	public void deleteByNo(String no) {
 		userMapper.deleteByPrimaryKey(no);
 	}
 
 	@Override
+	@LogPointcut(description = "更新用户", code = "update")
 	public UserDto update(UserDto userDto) {
 		User user = new User();
 		BeanUtils.copyProperties(userDto, user);
@@ -47,6 +51,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@LogPointcut(description = "通过主键查找用户", code = "findByno")
 	public UserDto findByno(String no) {
 		User user = userMapper.selectByPrimaryKey(no);
 		UserDto userDto = new UserDto();
@@ -55,6 +60,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@LogPointcut(description = "通过条件查找用户", code = "find")
 	public List<UserDto> find(UserQueryParamDto userQueryParamDto, String keyword) {
 		UserExample userExample = new UserExample();
 		Criteria criteria = userExample.createCriteria();
@@ -96,6 +102,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@LogPointcut(description = "通过账号查找用户", code = "findByAccount")
 	public UserDto findByAccount(String account) {
 
 		UserExample userExample = new UserExample();
@@ -115,6 +122,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@LogPointcut(description = "登录用户", code = "login")
 	public UserDto login(String account, String password) {
 		UserExample userExample = new UserExample();
 

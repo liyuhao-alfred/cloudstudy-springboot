@@ -48,7 +48,7 @@ import com.alibaba.fastjson.JSON;
 
 @Component
 @Aspect
-public class WebControllerAop {
+public class WebTestAop {
 	// 匹配com.cloudstudy.controller包及其子包下的所有类的所有方法
 	@Pointcut("execution(* com.cloudstudy.controller..*.*(..))")
 	public void executeService() {
@@ -60,9 +60,10 @@ public class WebControllerAop {
 	 * 
 	 * @param joinPoint
 	 */
+	@SuppressWarnings("unused")
 	@Before("executeService()")
 	public void doBeforeAdvice(JoinPoint joinPoint) {
-		System.out.println("我是前置通知!!!");
+		// System.out.println("我是前置通知!!!");
 		// 获取目标方法的参数信息
 		Object[] obj = joinPoint.getArgs();
 		// AOP代理类的信息
@@ -72,9 +73,9 @@ public class WebControllerAop {
 		// 用的最多 通知的签名
 		Signature signature = joinPoint.getSignature();
 		// 代理的是哪一个方法
-		System.out.println(signature.getName());
+		// System.out.println(signature.getName());
 		// AOP代理类的名字
-		System.out.println(signature.getDeclaringTypeName());
+		// System.out.println(signature.getDeclaringTypeName());
 		// AOP代理类的类（class）信息
 		signature.getDeclaringType();
 		// 获取RequestAttributes
@@ -84,7 +85,7 @@ public class WebControllerAop {
 				.resolveReference(RequestAttributes.REFERENCE_REQUEST);
 		// 如果要获取Session信息的话，可以这样写：
 		HttpSession session = (HttpSession) requestAttributes.resolveReference(RequestAttributes.REFERENCE_SESSION);
-		System.out.println(session);
+		// System.out.println(session);
 
 		Enumeration<String> enumeration = request.getParameterNames();
 		Map<String, String> parameterMap = new HashMap<String, String>();
@@ -94,7 +95,7 @@ public class WebControllerAop {
 		}
 		String str = JSON.toJSONString(parameterMap);
 		if (obj.length > 0) {
-			System.out.println("请求的参数信息为：" + str);
+			// System.out.println("请求的参数信息为：" + str);
 		}
 	}
 
@@ -108,12 +109,12 @@ public class WebControllerAop {
 	 */
 	@AfterReturning(value = "execution(* com.cloudstudy.controller..*.*(..))", returning = "keys")
 	public void doAfterReturningAdvice1(JoinPoint joinPoint, Object keys) {
-		System.out.println("第一个后置返回通知的返回值：" + keys);
+		// System.out.println("第一个后置返回通知的返回值：" + keys);
 	}
 
 	@AfterReturning(value = "execution(* com.cloudstudy.controller..*.*(..))", returning = "keys", argNames = "keys")
 	public void doAfterReturningAdvice2(String keys) {
-		System.out.println("第二个后置返回通知的返回值：" + keys);
+		// System.out.println("第二个后置返回通知的返回值：" + keys);
 	}
 
 	/**
@@ -127,9 +128,9 @@ public class WebControllerAop {
 	@AfterThrowing(value = "executeService()", throwing = "exception")
 	public void doAfterThrowingAdvice(JoinPoint joinPoint, Throwable exception) {
 		// 目标方法名：
-		System.out.println(joinPoint.getSignature().getName());
+		// System.out.println(joinPoint.getSignature().getName());
 		if (exception instanceof NullPointerException) {
-			System.out.println("发生了空指针异常!!!!!");
+			// System.out.println("发生了空指针异常!!!!!");
 		}
 	}
 
@@ -140,8 +141,7 @@ public class WebControllerAop {
 	 */
 	@After("executeService()")
 	public void doAfterAdvice(JoinPoint joinPoint) {
-
-		System.out.println("后置通知执行了!!!!");
+		// System.out.println("后置通知执行了!!!!");
 	}
 
 	/**
@@ -150,7 +150,8 @@ public class WebControllerAop {
 	 */
 	@Around("execution(* com.cloudstudy.controller..*.testAround*(..))")
 	public Object doAroundAdvice(ProceedingJoinPoint proceedingJoinPoint) {
-		System.out.println("环绕通知的目标方法名：" + proceedingJoinPoint.getSignature().getName());
+		// System.out.println("环绕通知的目标方法名：" +
+		// proceedingJoinPoint.getSignature().getName());
 		try {
 			Object obj = proceedingJoinPoint.proceed();
 			return obj;

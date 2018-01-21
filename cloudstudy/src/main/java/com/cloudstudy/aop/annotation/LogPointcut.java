@@ -10,5 +10,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface LogPointcut {
-	String description() default "";
+	public String code();
+
+	public String description() default "";
 }

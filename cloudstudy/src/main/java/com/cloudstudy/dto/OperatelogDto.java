@@ -7,7 +7,7 @@ public class OperatelogDto {
 
     private String operatorNo;
 
-    private Integer operatorType;
+    private String operatorType;
 
     private String operatorName;
 
@@ -47,12 +47,12 @@ public class OperatelogDto {
         this.operatorNo = operatorNo == null ? null : operatorNo.trim();
     }
 
-    public Integer getOperatorType() {
+    public String getOperatorType() {
         return operatorType;
     }
 
-    public void setOperatorType(Integer operatorType) {
-        this.operatorType = operatorType;
+    public void setOperatorType(String operatorType) {
+        this.operatorType = operatorType == null ? null : operatorType.trim();
     }
 
     public String getOperatorName() {
