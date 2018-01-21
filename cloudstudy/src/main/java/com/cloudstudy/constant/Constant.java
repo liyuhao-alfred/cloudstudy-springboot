@@ -36,6 +36,8 @@ public class Constant {
 	@Value("${cloudstudy.project.version}")
 	private String projectVersion;
 
+	public static String testStr;
+
 	public String getProjectName() {
 		return projectName;
 	}
