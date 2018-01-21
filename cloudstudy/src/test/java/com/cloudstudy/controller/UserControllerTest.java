@@ -18,8 +18,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.cloudstudy.Application;
 import com.cloudstudy.BaseTest;
-import com.cloudstudy.bo.Admin;
-import com.cloudstudy.service.AdminService;
+import com.cloudstudy.bo.User;
+import com.cloudstudy.service.UserService;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -30,18 +30,18 @@ import java.util.Date;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
-public class AdminControllerTest {
+public class UserControllerTest {
 
 	@Autowired
-	private AdminController adminController;
+	private UserController adminController;
 
 	private MockMvc mockMvc;
 
 	@Spy
 	@Autowired
-	private AdminService adminService;
+	private UserService adminService;
 
-	private Admin admin = new Admin();
+	private User user = new User();
 	private String str = BaseTest.str;
 
 	@Before
@@ -53,23 +53,22 @@ public class AdminControllerTest {
 		MockitoAnnotations.initMocks(this);
 		mockMvc = MockMvcBuilders.standaloneSetup(adminController).build();
 
-		admin.setAccount(str);
-		admin.setCreateTime(new Date());
-		admin.setEmail(str);
-		admin.setLastModifyTime(new Date());
-		admin.setLevel(1);
-		admin.setName(str);
-		admin.setNo(str);
-		admin.setPassword(str);
-		admin.setPhone(str);
-		admin.setSex(0);
-		admin.setStatus(0);
+		user.setAccount(str);
+		user.setCreateTime(new Date());
+		user.setEmail(str);
+		user.setLastModifyTime(new Date());
+		user.setName(str);
+		user.setNo(str);
+		user.setPassword(str);
+		user.setPhone(str);
+		user.setSex(0);
+		user.setStatus(0);
 	}
 
 	@Test
-	public void getAdmin() throws Exception {
+	public void getUser() throws Exception {
 		MvcResult mvcResult = mockMvc
-				.perform(MockMvcRequestBuilders.post("/api/admin").accept(MediaType.APPLICATION_JSON_UTF8)
+				.perform(MockMvcRequestBuilders.post("/api/user").accept(MediaType.APPLICATION_JSON_UTF8)
 						.param("account", str).param("password", str))
 				.andExpect(MockMvcResultMatchers.status().isOk()).andDo(MockMvcResultHandlers.print()).andReturn();
 		System.out.println("输出:" + mvcResult.getResponse().getContentAsString());
@@ -80,7 +79,7 @@ public class AdminControllerTest {
 
 		int adminId = 3;
 
-		mockMvc.perform(get("/admin/" + adminId)).andExpect(MockMvcResultMatchers.status().isOk())
+		mockMvc.perform(get("/user/" + adminId)).andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("data.age", is(15))).andExpect(jsonPath("data.firstName", is("bob")))
 				.andExpect(jsonPath("data.id", is(adminId))).andExpect(jsonPath("success", is(true)));
@@ -89,7 +88,7 @@ public class AdminControllerTest {
 	@Test
 	public void testSave() throws Exception {
 		mockMvc.perform(post("/api/add").contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(BaseTest.convertObjectToJsonBytes(admin))).andExpect(MockMvcResultMatchers.status().isOk())
+				.content(BaseTest.convertObjectToJsonBytes(user))).andExpect(MockMvcResultMatchers.status().isOk())
 				.andDo(MockMvcResultHandlers.print()).andReturn();
 		// .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(jsonPath("success",
 		// is(true)));
@@ -97,14 +96,14 @@ public class AdminControllerTest {
 
 	@Test
 	public void testUpdate() throws Exception {
-		mockMvc.perform(put("/admin").contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(BaseTest.convertObjectToJsonBytes(admin))).andExpect(MockMvcResultMatchers.status().isOk())
+		mockMvc.perform(put("/user").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(BaseTest.convertObjectToJsonBytes(user))).andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(jsonPath("success", is(true)));
 	}
 
 	@Test
 	public void testDelete() throws Exception {
-		mockMvc.perform(delete("/admin/3")).andExpect(MockMvcResultMatchers.status().isOk())
+		mockMvc.perform(delete("/user/3")).andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("success", is(true)));
 	}

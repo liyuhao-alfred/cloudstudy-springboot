@@ -84,7 +84,7 @@ public class LoginController {
 	public @ResponseBody String loginOut(HttpSession session, HttpServletResponse response) {
 		Subject subject = SecurityUtils.getSubject();
 		if (subject.isAuthenticated()) {
-			session.removeAttribute("superAdminSignPolicy");
+			session.removeAttribute("superUserSignPolicy");
 			session.removeAttribute("operationToken");
 			session.removeAttribute("operationObjMap");
 			subject.logout();

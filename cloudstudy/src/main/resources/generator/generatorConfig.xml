@@ -97,7 +97,7 @@
 -->
 
 <!--
-		<table tableName="tbadmin" domainObjectName="Admin"
+		<table tableName="tbadmin" domainObjectName="User"
 			enableCountByExample="true" enableUpdateByExample="true"
 			enableDeleteByExample="true" enableSelectByExample="true"
 			selectByExampleQueryId="true">

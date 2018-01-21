@@ -1,7 +1,10 @@
 package com.cloudstudy.druid;
 
+import java.util.Properties;
+
 import javax.sql.DataSource;
 
+import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -15,6 +18,8 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.TransactionManagementConfigurer;
+
+import com.github.pagehelper.PageHelper;
 
 @Configuration
 @EnableTransactionManagement
@@ -44,7 +49,8 @@ public class SessionFactoryConfig implements TransactionManagementConfigurer {
 	public SqlSessionFactoryBean createSqlSessionFactoryBean() throws Exception {
 		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
 		/** 设置mybatis configuration 扫描路径 */
-		// sqlSessionFactoryBean.setConfigLocation(new ClassPathResource(MYBATIS_CONFIG));
+		// sqlSessionFactoryBean.setConfigLocation(new
+		// ClassPathResource(MYBATIS_CONFIG));
 		/** 设置datasource */
 		sqlSessionFactoryBean.setDataSource(dataSource);
 		/** 设置mapper.xml文件路径 */
@@ -52,6 +58,19 @@ public class SessionFactoryConfig implements TransactionManagementConfigurer {
 				.setMapperLocations(new PathMatchingResourcePatternResolver().getResources(mapperLocations));
 		/** 设置typeAlias 包扫描路径 */
 		sqlSessionFactoryBean.setTypeAliasesPackage(typeAliasPackage);
+
+		// 分页插件
+		Properties properties = new Properties();
+		properties.setProperty("offsetAsPageNum", "true");
+		properties.setProperty("rowBoundsWithCount", "true");
+		properties.setProperty("reasonable", "true");
+		properties.setProperty("supportMethodsArguments", "true");
+		properties.setProperty("returnPageInfo", "check");
+		properties.setProperty("params", "pageNum=page;pageSize=rows;orderBy=orderBy");
+		PageHelper pageHelper = new PageHelper();
+		pageHelper.setProperties(properties);
+		sqlSessionFactoryBean.setPlugins(new Interceptor[] { pageHelper });// 添加插件
+
 		return sqlSessionFactoryBean;
 	}
 

@@ -12,8 +12,11 @@ import com.cloudstudy.bo.Systemlog;
 import com.cloudstudy.bo.example.SystemlogExample;
 import com.cloudstudy.bo.example.SystemlogExample.Criteria;
 import com.cloudstudy.dto.SystemlogDto;
+import com.cloudstudy.dto.SystemlogQueryParamDto;
 import com.cloudstudy.log.SystemlogService;
 import com.cloudstudy.mapper.SystemlogMapper;
+import com.cloudstudy.util.DateUtil;
+import com.github.pagehelper.PageHelper;
 
 @Service
 public class SystemlogServiceImpl implements SystemlogService {
@@ -40,7 +43,8 @@ public class SystemlogServiceImpl implements SystemlogService {
 
 	@Override
 	public List<SystemlogDto> find(String logLevel, String logType, String remoteCallIp, String serviceClass,
-			String serviceMethod, String serviceErrorCode, Integer index, Integer limit) {
+			String serviceMethod, String serviceErrorCode, String startTime, String endTime, Integer index,
+			Integer limit) {
 		SystemlogExample systemlogExample = new SystemlogExample();
 		systemlogExample.setDistinct(true);
 
@@ -65,14 +69,26 @@ public class SystemlogServiceImpl implements SystemlogService {
 			criteria.andServiceErrorCodeEqualTo(serviceErrorCode);
 		}
 
-		if (index != null && limit != null) {
+		try {
+			criteria.andLogTimeGreaterThanOrEqualTo(DateUtil.stringToDate(startTime));
+		} catch (Exception e) {
+		}
 
+		try {
+			criteria.andLogTimeLessThanOrEqualTo(DateUtil.stringToDate(endTime));
+		} catch (Exception e) {
+		}
+
+		if (index != null && limit != null) {
+			PageHelper.startPage(index, limit);
 		}
 
 		List<Systemlog> systemlogList = systemlogMapper.selectByExampleWithBLOBs(systemlogExample);
 		if (systemlogList == null || systemlogList.isEmpty()) {
 			return null;
 		}
+
+		System.out.println(systemlogList.size());
 
 		List<SystemlogDto> systemlogDtoList = new ArrayList<SystemlogDto>();
 		for (Systemlog systemlog : systemlogList) {
@@ -81,6 +97,12 @@ public class SystemlogServiceImpl implements SystemlogService {
 			systemlogDtoList.add(systemlogDto);
 		}
 		return systemlogDtoList;
+	}
+
+	@Override
+	public List<SystemlogDto> find(SystemlogQueryParamDto systemlogQueryParamDto) {
+		return find(null, null, null, null, null, null, systemlogQueryParamDto.getFromTime(),
+				systemlogQueryParamDto.getToTime(), null, null);
 	}
 
 }

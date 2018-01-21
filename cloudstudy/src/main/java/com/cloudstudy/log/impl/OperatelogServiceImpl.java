@@ -12,9 +12,11 @@ import com.cloudstudy.bo.Operatelog;
 import com.cloudstudy.bo.example.OperatelogExample;
 import com.cloudstudy.bo.example.OperatelogExample.Criteria;
 import com.cloudstudy.dto.OperatelogDto;
+import com.cloudstudy.dto.OperatelogQueryParamDto;
 import com.cloudstudy.log.OperatelogService;
 import com.cloudstudy.mapper.OperatelogMapper;
 import com.cloudstudy.util.DateUtil;
+import com.github.pagehelper.PageHelper;
 
 @Service
 public class OperatelogServiceImpl implements OperatelogService {
@@ -43,7 +45,6 @@ public class OperatelogServiceImpl implements OperatelogService {
 	public List<OperatelogDto> find(String operatorNo, String operatorType, String operatorName, String requestIp,
 			String operationErrorCode, String startTime, String endTime, Integer index, Integer limit) {
 		OperatelogExample operatelogExample = new OperatelogExample();
-		operatelogExample.setDistinct(true);
 
 		Criteria criteria = operatelogExample.createCriteria();
 
@@ -74,6 +75,7 @@ public class OperatelogServiceImpl implements OperatelogService {
 		}
 
 		if (index != null && limit != null) {
+			PageHelper.offsetPage(index, limit);
 
 		}
 
@@ -89,5 +91,11 @@ public class OperatelogServiceImpl implements OperatelogService {
 			operatelogDtoList.add(operatelogDto);
 		}
 		return operatelogDtoList;
+	}
+
+	@Override
+	public List<OperatelogDto> find(OperatelogQueryParamDto operatelogQueryParamDto) {
+		return find(null, null, null, null, null, operatelogQueryParamDto.getFromTime(),
+				operatelogQueryParamDto.getToTime(), null, null);
 	}
 }

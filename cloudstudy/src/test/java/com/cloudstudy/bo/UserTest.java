@@ -12,13 +12,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.cloudstudy.BaseTest;
-import com.cloudstudy.bo.Admin;
+import com.cloudstudy.bo.User;
 import com.cloudstudy.util.Util;
 
-public class AdminTest {
+public class UserTest {
 
-	private Admin test1;
-	private Admin test2;
+	private User test1;
+	private User test2;
 
 	@Before
 	public void init() {
@@ -28,7 +28,6 @@ public class AdminTest {
 		test1.setCreateTime(new Date());
 		test1.setEmail(str);
 		test1.setLastModifyTime(new Date());
-		test1.setLevel(1);
 		test1.setName(str);
 		test1.setNo(str);
 		test1.setPassword(str);
@@ -41,7 +40,6 @@ public class AdminTest {
 		test2.setCreateTime(new Date());
 		test2.setEmail(str);
 		test2.setLastModifyTime(new Date());
-		test2.setLevel(1);
 		test2.setName(str);
 		test2.setNo(str);
 		test2.setPassword(str);
@@ -51,29 +49,29 @@ public class AdminTest {
 	}
 
 	@Test
-	public void findAdmin() {
+	public void findUser() {
 
 		/** 数值匹配 **/
 		// 测试变量是否大于指定值
-		Assert.assertThat(test1.getLevel(), Matchers.greaterThan(50));
+		Assert.assertThat(test1.getAge(), Matchers.greaterThan(50));
 		// 测试变量是否小于指定值
-		Assert.assertThat(test1.getLevel(), Matchers.lessThan(100));
+		Assert.assertThat(test1.getAge(), Matchers.lessThan(100));
 		// 测试变量是否大于等于指定值
-		Assert.assertThat(test1.getLevel(), Matchers.greaterThanOrEqualTo(50));
+		Assert.assertThat(test1.getAge(), Matchers.greaterThanOrEqualTo(50));
 		// 测试变量是否小于等于指定值
-		Assert.assertThat(test1.getLevel(), Matchers.lessThanOrEqualTo(100));
+		Assert.assertThat(test1.getAge(), Matchers.lessThanOrEqualTo(100));
 
 		// 测试所有条件必须成立
-		Assert.assertThat(test1.getLevel(), Matchers.allOf(Matchers.greaterThan(50), Matchers.lessThan(100)));
+		Assert.assertThat(test1.getAge(), Matchers.allOf(Matchers.greaterThan(50), Matchers.lessThan(100)));
 		// 测试只要有一个条件成立
-		Assert.assertThat(test1.getLevel(),
+		Assert.assertThat(test1.getAge(),
 				Matchers.anyOf(Matchers.greaterThanOrEqualTo(50), Matchers.lessThanOrEqualTo(100)));
 		// 测试无论什么条件成立(还没明白这个到底是什么意思)
-		Assert.assertThat(test1.getLevel(), Matchers.anything());
+		Assert.assertThat(test1.getAge(), Matchers.anything());
 		// 测试变量值等于指定值
-		Assert.assertThat(test1.getLevel(), Matchers.is(100));
+		Assert.assertThat(test1.getAge(), Matchers.is(100));
 		// 测试变量不等于指定值
-		Assert.assertThat(test1.getLevel(), Matchers.not(50));
+		Assert.assertThat(test1.getAge(), Matchers.not(50));
 
 		/** 字符串匹配 **/
 		String url = "http://www.taobao.com";
@@ -92,7 +90,7 @@ public class AdminTest {
 
 		/** 集合匹配 **/
 
-		List<Admin> user = new ArrayList<Admin>();
+		List<User> user = new ArrayList<User>();
 		user.add(test1);
 		user.add(test2);
 
@@ -101,7 +99,7 @@ public class AdminTest {
 		Assert.assertThat(user, Matchers.hasItem(test2));
 
 		/** Map匹配 **/
-		Map<String, Admin> userMap = new HashMap<String, Admin>();
+		Map<String, User> userMap = new HashMap<String, User>();
 		userMap.put(test1.getNo(), test1);
 		userMap.put(test2.getNo(), test2);
 

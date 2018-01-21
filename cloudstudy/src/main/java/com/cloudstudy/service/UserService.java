@@ -13,9 +13,9 @@ public interface UserService {
 
 	UserDto update(UserDto userDto);
 
-	UserDto findByno(String no);
+	UserDto findByNo(String no);
 
-	List<UserDto> find(UserQueryParamDto userQueryParamDto, String keyword);
+	List<UserDto> find(UserQueryParamDto userQueryParamDto);
 
 	/**
 	 * 

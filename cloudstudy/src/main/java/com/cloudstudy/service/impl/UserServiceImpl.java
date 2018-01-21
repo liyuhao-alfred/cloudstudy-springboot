@@ -12,6 +12,7 @@ import com.cloudstudy.aop.annotation.LogPointcut;
 import com.cloudstudy.bo.User;
 import com.cloudstudy.bo.example.UserExample;
 import com.cloudstudy.bo.example.UserExample.Criteria;
+import com.cloudstudy.constant.SearchType;
 import com.cloudstudy.dto.UserDto;
 import com.cloudstudy.dto.UserQueryParamDto;
 import com.cloudstudy.mapper.UserMapper;
@@ -52,7 +53,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@LogPointcut(description = "通过主键查找用户", code = "findByno")
-	public UserDto findByno(String no) {
+	public UserDto findByNo(String no) {
 		User user = userMapper.selectByPrimaryKey(no);
 		UserDto userDto = new UserDto();
 		BeanUtils.copyProperties(user, userDto);
@@ -61,20 +62,24 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@LogPointcut(description = "通过条件查找用户", code = "find")
-	public List<UserDto> find(UserQueryParamDto userQueryParamDto, String keyword) {
+	public List<UserDto> find(UserQueryParamDto userQueryParamDto) {
 		UserExample userExample = new UserExample();
 		Criteria criteria = userExample.createCriteria();
 
-		if (!StringUtils.isEmpty(userQueryParamDto.getAccount())) {
-			criteria.andAccountLike(keyword);
-		} else if (!StringUtils.isEmpty(userQueryParamDto.getEmail())) {
-			criteria.andEmailLike(keyword);
-		} else if (!StringUtils.isEmpty(userQueryParamDto.getName())) {
-			criteria.andNameLike(keyword);
-		} else if (!StringUtils.isEmpty(userQueryParamDto.getNo())) {
-			criteria.andNoLike(keyword);
-		} else if (!StringUtils.isEmpty(userQueryParamDto.getPhone())) {
-			criteria.andPhoneLike(keyword);
+		String keyword = userQueryParamDto.getKeyword();
+		Integer searchType = userQueryParamDto.getSearchType();
+		if (!StringUtils.isEmpty(keyword)) {
+			if (searchType == SearchType.account.getCode()) {
+				criteria.andAccountLike(keyword);
+			} else if (searchType == SearchType.email.getCode()) {
+				criteria.andEmailLike(keyword);
+			} else if (searchType == SearchType.adminName.getCode()) {
+				criteria.andNameLike(keyword);
+			} else if (searchType == SearchType.no.getCode()) {
+				criteria.andNoLike(keyword);
+			} else if (searchType == SearchType.phone.getCode()) {
+				criteria.andPhoneLike(keyword);
+			}
 		}
 
 		if (!StringUtils.isEmpty(userQueryParamDto.getFromTime())

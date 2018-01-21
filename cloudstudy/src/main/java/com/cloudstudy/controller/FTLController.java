@@ -5,8 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import com.cloudstudy.bo.Admin;
-import com.cloudstudy.service.AdminService;
+import com.cloudstudy.dto.UserDto;
+import com.cloudstudy.dto.UserQueryParamDto;
+import com.cloudstudy.service.UserService;
 
 import java.util.List;
 
@@ -16,23 +17,24 @@ import java.util.List;
  * Created by bysocket on 07/02/2017.
  */
 @Controller
+@RequestMapping("/ftl")
 public class FTLController {
 
 	@Autowired
-	private AdminService adminService;
+	private UserService userService;
 
-	@RequestMapping(value = "/ftl/admin/{no}", produces = { "application/json; charset=UTF-8" }, method = {
+	@RequestMapping(value = "/user/{no}", produces = { "application/json; charset=UTF-8" }, method = {
 			RequestMethod.POST, RequestMethod.GET })
 	public String find(@PathVariable("no") String no, Model model) {
-		Admin admin = adminService.findAdmin(no);
-		model.addAttribute("admin", admin);
-		return "admin";
+		UserDto user = userService.findByNo(no);
+		model.addAttribute("user", user);
+		return "user";
 	}
 
-	@RequestMapping(value = "/ftl/adminList", method = RequestMethod.GET)
+	@RequestMapping(value = "/userList", method = RequestMethod.GET)
 	public String find(Model model) {
-		List<Admin> adminList = adminService.findAdmin(new Admin(), null);
-		model.addAttribute("adminList", adminList);
-		return "adminList";
+		List<UserDto> userList = userService.find(new UserQueryParamDto());
+		model.addAttribute("userList", userList);
+		return "userList";
 	}
 }

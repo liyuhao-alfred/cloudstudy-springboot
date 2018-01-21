@@ -19,19 +19,19 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.alibaba.fastjson.JSONObject;
 import com.cloudstudy.Application;
 import com.cloudstudy.BaseTest;
-import com.cloudstudy.bo.Admin;
+import com.cloudstudy.bo.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
-public class Admin2ServiceTest {
+public class User2ServiceTest {
 
 	@Autowired
-	private AdminController adminController;
+	private UserController adminController;
 
 	private MockMvc mockMvc;
 
-	private Admin admin = new Admin();
+	private User user = new User();
 	private String str = BaseTest.str;
 
 	@Before
@@ -40,17 +40,16 @@ public class Admin2ServiceTest {
 
 		String str = BaseTest.str;
 
-		admin.setAccount(str);
-		admin.setCreateTime(new Date());
-		admin.setEmail(str);
-		admin.setLastModifyTime(new Date());
-		admin.setLevel(1);
-		admin.setName(str);
-		admin.setNo(str);
-		admin.setPassword(str);
-		admin.setPhone(str);
-		admin.setSex(0);
-		admin.setStatus(0);
+		user.setAccount(str);
+		user.setCreateTime(new Date());
+		user.setEmail(str);
+		user.setLastModifyTime(new Date());
+		user.setName(str);
+		user.setNo(str);
+		user.setPassword(str);
+		user.setPhone(str);
+		user.setSex(0);
+		user.setStatus(0);
 	}
 
 	// 验证controller是否正常响应并打印返回结果
@@ -58,10 +57,10 @@ public class Admin2ServiceTest {
 	public void add() throws Exception {
 
 		ObjectMapper mapper = new ObjectMapper();
-		String json = mapper.writeValueAsString(admin);
+		String json = mapper.writeValueAsString(user);
 		System.out.println(json);
 
-		json = JSONObject.toJSONString(admin);
+		json = JSONObject.toJSONString(user);
 		System.out.println(json);
 
 		// 指定表单方法和表单行为
@@ -76,7 +75,7 @@ public class Admin2ServiceTest {
 	@Test
 	public void get() throws Exception {
 		MvcResult mvcResult = mockMvc
-				.perform(MockMvcRequestBuilders.post("/api/admin").accept(MediaType.APPLICATION_JSON_UTF8)
+				.perform(MockMvcRequestBuilders.post("/api/user").accept(MediaType.APPLICATION_JSON_UTF8)
 						.param("account", str).param("password", str))
 				.andExpect(MockMvcResultMatchers.status().isOk()).andDo(MockMvcResultHandlers.print()).andReturn();
 		System.out.println("输出:" + mvcResult.getResponse().getContentAsString());

@@ -28,7 +28,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
-@Api(value = "用户模块")
+@Api(value = "系统用户模块")
 @RestController
 @RequestMapping("/cloudstudy/user")
 public class UserController {
@@ -49,18 +49,18 @@ public class UserController {
 	}
 
 	/**
-	 * 获取单个用户
+	 * 获取单个系统用户
 	 * 
 	 * @param no
 	 * @return
 	 */
-	@ApiOperation(value = "获取单个用户", notes = "传入工号或者学号获取单个用户")
-	@ApiImplicitParam(name = "no", value = "用户工号或者学号", required = true, paramType = "path", dataType = "String") // 注意：paramType需要指定为path,不然不能正常获取
+	@ApiOperation(value = "获取单个系统用户", notes = "传入工号或者学号获取单个系统用户")
+	@ApiImplicitParam(name = "no", value = "系统用户工号或者学号", required = true, paramType = "path", dataType = "String") // 注意：paramType需要指定为path,不然不能正常获取
 	@RequestMapping(value = "/single/{no}", produces = { "application/json; charset=UTF-8" }, method = {
 			RequestMethod.POST, RequestMethod.GET })
 	@RequiresPermissions("User:view") // 权限管理;
 	public @ResponseBody WebResult<UserDto> find(@PathVariable("no") String no) {
-		UserDto userDto = userService.findByno(no);
+		UserDto userDto = userService.findByNo(no);
 		return WebResultUtil.success(userDto);
 	}
 
@@ -77,71 +77,70 @@ public class UserController {
 	}
 
 	/**
-	 * 获取用户列表
+	 * 获取系统用户列表
 	 * 
 	 * @param user
 	 * @param keyword
 	 * @return
 	 */
-	@ApiOperation(value = "获取用户列表", notes = "获取用户列表")
+	@ApiOperation(value = "获取系统用户列表", notes = "获取系统用户列表")
 	@RequestMapping(value = "/list", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
 	@RequiresPermissions("User:del") // 权限管理;
 	public @ResponseBody WebResult<List<UserDto>> find(
-			@RequestParam(value = "userQueryParamDto", required = true) UserQueryParamDto userQueryParamDto,
-			@RequestParam(value = "keyword", required = true) String keyword) {
-		List<UserDto> userDtoList = userService.find(userQueryParamDto, keyword);
+			@RequestParam(value = "userQueryParamDto", required = true) UserQueryParamDto userQueryParamDto) {
+		List<UserDto> userDtoList = userService.find(userQueryParamDto);
 		return WebResultUtil.success(userDtoList);
 	}
 
 	/**
-	 * 新建用户
+	 * 新建系统用户
 	 * 
 	 * @param userDto
 	 * @return
 	 */
-	@ApiOperation(value = "新建用户", notes = "新建一个用户")
+	@ApiOperation(value = "新建系统用户", notes = "新建一个系统用户")
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "userDto", value = "用户数据", required = true, paramType = "body", dataType = "UserDto") }) // 注意：paramType需要指定为body
+			@ApiImplicitParam(name = "userDto", value = "系统用户数据", required = true, paramType = "body", dataType = "UserDto") }) // 注意：paramType需要指定为body
 	@RequestMapping(value = "/api/add", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
 	@RequiresPermissions("User:add") // 权限管理;
 	public @ResponseBody WebResult<UserDto> add(
-			@ApiParam(value = "用户数据", required = true) @RequestBody UserDto userDto) {
+			@ApiParam(value = "系统用户数据", required = true) @RequestBody UserDto userDto) {
 		userDto = userService.save(userDto);
 		return WebResultUtil.success(userDto);
 	}
 
 	/**
-	 * 更新用户
+	 * 更新系统用户
 	 * 
 	 * @param userDto
 	 * @return
 	 */
-	@ApiOperation(value = "更新用户", notes = "更新已存在用户")
-	@ApiImplicitParam(name = "user", value = "用户数据", required = true, paramType = "body", dataType = "User")
+	@ApiOperation(value = "更新系统用户", notes = "更新已存在系统用户")
+	@ApiImplicitParam(name = "user", value = "系统用户数据", required = true, paramType = "body", dataType = "User")
 	@RequestMapping(value = "/api/update", produces = { "application/json; charset=UTF-8" }, method = {
 			RequestMethod.POST, RequestMethod.GET })
 	@RequiresPermissions("User:update") // 权限管理;
 	public @ResponseBody WebResult<UserDto> update(
-			@ApiParam(value = "用户数据", required = true) @RequestBody UserDto userDto) {
+			@ApiParam(value = "系统用户数据", required = true) @RequestBody UserDto userDto) {
 		userDto = userService.update(userDto);
 		return WebResultUtil.success(userDto);
 	}
 
 	/**
-	 * 删除用户
+	 * 删除系统用户
 	 *
 	 * @param no
 	 * @return
 	 */
-	@ApiOperation(value = "删除用户", notes = "通过用户工号或者学号删除用户")
-	@ApiImplicitParam(name = "no", value = "用户工号或者学号", required = true, paramType = "body", dataType = "String")
+	@ApiOperation(value = "删除系统用户", notes = "通过系统用户工号或者学号删除系统用户")
+	@ApiImplicitParam(name = "no", value = "系统用户工号或者学号", required = true, paramType = "body", dataType = "String")
 	@RequestMapping(value = "/delete", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
 	@RequiresPermissions("User:delete") // 权限管理;
 	public @ResponseBody WebResult<UserDto> delete(@RequestParam(value = "no", required = true) String no) {
-		UserDto userDto = userService.findByno(no);
+		UserDto userDto = userService.findByNo(no);
 		userService.deleteByNo(no);
 		return WebResultUtil.success(userDto);
 	}
