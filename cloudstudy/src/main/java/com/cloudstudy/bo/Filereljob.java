@@ -1,23 +1,29 @@
 package com.cloudstudy.bo;
 
 public class Filereljob {
-    private Integer fileId;
+	private Integer fileId;
 
-    private Integer jobId;
+	private Integer jobId;
 
-    public Integer getFileId() {
-        return fileId;
-    }
+	public Filereljob(Integer fileId, Integer jobId) {
+		super();
+		this.fileId = fileId;
+		this.jobId = jobId;
+	}
 
-    public void setFileId(Integer fileId) {
-        this.fileId = fileId;
-    }
+	public Integer getFileId() {
+		return fileId;
+	}
 
-    public Integer getJobId() {
-        return jobId;
-    }
+	public void setFileId(Integer fileId) {
+		this.fileId = fileId;
+	}
 
-    public void setJobId(Integer jobId) {
-        this.jobId = jobId;
-    }
+	public Integer getJobId() {
+		return jobId;
+	}
+
+	public void setJobId(Integer jobId) {
+		this.jobId = jobId;
+	}
 }

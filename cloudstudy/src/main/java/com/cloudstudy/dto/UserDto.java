@@ -1,6 +1,7 @@
 package com.cloudstudy.dto;
 
 import java.util.Date;
+import java.util.HashSet;
 
 public class UserDto {
 	private String no;
@@ -32,6 +33,8 @@ public class UserDto {
 	private Integer status;
 
 	private String description;
+
+	private HashSet<Integer> roleType = new HashSet<Integer>();
 
 	public UserDto() {
 		super();
@@ -208,5 +211,13 @@ public class UserDto {
 		builder.append(description);
 		builder.append("]");
 		return builder.toString();
+	}
+
+	public HashSet<Integer> getRoleType() {
+		return roleType;
+	}
+
+	public void setRoleType(HashSet<Integer> roleType) {
+		this.roleType = roleType;
 	}
 }

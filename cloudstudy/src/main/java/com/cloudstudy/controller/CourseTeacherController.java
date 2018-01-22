@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cloudstudy.dto.CourseDto;
-import com.cloudstudy.dto.CourseQueryParamDto;
+import com.cloudstudy.dto.CourserelteacherDto;
+import com.cloudstudy.dto.CourserelteacherQueryDto;
 import com.cloudstudy.dto.WebResult;
-import com.cloudstudy.service.CourseService;
+import com.cloudstudy.service.CourserelteacherService;
 import com.cloudstudy.util.WebResultUtil;
 
 import io.swagger.annotations.Api;
@@ -30,7 +30,7 @@ import io.swagger.annotations.ApiParam;
 public class CourseTeacherController {
 
 	@Autowired
-	private CourseService courseService;
+	private CourserelteacherService courseService;
 
 	/**
 	 * 获取单个课程
@@ -43,9 +43,9 @@ public class CourseTeacherController {
 	@RequestMapping(value = "/single/{id}", produces = { "application/json; charset=UTF-8" }, method = {
 			RequestMethod.POST, RequestMethod.GET })
 	@RequiresPermissions("Course:view") // 权限管理;
-	public @ResponseBody WebResult<CourseDto> find(@PathVariable("id") Integer id) {
-		CourseDto courseDto = courseService.findById(id);
-		return WebResultUtil.success(courseDto);
+	public @ResponseBody WebResult<CourserelteacherDto> find(@PathVariable("id") Integer id) {
+		CourserelteacherDto courserelteacherDto = courseService.findById(id);
+		return WebResultUtil.success(courserelteacherDto);
 	}
 
 	/**
@@ -59,34 +59,34 @@ public class CourseTeacherController {
 	@RequestMapping(value = "/list", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
 	@RequiresPermissions("Course:del") // 权限管理;
-	public @ResponseBody WebResult<List<CourseDto>> find(
-			@RequestParam(value = "courseQueryParamDto", required = true) CourseQueryParamDto courseQueryParamDto) {
-		List<CourseDto> courseDtoList = courseService.find(courseQueryParamDto);
+	public @ResponseBody WebResult<List<CourserelteacherDto>> find(
+			@RequestParam(value = "courseQueryParamDto", required = true) CourserelteacherQueryDto courseQueryParamDto) {
+		List<CourserelteacherDto> courseDtoList = courseService.find(courseQueryParamDto);
 		return WebResultUtil.success(courseDtoList);
 	}
 
 	/**
 	 * 新建课程
 	 * 
-	 * @param courseDto
+	 * @param courserelteacherDto
 	 * @return
 	 */
 	@ApiOperation(value = "新建课程", notes = "新建一个课程")
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "courseDto", value = "课程数据", required = true, paramType = "body", dataType = "CourseDto") }) // 注意：paramType需要指定为body
+			@ApiImplicitParam(name = "courserelteacherDto", value = "课程数据", required = true, paramType = "body", dataType = "CourserelteacherDto") }) // 注意：paramType需要指定为body
 	@RequestMapping(value = "/add", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
 	@RequiresPermissions("Course:add") // 权限管理;
-	public @ResponseBody WebResult<CourseDto> add(
-			@ApiParam(value = "课程数据", required = true) @RequestBody CourseDto courseDto) {
-		courseDto = courseService.add(courseDto);
-		return WebResultUtil.success(courseDto);
+	public @ResponseBody WebResult<CourserelteacherDto> add(
+			@ApiParam(value = "课程数据", required = true) @RequestBody CourserelteacherDto courserelteacherDto) {
+		courserelteacherDto = courseService.add(courserelteacherDto);
+		return WebResultUtil.success(courserelteacherDto);
 	}
 
 	/**
 	 * 更新课程
 	 * 
-	 * @param courseDto
+	 * @param courserelteacherDto
 	 * @return
 	 */
 	@ApiOperation(value = "更新课程", notes = "更新已存在课程")
@@ -94,10 +94,10 @@ public class CourseTeacherController {
 	@RequestMapping(value = "/update", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
 	@RequiresPermissions("Course:update") // 权限管理;
-	public @ResponseBody WebResult<CourseDto> update(
-			@ApiParam(value = "课程数据", required = true) @RequestBody CourseDto courseDto) {
-		courseDto = courseService.update(courseDto);
-		return WebResultUtil.success(courseDto);
+	public @ResponseBody WebResult<CourserelteacherDto> update(
+			@ApiParam(value = "课程数据", required = true) @RequestBody CourserelteacherDto courserelteacherDto) {
+		courserelteacherDto = courseService.update(courserelteacherDto);
+		return WebResultUtil.success(courserelteacherDto);
 	}
 
 	/**
@@ -111,10 +111,10 @@ public class CourseTeacherController {
 	@RequestMapping(value = "/delete", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
 	@RequiresPermissions("Course:delete") // 权限管理;
-	public @ResponseBody WebResult<CourseDto> delete(@RequestParam(value = "id", required = true) Integer id) {
-		CourseDto courseDto = courseService.findById(id);
+	public @ResponseBody WebResult<CourserelteacherDto> delete(@RequestParam(value = "id", required = true) Integer id) {
+		CourserelteacherDto courserelteacherDto = courseService.findById(id);
 		courseService.delete(id);
-		return WebResultUtil.success(courseDto);
+		return WebResultUtil.success(courserelteacherDto);
 	}
 
 }

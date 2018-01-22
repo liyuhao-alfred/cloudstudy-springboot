@@ -5,6 +5,12 @@ import java.util.Date;
 public class FileDto {
 	private Integer id;
 
+	private Integer courseId;
+	
+	private Integer taskId;
+	
+	private Integer jobId;
+
 	private String name;
 
 	private String path;
@@ -81,5 +87,29 @@ public class FileDto {
 
 	public void setMemo(String memo) {
 		this.memo = memo == null ? null : memo.trim();
+	}
+
+	public Integer getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(Integer courseId) {
+		this.courseId = courseId;
+	}
+
+	public Integer getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(Integer taskId) {
+		this.taskId = taskId;
+	}
+
+	public Integer getJobId() {
+		return jobId;
+	}
+
+	public void setJobId(Integer jobId) {
+		this.jobId = jobId;
 	}
 }

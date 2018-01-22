@@ -16,23 +16,6 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/`cloudstudy` /*!40100 DEFAULT CHARACTER 
 
 USE `cloudstudy`;
 
-/*Table structure for table `tbcourse` */
-
-DROP TABLE IF EXISTS `tbcourse`;
-
-CREATE TABLE `tbcourse` (
-  `id` int(20) NOT NULL AUTO_INCREMENT COMMENT '编号',
-  `name` varchar(60) NOT NULL COMMENT '课程名',
-  `description` longtext NOT NULL COMMENT '描述',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `last_modify_time` datetime NOT NULL COMMENT '最后修改时间',
-  `status` int(1) NOT NULL DEFAULT '0' COMMENT '状态',
-  PRIMARY KEY (`id`),
-  KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-/*Data for the table `tbcourse` */
-
 /*Table structure for table `tbcourserelstudent` */
 
 DROP TABLE IF EXISTS `tbcourserelstudent`;
@@ -58,8 +41,9 @@ DROP TABLE IF EXISTS `tbcourserelteacher`;
 
 CREATE TABLE `tbcourserelteacher` (
   `id` int(20) NOT NULL AUTO_INCREMENT COMMENT '编号',
-  `course_id` int(20) NOT NULL COMMENT '课程id',
   `teacher_no` varchar(30) NOT NULL COMMENT '教师工号',
+  `name` varchar(60) NOT NULL COMMENT '课程名',
+  `description` longtext NOT NULL COMMENT '描述',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `last_modify_time` datetime NOT NULL COMMENT '修改时间',
   `begin_time` datetime NOT NULL COMMENT '开始上课时间',

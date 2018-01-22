@@ -26,7 +26,7 @@ public class FTLController {
 	@RequestMapping(value = "/user/{no}", produces = { "application/json; charset=UTF-8" }, method = {
 			RequestMethod.POST, RequestMethod.GET })
 	public String find(@PathVariable("no") String no, Model model) {
-		UserDto user = userService.findByNo(no);
+		UserDto user = userService.findUserByNo(no);
 		model.addAttribute("user", user);
 		return "user";
 	}

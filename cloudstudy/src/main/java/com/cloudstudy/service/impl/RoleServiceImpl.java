@@ -3,6 +3,7 @@ package com.cloudstudy.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,7 @@ import com.cloudstudy.bo.Rolereluser;
 import com.cloudstudy.bo.Role;
 import com.cloudstudy.bo.example.RolereluserExample;
 import com.cloudstudy.bo.example.RolereluserExample.Criteria;
+import com.cloudstudy.dto.RoleDto;
 import com.cloudstudy.mapper.RoleMapper;
 import com.cloudstudy.mapper.RolereluserMapper;
 import com.cloudstudy.service.RoleService;
@@ -22,7 +24,7 @@ public class RoleServiceImpl implements RoleService {
 	private RolereluserMapper rolereluserMapper;
 
 	@Override
-	public List<Role> findByUserNo(String no) {
+	public List<RoleDto> findRoleByUserNo(String no) {
 		RolereluserExample rolereluserExample = new RolereluserExample();
 
 		Criteria criteria = rolereluserExample.createCriteria();
@@ -33,12 +35,16 @@ public class RoleServiceImpl implements RoleService {
 			return null;
 		}
 
-		List<Role> roleList = new ArrayList<Role>();
+		List<RoleDto> roleDtoList = new ArrayList<RoleDto>();
 		for (Rolereluser rolereluser : rolereluserList) {
 			Role role = roleMapper.selectByPrimaryKey(rolereluser.getRoleId());
-			roleList.add(role);
+			if (role != null) {
+				RoleDto roleDto = new RoleDto();
+				BeanUtils.copyProperties(role, roleDto);
+				roleDtoList.add(roleDto);
+			}
 		}
-		return roleList;
+		return roleDtoList;
 	}
 
 }

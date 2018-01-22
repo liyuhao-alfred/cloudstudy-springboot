@@ -3,7 +3,7 @@ package com.cloudstudy.constant;
 public enum SearchType {
 
 	adminName(1, "管理员名搜索"), //
-	teacherName(2, "教室名搜索"), //
+	teacherName(2, "教师名搜索"), //
 	studentName(3, "学生名搜索"), //
 	courseName(4, "课程名搜索"), //
 	homeworkName(5, "作业名搜索"), //

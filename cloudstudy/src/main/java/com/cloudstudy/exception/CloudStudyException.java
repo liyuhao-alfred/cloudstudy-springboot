@@ -12,6 +12,10 @@ public class CloudStudyException extends RuntimeException {
 	private String code;
 	private String msg;
 
+	public CloudStudyException(String msg) {
+		this.msg = msg;
+	}
+
 	public CloudStudyException(String code, String msg) {
 		this.code = code;
 		this.msg = msg;

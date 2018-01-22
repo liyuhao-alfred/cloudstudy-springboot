@@ -13,17 +13,23 @@ public interface UserService {
 
 	UserDto update(UserDto userDto);
 
-	UserDto findByNo(String no);
+	UserDto findUserByNo(String no);
+
+	UserDto findAdminByNo(String no);
+
+	UserDto findTeacherByNo(String no);
+
+	UserDto findStudentByNo(String no);
+
+	UserDto findUserByAccount(String account);
+
+	UserDto findAdminByAccount(String account);
+
+	UserDto findTeacherByAccount(String account);
+
+	UserDto findStudentByAccount(String account);
 
 	List<UserDto> find(UserQueryParamDto userQueryParamDto);
-
-	/**
-	 * 
-	 * 
-	 * @param account
-	 * @return
-	 */
-	UserDto findByAccount(String account);
 
 	UserDto login(String account, String password);
 }

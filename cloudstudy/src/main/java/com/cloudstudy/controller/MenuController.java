@@ -34,7 +34,7 @@ public class MenuController {
 	@RequestMapping(value = "/api/user/{no}", produces = { "application/json; charset=UTF-8" }, method = {
 			RequestMethod.POST, RequestMethod.GET })
 	public @ResponseBody String find(@PathVariable("no") String no) {
-		UserDto user = userService.findByNo(no);
+		UserDto user = userService.findUserByNo(no);
 		return user.toString();
 	}
 

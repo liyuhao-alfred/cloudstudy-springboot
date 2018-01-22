@@ -63,8 +63,8 @@ public class UserServiceTest {
 	@Test
 	public void returnExactValue() {
 		UserService userService = Mockito.mock(UserService.class);
-		when(userService.findByNo(str)).thenReturn(userDto);
-		assertEquals(userDto, userService.findByNo(str));
+		when(userService.findUserByNo(str)).thenReturn(userDto);
+		assertEquals(userDto, userService.findUserByNo(str));
 	}
 
 	/**
@@ -75,9 +75,9 @@ public class UserServiceTest {
 	@Test(expected = NullPointerException.class)
 	public void testForNullPointerException() {
 		UserService userService = Mockito.mock(UserService.class);
-		when(userService.findByNo(str)).thenThrow(new NullPointerException());
+		when(userService.findUserByNo(str)).thenThrow(new NullPointerException());
 		try {
-			userService.findByNo(str);
+			userService.findUserByNo(str);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -92,9 +92,9 @@ public class UserServiceTest {
 		userService.save(userDto);
 		verify(userService).save(userDto);
 
-		userService.findByNo(str);
-		userService.findByNo(str);
-		verify(userService, times(2)).findByNo(str);
+		userService.findUserByNo(str);
+		userService.findUserByNo(str);
+		verify(userService, times(2)).findUserByNo(str);
 	}
 
 }

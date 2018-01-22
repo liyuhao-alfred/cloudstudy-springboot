@@ -22,6 +22,7 @@ import org.springframework.util.StringUtils;
 
 import com.cloudstudy.bo.Permission;
 import com.cloudstudy.bo.Role;
+import com.cloudstudy.dto.RoleDto;
 import com.cloudstudy.dto.UserDto;
 import com.cloudstudy.service.PermissionService;
 import com.cloudstudy.service.RoleService;
@@ -86,11 +87,11 @@ public class UserRealm extends AuthorizingRealm {
 		HashSet<String> userRoleSet = new HashSet<String>();
 		HashSet<String> userPermissionSet = new HashSet<String>();
 		// 从数据库中获取当前登录用户的详细信息
-		loginUserDto = userService.findByAccount(loginAccount);
+		loginUserDto = userService.findUserByAccount(loginAccount);
 		if (null != loginUserDto) {
 			// 获取当前用户下所有ACL权限列表 待续。。。
 			// 获取当前用户下拥有的所有角色列表
-			List<Role> roles = roleService.findByUserNo(loginUserDto.getNo());
+			List<RoleDto> roles = roleService.findRoleByUserNo(loginUserDto.getNo());
 			for (int i = 0; i < roles.size(); i++) {
 				String roleCode = roles.get(i).getCode();
 				if (!StringUtils.isEmpty(roleCode)) {

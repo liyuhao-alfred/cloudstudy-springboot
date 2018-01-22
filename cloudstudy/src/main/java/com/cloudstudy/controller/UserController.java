@@ -60,7 +60,7 @@ public class UserController {
 			RequestMethod.POST, RequestMethod.GET })
 	@RequiresPermissions("User:view") // 权限管理;
 	public @ResponseBody WebResult<UserDto> find(@PathVariable("no") String no) {
-		UserDto userDto = userService.findByNo(no);
+		UserDto userDto = userService.findUserByNo(no);
 		return WebResultUtil.success(userDto);
 	}
 
@@ -140,7 +140,7 @@ public class UserController {
 			RequestMethod.GET })
 	@RequiresPermissions("User:delete") // 权限管理;
 	public @ResponseBody WebResult<UserDto> delete(@RequestParam(value = "no", required = true) String no) {
-		UserDto userDto = userService.findByNo(no);
+		UserDto userDto = userService.findUserByNo(no);
 		userService.deleteByNo(no);
 		return WebResultUtil.success(userDto);
 	}
