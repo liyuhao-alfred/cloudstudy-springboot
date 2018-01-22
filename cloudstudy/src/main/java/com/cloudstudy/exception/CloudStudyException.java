@@ -1,40 +1,65 @@
 package com.cloudstudy.exception;
 
-/**
- * @author liyuhao
- * @since 2017/7/17
- */
+import java.util.HashMap;
+import java.util.Map;
+
+@SuppressWarnings("serial")
 public class CloudStudyException extends RuntimeException {
-	/**
-	 * @Field @serialVersionUID :
-	 */
-	private static final long serialVersionUID = 1L;
-	private String code;
-	private String msg;
 
-	public CloudStudyException(String msg) {
-		this.msg = msg;
+	private String errorCode = "-1";
+	private String errorMsg;
+	private HashMap<Integer, String> errorMap;// 存放错误的map
+
+	public CloudStudyException(String message) {
+		super(message);
+		this.errorMsg = message;
 	}
 
-	public CloudStudyException(String code, String msg) {
-		this.code = code;
-		this.msg = msg;
+	public CloudStudyException(HashMap<Integer, String> errorMap) {
+		this.errorMap = errorMap;
 	}
 
-	public String getCode() {
-		return code;
+	public CloudStudyException(String message, Throwable t) {
+		super(message, t);
+		this.errorMsg = message;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public CloudStudyException(String message, String errorCode) {
+		super(message);
+		this.errorMsg = message;
+		this.errorCode = errorCode;
 	}
 
-	public String getMsg() {
-		return msg;
+	public String getErrorCode() {
+		return errorCode;
 	}
 
-	public void setMsg(String msg) {
-		this.msg = msg;
+	public String getErrorMsg() {
+		return errorMsg;
 	}
 
+	public void setErrorMsg(String errorMsg) {
+		this.errorMsg = errorMsg;
+	}
+
+	public void setErrorCode(String errorCode) {
+		this.errorCode = errorCode;
+	}
+
+	public HashMap<Integer, String> getErrorMap() {
+		return errorMap;
+	}
+
+	public void setErrorMap(HashMap<Integer, String> errorMap) {
+		this.errorMap = errorMap;
+	}
+
+	public String getErrorMapMsg() {
+		String errorMsg = "";
+		for (Map.Entry<Integer, String> entry : errorMap.entrySet()) {
+			errorMsg += "[错误" + entry.getKey() + ":" + entry.getValue() + "];";
+
+		}
+		return errorMsg;
+	}
 }

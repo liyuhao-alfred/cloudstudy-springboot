@@ -1,5 +1,7 @@
 package com.cloudstudy.dto;
 
+import java.awt.List;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 
@@ -34,7 +36,9 @@ public class UserDto {
 
 	private String description;
 
-	private HashSet<Integer> roleType = new HashSet<Integer>();
+	private ArrayList<Integer> roleType = new ArrayList<Integer>();
+
+	private ShiroDto shiro;
 
 	public UserDto() {
 		super();
@@ -213,11 +217,20 @@ public class UserDto {
 		return builder.toString();
 	}
 
-	public HashSet<Integer> getRoleType() {
+	public ShiroDto getShiro() {
+		return shiro;
+	}
+
+	public void setShiro(ShiroDto shiro) {
+		this.shiro = shiro;
+	}
+
+	public ArrayList<Integer> getRoleType() {
 		return roleType;
 	}
 
-	public void setRoleType(HashSet<Integer> roleType) {
+	public void setRoleType(ArrayList<Integer> roleType) {
 		this.roleType = roleType;
 	}
+
 }

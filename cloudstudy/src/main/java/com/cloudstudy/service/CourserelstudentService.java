@@ -18,8 +18,6 @@ public interface CourserelstudentService {
 
 	void delete(Integer teacherCourseId);
 
-	CourserelstudentDto update(CourserelstudentDto courserelstudentDto);
-
 	/**
 	 * 查找所有的课程
 	 * 
@@ -27,6 +25,8 @@ public interface CourserelstudentService {
 	 * @return
 	 */
 	CourserelstudentDto findById(Integer id);
+
+	List<CourserelstudentDto> findByStudentNo(String studentNo);
 
 	List<CourserelstudentDto> find(CourserelstudentQueryDto courserelstudentQueryDto);
 

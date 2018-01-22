@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cloudstudy.mapper.FileMapper">
-  <resultMap id="BaseResultMap" type="com.cloudstudy.bo.File">
+  <resultMap id="BaseResultMap" type="com.cloudstudy.bo.Studyfile">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="path" jdbcType="VARCHAR" property="path" />
@@ -10,7 +10,7 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="last_modify_time" jdbcType="TIMESTAMP" property="lastModifyTime" />
   </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.cloudstudy.bo.File">
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.cloudstudy.bo.Studyfile">
     <result column="memo" jdbcType="LONGVARCHAR" property="memo" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -77,7 +77,7 @@
   <sql id="Blob_Column_List">
     memo
   </sql>
-  <select id="selectByExampleWithBLOBs" parameterType="com.cloudstudy.bo.example.FileExample" resultMap="ResultMapWithBLOBs">
+  <select id="selectByExampleWithBLOBs" parameterType="com.cloudstudy.bo.example.StudyfileExample" resultMap="ResultMapWithBLOBs">
     select
     <if test="distinct">
       distinct
@@ -94,7 +94,7 @@
       order by ${orderByClause}
     </if>
   </select>
-   <select id="selectByExample" parameterType="com.cloudstudy.bo.example.FileExample" resultMap="BaseResultMap">
+   <select id="selectByExample" parameterType="com.cloudstudy.bo.example.StudyfileExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -121,13 +121,13 @@
     delete from tbfile
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.cloudstudy.bo.example.FileExample">
+  <delete id="deleteByExample" parameterType="com.cloudstudy.bo.example.StudyfileExample">
     delete from tbfile
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.cloudstudy.bo.File">
+  <insert id="insert" parameterType="com.cloudstudy.bo.Studyfile">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -138,7 +138,7 @@
       #{size,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{lastModifyTime,jdbcType=TIMESTAMP}, 
       #{memo,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.cloudstudy.bo.File">
+  <insert id="insertSelective" parameterType="com.cloudstudy.bo.Studyfile">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -190,7 +190,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.cloudstudy.bo.example.FileExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="com.cloudstudy.bo.example.StudyfileExample" resultType="java.lang.Long">
     select count(*) from tbfile
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -255,7 +255,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.cloudstudy.bo.File">
+  <update id="updateByPrimaryKeySelective" parameterType="com.cloudstudy.bo.Studyfile">
     update tbfile
     <set>
       <if test="name != null">
@@ -282,7 +282,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.cloudstudy.bo.File">
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.cloudstudy.bo.Studyfile">
     update tbfile
     set name = #{name,jdbcType=VARCHAR},
       path = #{path,jdbcType=VARCHAR},
@@ -293,7 +293,7 @@
       memo = #{memo,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.cloudstudy.bo.File">
+  <update id="updateByPrimaryKey" parameterType="com.cloudstudy.bo.Studyfile">
     update tbfile
     set name = #{name,jdbcType=VARCHAR},
       path = #{path,jdbcType=VARCHAR},

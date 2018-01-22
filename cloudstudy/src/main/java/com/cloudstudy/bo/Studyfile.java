@@ -2,7 +2,7 @@ package com.cloudstudy.bo;
 
 import java.util.Date;
 
-public class File {
+public class Studyfile {
     private Integer id;
 
     private String name;

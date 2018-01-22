@@ -60,17 +60,6 @@ public class CourserelstudentServiceImpl implements CourserelstudentService {
 	}
 
 	@Override
-	public CourserelstudentDto update(CourserelstudentDto courserelstudentDto) {
-		userService.findTeacherByNo(courserelstudentDto.getStudentNo());
-
-		Courserelstudent courserelstudent = new Courserelstudent();
-		BeanUtils.copyProperties(courserelstudentDto, courserelstudent);
-		courserelstudentMapper.updateByPrimaryKey(courserelstudent);
-
-		return courserelstudentDto;
-	}
-
-	@Override
 	public CourserelstudentDto findById(Integer id) {
 		Courserelstudent course = courserelstudentMapper.selectByPrimaryKey(id);
 		if (course == null) {
@@ -137,6 +126,12 @@ public class CourserelstudentServiceImpl implements CourserelstudentService {
 			courserelstudentDtoList.add(courserelstudentDto);
 		}
 		return courserelstudentDtoList;
+	}
+
+	@Override
+	public List<CourserelstudentDto> findByStudentNo(String studentNo) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

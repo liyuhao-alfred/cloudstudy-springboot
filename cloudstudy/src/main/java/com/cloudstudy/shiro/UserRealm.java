@@ -24,6 +24,7 @@ import com.cloudstudy.bo.Permission;
 import com.cloudstudy.bo.Role;
 import com.cloudstudy.dto.RoleDto;
 import com.cloudstudy.dto.UserDto;
+import com.cloudstudy.service.MenuService;
 import com.cloudstudy.service.PermissionService;
 import com.cloudstudy.service.RoleService;
 import com.cloudstudy.service.UserService;
@@ -47,6 +48,8 @@ public class UserRealm extends AuthorizingRealm {
 	private RoleService roleService;
 	@Resource
 	private PermissionService permissionService;
+	@Resource
+	private MenuService menuService;
 
 	/**
 	 * 认证信息.(身份验证) : Authentication 是用来验证用户身份
@@ -67,6 +70,12 @@ public class UserRealm extends AuthorizingRealm {
 			throw new UnknownAccountException();// 没找到帐号
 		}
 
+		HashSet<String> htmlPathSet = loginUserDto.getShiro().getHtmlPath();
+		if (htmlPathSet == null || htmlPathSet.isEmpty()) {
+			htmlPathSet = menuService.generateMenu(loginAccount, loginUserDto.getRoleType().get(0));
+			loginUserDto.getShiro().setHtmlPath(htmlPathSet);
+		}
+
 		// 交给AuthenticatingRealm使用CredentialsMatcher进行密码匹配
 		SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(loginUserDto, // 用户
 				loginUserDto.getPassword(), // 账号
@@ -84,29 +93,35 @@ public class UserRealm extends AuthorizingRealm {
 		}
 
 		String loginAccount = loginUserDto.getAccount();
-		HashSet<String> userRoleSet = new HashSet<String>();
-		HashSet<String> userPermissionSet = new HashSet<String>();
+		HashSet<String> userRoleSet = loginUserDto.getShiro().getRoleType();
+		HashSet<String> userPermissionSet = loginUserDto.getShiro().getPermissionType();
+
 		// 从数据库中获取当前登录用户的详细信息
 		loginUserDto = userService.findUserByAccount(loginAccount);
 		if (null != loginUserDto) {
-			// 获取当前用户下所有ACL权限列表 待续。。。
-			// 获取当前用户下拥有的所有角色列表
-			List<RoleDto> roles = roleService.findRoleByUserNo(loginUserDto.getNo());
-			for (int i = 0; i < roles.size(); i++) {
-				String roleCode = roles.get(i).getCode();
-				if (!StringUtils.isEmpty(roleCode)) {
-					userRoleSet.add(roleCode);
-				}
+			if (userRoleSet == null || userRoleSet.isEmpty()) {
+				// 获取当前用户下所有ACL权限列表 待续。。。
+				// 获取当前用户下拥有的所有角色列表
+				List<RoleDto> roles = roleService.findRoleByUserNo(loginUserDto.getNo());
+				for (int i = 0; i < roles.size(); i++) {
+					String roleCode = roles.get(i).getCode();
+					if (!StringUtils.isEmpty(roleCode)) {
+						userRoleSet.add(roleCode);
+					}
 
-				List<Permission> userTempPermissions = new ArrayList<Permission>();
-				userTempPermissions = permissionService.findByRoleId(roles.get(i).getId());
-				for (int j = 0; j < userTempPermissions.size(); j++) {
-					String permissionCode = userTempPermissions.get(j).getCode();
-					if (!StringUtils.isEmpty(permissionCode)) {
-						userPermissionSet.add(permissionCode);
+					List<Permission> userTempPermissions = new ArrayList<Permission>();
+					userTempPermissions = permissionService.findByRoleId(roles.get(i).getId());
+					for (int j = 0; j < userTempPermissions.size(); j++) {
+						String permissionCode = userTempPermissions.get(j).getCode();
+						if (!StringUtils.isEmpty(permissionCode)) {
+							userPermissionSet.add(permissionCode);
+						}
 					}
 				}
+				loginUserDto.getShiro().setRoleType(userRoleSet);
+				loginUserDto.getShiro().setPermissionType(userPermissionSet);
 			}
+
 		} else {
 			throw new AuthorizationException();
 		}

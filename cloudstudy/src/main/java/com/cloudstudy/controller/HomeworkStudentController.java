@@ -84,23 +84,6 @@ public class HomeworkStudentController {
 	}
 
 	/**
-	 * 更新学生提交的作业
-	 * 
-	 * @param jobDto
-	 * @return
-	 */
-	@ApiOperation(value = "更新学生提交的作业", notes = "更新已存在学生提交的作业")
-	@ApiImplicitParam(name = "job", value = "学生提交的作业数据", required = true, paramType = "body", dataType = "Job")
-	@RequestMapping(value = "/update", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
-			RequestMethod.GET })
-	@RequiresPermissions("Job:update") // 权限管理;
-	public @ResponseBody WebResult<JobDto> update(
-			@ApiParam(value = "学生提交的作业数据", required = true) @RequestBody JobDto jobDto) {
-		jobDto = jobService.update(jobDto);
-		return WebResultUtil.success(jobDto);
-	}
-
-	/**
 	 * 删除学生提交的作业
 	 *
 	 * @param id

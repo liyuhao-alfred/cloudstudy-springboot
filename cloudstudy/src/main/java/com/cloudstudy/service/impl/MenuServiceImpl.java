@@ -22,17 +22,17 @@ public class MenuServiceImpl implements MenuService {
 	private Constant constant;
 
 	@Override
-	public List<String> generateMenu(String account, Integer roleTyppe) {
+	public HashSet<String> generateMenu(String account, Integer roleTyppe) {
 		UserDto userDto = userService.findUserByAccount(account);
-		HashSet<Integer> roleTypeSet = userDto.getRoleType();
+		List<Integer> roleTypeSet = userDto.getRoleType();
 		if (roleTypeSet.contains(RoleTypeConstant.superAdminType)) {
-			return new ArrayList<String>(getSuperAdminMenu());
+			return getSuperAdminMenu();
 		} else if (roleTypeSet.contains(RoleTypeConstant.adminType)) {
-			return new ArrayList<String>(getAdminMenu());
+			return getAdminMenu();
 		} else if (roleTypeSet.contains(RoleTypeConstant.teacherType)) {
-			return new ArrayList<String>(getTeacherMenu());
+			return getTeacherMenu();
 		} else if (roleTypeSet.contains(RoleTypeConstant.studentType)) {
-			return new ArrayList<String>(getStudentMenu());
+			return getStudentMenu();
 		} else {
 			throw new CloudStudyException("生成菜单失败！");
 		}

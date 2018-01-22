@@ -3,14 +3,14 @@ package com.cloudstudy.bo.example;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FilerelcourseExample {
+public class StudyfilereljobExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public FilerelcourseExample() {
+    public StudyfilereljobExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -164,63 +164,63 @@ public class FilerelcourseExample {
             return (Criteria) this;
         }
 
-        public Criteria andCourseIdIsNull() {
-            addCriterion("course_id is null");
+        public Criteria andJobIdIsNull() {
+            addCriterion("job_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andCourseIdIsNotNull() {
-            addCriterion("course_id is not null");
+        public Criteria andJobIdIsNotNull() {
+            addCriterion("job_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andCourseIdEqualTo(Integer value) {
-            addCriterion("course_id =", value, "courseId");
+        public Criteria andJobIdEqualTo(Integer value) {
+            addCriterion("job_id =", value, "jobId");
             return (Criteria) this;
         }
 
-        public Criteria andCourseIdNotEqualTo(Integer value) {
-            addCriterion("course_id <>", value, "courseId");
+        public Criteria andJobIdNotEqualTo(Integer value) {
+            addCriterion("job_id <>", value, "jobId");
             return (Criteria) this;
         }
 
-        public Criteria andCourseIdGreaterThan(Integer value) {
-            addCriterion("course_id >", value, "courseId");
+        public Criteria andJobIdGreaterThan(Integer value) {
+            addCriterion("job_id >", value, "jobId");
             return (Criteria) this;
         }
 
-        public Criteria andCourseIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("course_id >=", value, "courseId");
+        public Criteria andJobIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("job_id >=", value, "jobId");
             return (Criteria) this;
         }
 
-        public Criteria andCourseIdLessThan(Integer value) {
-            addCriterion("course_id <", value, "courseId");
+        public Criteria andJobIdLessThan(Integer value) {
+            addCriterion("job_id <", value, "jobId");
             return (Criteria) this;
         }
 
-        public Criteria andCourseIdLessThanOrEqualTo(Integer value) {
-            addCriterion("course_id <=", value, "courseId");
+        public Criteria andJobIdLessThanOrEqualTo(Integer value) {
+            addCriterion("job_id <=", value, "jobId");
             return (Criteria) this;
         }
 
-        public Criteria andCourseIdIn(List<Integer> values) {
-            addCriterion("course_id in", values, "courseId");
+        public Criteria andJobIdIn(List<Integer> values) {
+            addCriterion("job_id in", values, "jobId");
             return (Criteria) this;
         }
 
-        public Criteria andCourseIdNotIn(List<Integer> values) {
-            addCriterion("course_id not in", values, "courseId");
+        public Criteria andJobIdNotIn(List<Integer> values) {
+            addCriterion("job_id not in", values, "jobId");
             return (Criteria) this;
         }
 
-        public Criteria andCourseIdBetween(Integer value1, Integer value2) {
-            addCriterion("course_id between", value1, value2, "courseId");
+        public Criteria andJobIdBetween(Integer value1, Integer value2) {
+            addCriterion("job_id between", value1, value2, "jobId");
             return (Criteria) this;
         }
 
-        public Criteria andCourseIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("course_id not between", value1, value2, "courseId");
+        public Criteria andJobIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("job_id not between", value1, value2, "jobId");
             return (Criteria) this;
         }
     }

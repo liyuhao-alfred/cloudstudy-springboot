@@ -1,14 +1,15 @@
 package com.cloudstudy.dto;
 
+import java.io.File;
 import java.util.Date;
 
-public class FileDto {
+public class StudyFileDto {
 	private Integer id;
 
 	private Integer courseId;
-	
+
 	private Integer taskId;
-	
+
 	private Integer jobId;
 
 	private String name;
@@ -24,6 +25,8 @@ public class FileDto {
 	private Date lastModifyTime;
 
 	private String memo;
+
+	private File file;
 
 	public Integer getId() {
 		return id;
@@ -111,5 +114,13 @@ public class FileDto {
 
 	public void setJobId(Integer jobId) {
 		this.jobId = jobId;
+	}
+
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
 	}
 }

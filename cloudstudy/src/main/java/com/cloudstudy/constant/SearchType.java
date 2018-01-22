@@ -12,6 +12,13 @@ public enum SearchType {
 	phone(8, "电话搜索"), //
 	email(9, "邮箱搜索"), //
 	fileName(10, "文件名搜索"), //
+	
+	courseId(11, "课程编号搜索"), //
+	taskId(12, "老师布置的作业编号搜索"), //
+	jobId(13, "学生提交的作业编号搜索"), //
+	teacherNo(14, "教师工号搜索"), //
+	studentno(15, "学生学号搜索"), //
+	
 	all(0, "全文搜索"); //
 	private int code;
 	private String description;

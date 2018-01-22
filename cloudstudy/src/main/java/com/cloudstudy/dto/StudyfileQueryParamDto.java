@@ -5,38 +5,39 @@ import java.util.HashSet;
 import com.cloudstudy.constant.SearchType;
 
 @SuppressWarnings("unused")
-public class HomeworkQueryParamDto {
-
+public class StudyfileQueryParamDto {
 	private HashSet<SearchType> searchTypeSet = new HashSet<SearchType>() {
 		private static final long serialVersionUID = 1L;
 		{
+			searchTypeSet.add(SearchType.all);
+			searchTypeSet.add(SearchType.adminName);
 			searchTypeSet.add(SearchType.teacherName);
 			searchTypeSet.add(SearchType.studentName);
 			searchTypeSet.add(SearchType.courseName);
 			searchTypeSet.add(SearchType.homeworkName);
 			searchTypeSet.add(SearchType.no);
 			searchTypeSet.add(SearchType.account);
+			searchTypeSet.add(SearchType.phone);
+			searchTypeSet.add(SearchType.email);
 			searchTypeSet.add(SearchType.fileName);
-
-			searchTypeSet.add(SearchType.courseId);
-			searchTypeSet.add(SearchType.taskId);
-			searchTypeSet.add(SearchType.jobId);
-			searchTypeSet.add(SearchType.teacherNo);
-			searchTypeSet.add(SearchType.studentno);
 
 		}
 	};
 	private Integer searchType;
 
 	/**
-	 * 时间开始
+	 * 文件大小
 	 */
-	private String fromTime;
+	private Integer fromFileSize;
+	/**
+	 * 文件大小
+	 */
+	private Integer toFileSize;
 
 	/**
-	 * 时间结束
+	 * 文件格式类型
 	 */
-	private String toTime;
+	private String fileType;
 
 	/**
 	 * 关键字
@@ -61,20 +62,28 @@ public class HomeworkQueryParamDto {
 		this.searchType = searchType;
 	}
 
-	public String getFromTime() {
-		return fromTime;
+	public Integer getFromFileSize() {
+		return fromFileSize;
 	}
 
-	public void setFromTime(String fromTime) {
-		this.fromTime = fromTime;
+	public void setFromFileSize(Integer fromFileSize) {
+		this.fromFileSize = fromFileSize;
 	}
 
-	public String getToTime() {
-		return toTime;
+	public Integer getToFileSize() {
+		return toFileSize;
 	}
 
-	public void setToTime(String toTime) {
-		this.toTime = toTime;
+	public void setToFileSize(Integer toFileSize) {
+		this.toFileSize = toFileSize;
+	}
+
+	public String getFileType() {
+		return fileType;
+	}
+
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
 	}
 
 	public String getKeyword() {
@@ -92,4 +101,5 @@ public class HomeworkQueryParamDto {
 	public void setPageDto(PageDto pageDto) {
 		this.pageDto = pageDto;
 	}
+
 }

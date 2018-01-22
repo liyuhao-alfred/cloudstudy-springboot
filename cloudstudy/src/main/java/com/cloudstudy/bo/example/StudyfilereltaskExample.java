@@ -3,14 +3,14 @@ package com.cloudstudy.bo.example;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FilereljobExample {
+public class StudyfilereltaskExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public FilereljobExample() {
+    public StudyfilereltaskExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -164,63 +164,63 @@ public class FilereljobExample {
             return (Criteria) this;
         }
 
-        public Criteria andJobIdIsNull() {
-            addCriterion("job_id is null");
+        public Criteria andTaskIdIsNull() {
+            addCriterion("task_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andJobIdIsNotNull() {
-            addCriterion("job_id is not null");
+        public Criteria andTaskIdIsNotNull() {
+            addCriterion("task_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andJobIdEqualTo(Integer value) {
-            addCriterion("job_id =", value, "jobId");
+        public Criteria andTaskIdEqualTo(Integer value) {
+            addCriterion("task_id =", value, "taskId");
             return (Criteria) this;
         }
 
-        public Criteria andJobIdNotEqualTo(Integer value) {
-            addCriterion("job_id <>", value, "jobId");
+        public Criteria andTaskIdNotEqualTo(Integer value) {
+            addCriterion("task_id <>", value, "taskId");
             return (Criteria) this;
         }
 
-        public Criteria andJobIdGreaterThan(Integer value) {
-            addCriterion("job_id >", value, "jobId");
+        public Criteria andTaskIdGreaterThan(Integer value) {
+            addCriterion("task_id >", value, "taskId");
             return (Criteria) this;
         }
 
-        public Criteria andJobIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("job_id >=", value, "jobId");
+        public Criteria andTaskIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("task_id >=", value, "taskId");
             return (Criteria) this;
         }
 
-        public Criteria andJobIdLessThan(Integer value) {
-            addCriterion("job_id <", value, "jobId");
+        public Criteria andTaskIdLessThan(Integer value) {
+            addCriterion("task_id <", value, "taskId");
             return (Criteria) this;
         }
 
-        public Criteria andJobIdLessThanOrEqualTo(Integer value) {
-            addCriterion("job_id <=", value, "jobId");
+        public Criteria andTaskIdLessThanOrEqualTo(Integer value) {
+            addCriterion("task_id <=", value, "taskId");
             return (Criteria) this;
         }
 
-        public Criteria andJobIdIn(List<Integer> values) {
-            addCriterion("job_id in", values, "jobId");
+        public Criteria andTaskIdIn(List<Integer> values) {
+            addCriterion("task_id in", values, "taskId");
             return (Criteria) this;
         }
 
-        public Criteria andJobIdNotIn(List<Integer> values) {
-            addCriterion("job_id not in", values, "jobId");
+        public Criteria andTaskIdNotIn(List<Integer> values) {
+            addCriterion("task_id not in", values, "taskId");
             return (Criteria) this;
         }
 
-        public Criteria andJobIdBetween(Integer value1, Integer value2) {
-            addCriterion("job_id between", value1, value2, "jobId");
+        public Criteria andTaskIdBetween(Integer value1, Integer value2) {
+            addCriterion("task_id between", value1, value2, "taskId");
             return (Criteria) this;
         }
 
-        public Criteria andJobIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("job_id not between", value1, value2, "jobId");
+        public Criteria andTaskIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("task_id not between", value1, value2, "taskId");
             return (Criteria) this;
         }
     }

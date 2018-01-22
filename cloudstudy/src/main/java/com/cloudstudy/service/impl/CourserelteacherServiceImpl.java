@@ -139,4 +139,10 @@ public class CourserelteacherServiceImpl implements CourserelteacherService {
 		return courserelteacherDtoList;
 	}
 
+	@Override
+	public List<CourserelteacherDto> findByTeacherNo(String teacherNo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

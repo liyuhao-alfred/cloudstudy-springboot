@@ -1,6 +1,6 @@
 package com.cloudstudy.service;
 
-import java.util.List;
+import java.util.HashSet;
 
 public interface MenuService {
 
@@ -11,6 +11,6 @@ public interface MenuService {
 	 * @param roleTyppe
 	 * @return
 	 */
-	List<String> generateMenu(String account, Integer roleTyppe);
+	HashSet<String> generateMenu(String account, Integer roleTyppe);
 
 }

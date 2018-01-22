@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
 				roleTypeSet.add(rolereluser.getRoleId());
 			}
 		}
-		userDto.setRoleType(roleTypeSet);
+		userDto.setRoleType(new ArrayList<Integer>(roleTypeSet));
 
 		return userDto;
 	}
@@ -156,7 +156,7 @@ public class UserServiceImpl implements UserService {
 				roleTypeSet.add(rolereluser.getRoleId());
 			}
 		}
-		userDto.setRoleType(roleTypeSet);
+		userDto.setRoleType(new ArrayList<Integer>(roleTypeSet));
 
 		return userDto;
 	}
@@ -191,7 +191,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDto findAdminByNo(String no) {
 		UserDto userDto = findUserByNo(no);
-		HashSet<Integer> roleTypeSet = userDto.getRoleType();
+		List<Integer> roleTypeSet = userDto.getRoleType();
 		if (roleTypeSet.contains(RoleTypeConstant.adminType)) {
 			return userDto;
 		} else {
@@ -202,7 +202,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDto findTeacherByNo(String no) {
 		UserDto userDto = findUserByNo(no);
-		HashSet<Integer> roleTypeSet = userDto.getRoleType();
+		List<Integer> roleTypeSet = userDto.getRoleType();
 		if (roleTypeSet.contains(RoleTypeConstant.teacherType)) {
 			return userDto;
 		} else {
@@ -213,7 +213,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDto findStudentByNo(String no) {
 		UserDto userDto = findUserByNo(no);
-		HashSet<Integer> roleTypeSet = userDto.getRoleType();
+		List<Integer> roleTypeSet = userDto.getRoleType();
 		if (roleTypeSet.contains(RoleTypeConstant.studentType)) {
 			return userDto;
 		} else {
@@ -224,7 +224,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDto findAdminByAccount(String account) {
 		UserDto userDto = findUserByAccount(account);
-		HashSet<Integer> roleTypeSet = userDto.getRoleType();
+		List<Integer> roleTypeSet = userDto.getRoleType();
 		if (roleTypeSet.contains(RoleTypeConstant.adminType)) {
 			return userDto;
 		} else {
@@ -235,7 +235,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDto findTeacherByAccount(String account) {
 		UserDto userDto = findUserByAccount(account);
-		HashSet<Integer> roleTypeSet = userDto.getRoleType();
+		List<Integer> roleTypeSet = userDto.getRoleType();
 		if (roleTypeSet.contains(RoleTypeConstant.teacherType)) {
 			return userDto;
 		} else {
@@ -246,7 +246,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDto findStudentByAccount(String account) {
 		UserDto userDto = findUserByAccount(account);
-		HashSet<Integer> roleTypeSet = userDto.getRoleType();
+		List<Integer> roleTypeSet = userDto.getRoleType();
 		if (roleTypeSet.contains(RoleTypeConstant.studentType)) {
 			return userDto;
 		} else {

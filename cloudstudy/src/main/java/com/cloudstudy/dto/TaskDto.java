@@ -3,83 +3,93 @@ package com.cloudstudy.dto;
 import java.util.Date;
 
 public class TaskDto {
-    private Integer id;
+	private Integer id;
 
-    private String title;
+	private String title;
 
-    private Integer courserelteacherId;
+	private Integer courserelteacherId;
 
-    private Date deadLine;
+	private Date deadLine;
 
-    private Date createTime;
+	private Date createTime;
 
-    private Date lastModifyTime;
+	private Date lastModifyTime;
 
-    private Integer status;
+	private Integer status;
 
-    private String content;
+	private String content;
 
-    public Integer getId() {
-        return id;
-    }
+	private StudyFileDto studyFileDto;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public void setTitle(String title) {
-        this.title = title == null ? null : title.trim();
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public Integer getCourserelteacherId() {
-        return courserelteacherId;
-    }
+	public void setTitle(String title) {
+		this.title = title == null ? null : title.trim();
+	}
 
-    public void setCourserelteacherId(Integer courserelteacherId) {
-        this.courserelteacherId = courserelteacherId;
-    }
+	public Integer getCourserelteacherId() {
+		return courserelteacherId;
+	}
 
-    public Date getDeadLine() {
-        return deadLine;
-    }
+	public void setCourserelteacherId(Integer courserelteacherId) {
+		this.courserelteacherId = courserelteacherId;
+	}
 
-    public void setDeadLine(Date deadLine) {
-        this.deadLine = deadLine;
-    }
+	public Date getDeadLine() {
+		return deadLine;
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public void setDeadLine(Date deadLine) {
+		this.deadLine = deadLine;
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public Date getCreateTime() {
+		return createTime;
+	}
 
-    public Date getLastModifyTime() {
-        return lastModifyTime;
-    }
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
 
-    public void setLastModifyTime(Date lastModifyTime) {
-        this.lastModifyTime = lastModifyTime;
-    }
+	public Date getLastModifyTime() {
+		return lastModifyTime;
+	}
 
-    public Integer getStatus() {
-        return status;
-    }
+	public void setLastModifyTime(Date lastModifyTime) {
+		this.lastModifyTime = lastModifyTime;
+	}
 
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
+	public Integer getStatus() {
+		return status;
+	}
 
-    public String getContent() {
-        return content;
-    }
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 
-    public void setContent(String content) {
-        this.content = content == null ? null : content.trim();
-    }
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content == null ? null : content.trim();
+	}
+
+	public StudyFileDto getStudyFileDto() {
+		return studyFileDto;
+	}
+
+	public void setStudyFileDto(StudyFileDto studyFileDto) {
+		this.studyFileDto = studyFileDto;
+	}
 }

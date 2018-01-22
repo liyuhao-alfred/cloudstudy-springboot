@@ -3,14 +3,14 @@ package com.cloudstudy.bo.example;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FilereltaskExample {
+public class StudyfilerelcourseExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public FilereltaskExample() {
+    public StudyfilerelcourseExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -164,63 +164,63 @@ public class FilereltaskExample {
             return (Criteria) this;
         }
 
-        public Criteria andTaskIdIsNull() {
-            addCriterion("task_id is null");
+        public Criteria andCourseIdIsNull() {
+            addCriterion("course_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andTaskIdIsNotNull() {
-            addCriterion("task_id is not null");
+        public Criteria andCourseIdIsNotNull() {
+            addCriterion("course_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andTaskIdEqualTo(Integer value) {
-            addCriterion("task_id =", value, "taskId");
+        public Criteria andCourseIdEqualTo(Integer value) {
+            addCriterion("course_id =", value, "courseId");
             return (Criteria) this;
         }
 
-        public Criteria andTaskIdNotEqualTo(Integer value) {
-            addCriterion("task_id <>", value, "taskId");
+        public Criteria andCourseIdNotEqualTo(Integer value) {
+            addCriterion("course_id <>", value, "courseId");
             return (Criteria) this;
         }
 
-        public Criteria andTaskIdGreaterThan(Integer value) {
-            addCriterion("task_id >", value, "taskId");
+        public Criteria andCourseIdGreaterThan(Integer value) {
+            addCriterion("course_id >", value, "courseId");
             return (Criteria) this;
         }
 
-        public Criteria andTaskIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("task_id >=", value, "taskId");
+        public Criteria andCourseIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("course_id >=", value, "courseId");
             return (Criteria) this;
         }
 
-        public Criteria andTaskIdLessThan(Integer value) {
-            addCriterion("task_id <", value, "taskId");
+        public Criteria andCourseIdLessThan(Integer value) {
+            addCriterion("course_id <", value, "courseId");
             return (Criteria) this;
         }
 
-        public Criteria andTaskIdLessThanOrEqualTo(Integer value) {
-            addCriterion("task_id <=", value, "taskId");
+        public Criteria andCourseIdLessThanOrEqualTo(Integer value) {
+            addCriterion("course_id <=", value, "courseId");
             return (Criteria) this;
         }
 
-        public Criteria andTaskIdIn(List<Integer> values) {
-            addCriterion("task_id in", values, "taskId");
+        public Criteria andCourseIdIn(List<Integer> values) {
+            addCriterion("course_id in", values, "courseId");
             return (Criteria) this;
         }
 
-        public Criteria andTaskIdNotIn(List<Integer> values) {
-            addCriterion("task_id not in", values, "taskId");
+        public Criteria andCourseIdNotIn(List<Integer> values) {
+            addCriterion("course_id not in", values, "courseId");
             return (Criteria) this;
         }
 
-        public Criteria andTaskIdBetween(Integer value1, Integer value2) {
-            addCriterion("task_id between", value1, value2, "taskId");
+        public Criteria andCourseIdBetween(Integer value1, Integer value2) {
+            addCriterion("course_id between", value1, value2, "courseId");
             return (Criteria) this;
         }
 
-        public Criteria andTaskIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("task_id not between", value1, value2, "taskId");
+        public Criteria andCourseIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("course_id not between", value1, value2, "courseId");
             return (Criteria) this;
         }
     }

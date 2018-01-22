@@ -85,23 +85,6 @@ public class CourseStudentController {
 	}
 
 	/**
-	 * 更新课程
-	 * 
-	 * @param courserelteacherDto
-	 * @return
-	 */
-	@ApiOperation(value = "更新课程", notes = "更新已存在课程")
-	@ApiImplicitParam(name = "course", value = "课程数据", required = true, paramType = "body", dataType = "Course")
-	@RequestMapping(value = "/update", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
-			RequestMethod.GET })
-	@RequiresPermissions("Course:update") // 权限管理;
-	public @ResponseBody WebResult<CourserelstudentDto> update(
-			@ApiParam(value = "课程数据", required = true) @RequestBody CourserelstudentDto courserelteacherDto) {
-		courserelteacherDto = courserelstudentService.update(courserelteacherDto);
-		return WebResultUtil.success(courserelteacherDto);
-	}
-
-	/**
 	 * 删除课程
 	 *
 	 * @param id

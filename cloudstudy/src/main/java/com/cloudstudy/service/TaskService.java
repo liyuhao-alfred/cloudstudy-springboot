@@ -15,6 +15,12 @@ public interface TaskService {
 
 	TaskDto findById(Integer id);
 
+	List<TaskDto> findByCourseId(Integer id);
+
+	List<TaskDto> findByTeacherNo(String no);
+
+	List<TaskDto> findByStudentNo(String no);
+
 	List<TaskDto> find(HomeworkQueryParamDto homeworkQueryParamDto);
 
 }

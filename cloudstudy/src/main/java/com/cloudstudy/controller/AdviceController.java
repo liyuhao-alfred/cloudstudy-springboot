@@ -49,8 +49,8 @@ public class AdviceController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (CloudStudyException.class.isInstance(ex)) {
 			CloudStudyException cloudStudyException = (CloudStudyException) ex;
-			map.put("code", cloudStudyException.getCode());
-			map.put("msg", cloudStudyException.getMsg());
+			map.put("code", cloudStudyException.getErrorCode());
+			map.put("msg", cloudStudyException.getErrorMsg());
 		} else {
 			map.put("code", 100);
 			map.put("msg", ex.getMessage());

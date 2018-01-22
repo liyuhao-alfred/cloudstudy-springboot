@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cloudstudy.mapper.FilereltaskMapper">
-  <resultMap id="BaseResultMap" type="com.cloudstudy.bo.Filereltask">
+<mapper namespace="com.cloudstudy.mapper.FilereljobMapper">
+  <resultMap id="BaseResultMap" type="com.cloudstudy.bo.Studyfilereljob">
     <result column="file_id" jdbcType="INTEGER" property="fileId" />
-    <result column="task_id" jdbcType="INTEGER" property="taskId" />
+    <result column="job_id" jdbcType="INTEGER" property="jobId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -64,16 +64,16 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    file_id, task_id
+    file_id, job_id
   </sql>
-   <select id="selectByExample" parameterType="com.cloudstudy.bo.example.FilereltaskExample" resultMap="BaseResultMap">
+   <select id="selectByExample" parameterType="com.cloudstudy.bo.example.StudyfilereljobExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     'true' as QUERYID,
     <include refid="Base_Column_List" />
-    from tbfilereltask
+    from tbfilereljob
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -81,49 +81,49 @@
       order by ${orderByClause}
     </if>
   </select>
-  <delete id="deleteByExample" parameterType="com.cloudstudy.bo.example.FilereltaskExample">
-    delete from tbfilereltask
+  <delete id="deleteByExample" parameterType="com.cloudstudy.bo.example.StudyfilereljobExample">
+    delete from tbfilereljob
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.cloudstudy.bo.Filereltask">
-    insert into tbfilereltask (file_id, task_id)
-    values (#{fileId,jdbcType=INTEGER}, #{taskId,jdbcType=INTEGER})
+  <insert id="insert" parameterType="com.cloudstudy.bo.Studyfilereljob">
+    insert into tbfilereljob (file_id, job_id)
+    values (#{fileId,jdbcType=INTEGER}, #{jobId,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.cloudstudy.bo.Filereltask">
-    insert into tbfilereltask
+  <insert id="insertSelective" parameterType="com.cloudstudy.bo.Studyfilereljob">
+    insert into tbfilereljob
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="fileId != null">
         file_id,
       </if>
-      <if test="taskId != null">
-        task_id,
+      <if test="jobId != null">
+        job_id,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="fileId != null">
         #{fileId,jdbcType=INTEGER},
       </if>
-      <if test="taskId != null">
-        #{taskId,jdbcType=INTEGER},
+      <if test="jobId != null">
+        #{jobId,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.cloudstudy.bo.example.FilereltaskExample" resultType="java.lang.Long">
-    select count(*) from tbfilereltask
+  <select id="countByExample" parameterType="com.cloudstudy.bo.example.StudyfilereljobExample" resultType="java.lang.Long">
+    select count(*) from tbfilereljob
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update tbfilereltask
+    update tbfilereljob
     <set>
       <if test="record.fileId != null">
         file_id = #{record.fileId,jdbcType=INTEGER},
       </if>
-      <if test="record.taskId != null">
-        task_id = #{record.taskId,jdbcType=INTEGER},
+      <if test="record.jobId != null">
+        job_id = #{record.jobId,jdbcType=INTEGER},
       </if>
     </set>
     <if test="_parameter != null">
@@ -131,9 +131,9 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update tbfilereltask
+    update tbfilereljob
     set file_id = #{record.fileId,jdbcType=INTEGER},
-      task_id = #{record.taskId,jdbcType=INTEGER}
+      job_id = #{record.jobId,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>

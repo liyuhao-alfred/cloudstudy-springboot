@@ -1,6 +1,6 @@
 package com.cloudstudy.dto;
 
-public class FilerelcourseDto {
+public class StudyfilerelcourseDto {
     private Integer fileId;
 
     private Integer courseId;

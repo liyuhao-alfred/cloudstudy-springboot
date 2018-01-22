@@ -1,12 +1,17 @@
 package com.cloudstudy.bo;
 
-public class Filerelcourse {
+public class Studyfilerelcourse {
 
 	private Integer fileId;
 
 	private Integer courseId;
 
-	public Filerelcourse(Integer fileId, Integer courseId) {
+	public Studyfilerelcourse(Integer fileId) {
+		super();
+		this.fileId = fileId;
+	}
+
+	public Studyfilerelcourse(Integer fileId, Integer courseId) {
 		super();
 		this.fileId = fileId;
 		this.courseId = courseId;

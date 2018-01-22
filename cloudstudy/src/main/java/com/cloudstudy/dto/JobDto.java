@@ -3,93 +3,103 @@ package com.cloudstudy.dto;
 import java.util.Date;
 
 public class JobDto {
-    private Integer id;
+	private Integer id;
 
-    private String title;
+	private String title;
 
-    private Integer courserelstudentId;
+	private Integer courserelstudentId;
 
-    private Integer taskId;
+	private Integer taskId;
 
-    private Integer grade;
+	private Integer grade;
 
-    private Date createTime;
+	private Date createTime;
 
-    private Date lastModifyTime;
+	private Date lastModifyTime;
 
-    private Integer status;
+	private Integer status;
 
-    private String content;
+	private String content;
 
-    public Integer getId() {
-        return id;
-    }
+	private StudyFileDto studyFileDto;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public void setTitle(String title) {
-        this.title = title == null ? null : title.trim();
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public Integer getCourserelstudentId() {
-        return courserelstudentId;
-    }
+	public void setTitle(String title) {
+		this.title = title == null ? null : title.trim();
+	}
 
-    public void setCourserelstudentId(Integer courserelstudentId) {
-        this.courserelstudentId = courserelstudentId;
-    }
+	public Integer getCourserelstudentId() {
+		return courserelstudentId;
+	}
 
-    public Integer getTaskId() {
-        return taskId;
-    }
+	public void setCourserelstudentId(Integer courserelstudentId) {
+		this.courserelstudentId = courserelstudentId;
+	}
 
-    public void setTaskId(Integer taskId) {
-        this.taskId = taskId;
-    }
+	public Integer getTaskId() {
+		return taskId;
+	}
 
-    public Integer getGrade() {
-        return grade;
-    }
+	public void setTaskId(Integer taskId) {
+		this.taskId = taskId;
+	}
 
-    public void setGrade(Integer grade) {
-        this.grade = grade;
-    }
+	public Integer getGrade() {
+		return grade;
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public void setGrade(Integer grade) {
+		this.grade = grade;
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public Date getCreateTime() {
+		return createTime;
+	}
 
-    public Date getLastModifyTime() {
-        return lastModifyTime;
-    }
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
 
-    public void setLastModifyTime(Date lastModifyTime) {
-        this.lastModifyTime = lastModifyTime;
-    }
+	public Date getLastModifyTime() {
+		return lastModifyTime;
+	}
 
-    public Integer getStatus() {
-        return status;
-    }
+	public void setLastModifyTime(Date lastModifyTime) {
+		this.lastModifyTime = lastModifyTime;
+	}
 
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
+	public Integer getStatus() {
+		return status;
+	}
 
-    public String getContent() {
-        return content;
-    }
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 
-    public void setContent(String content) {
-        this.content = content == null ? null : content.trim();
-    }
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content == null ? null : content.trim();
+	}
+
+	public StudyFileDto getStudyFileDto() {
+		return studyFileDto;
+	}
+
+	public void setStudyFileDto(StudyFileDto studyFileDto) {
+		this.studyFileDto = studyFileDto;
+	}
 }

@@ -5,7 +5,8 @@ import java.util.HashSet;
 import com.cloudstudy.constant.SearchType;
 
 @SuppressWarnings("unused")
-public class FileQueryParamDto {
+public class ddddddddddddddd {
+
 	private HashSet<SearchType> searchTypeSet = new HashSet<SearchType>() {
 		private static final long serialVersionUID = 1L;
 		{
@@ -21,23 +22,25 @@ public class FileQueryParamDto {
 			searchTypeSet.add(SearchType.email);
 			searchTypeSet.add(SearchType.fileName);
 
+			searchTypeSet.add(SearchType.courseId);
+			searchTypeSet.add(SearchType.taskId);
+			searchTypeSet.add(SearchType.jobId);
+			searchTypeSet.add(SearchType.teacherNo);
+			searchTypeSet.add(SearchType.studentno);
+
 		}
 	};
 	private Integer searchType;
 
 	/**
-	 * 文件大小
+	 * 时间开始
 	 */
-	private Integer fromFileSize;
-	/**
-	 * 文件大小
-	 */
-	private Integer toFileSize;
+	private String fromTime;
 
 	/**
-	 * 文件格式类型
+	 * 时间结束
 	 */
-	private Integer fileType;
+	private String toTime;
 
 	/**
 	 * 关键字
@@ -45,5 +48,4 @@ public class FileQueryParamDto {
 	private String keyword;
 
 	private PageDto pageDto;
-
 }

@@ -1,11 +1,11 @@
 package com.cloudstudy.bo;
 
-public class Filereljob {
+public class Studyfilereljob {
 	private Integer fileId;
 
 	private Integer jobId;
 
-	public Filereljob(Integer fileId, Integer jobId) {
+	public Studyfilereljob(Integer fileId, Integer jobId) {
 		super();
 		this.fileId = fileId;
 		this.jobId = jobId;

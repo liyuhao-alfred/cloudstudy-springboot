@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cloudstudy.dto.FileDto;
-import com.cloudstudy.dto.FileQueryParamDto;
+import com.cloudstudy.dto.StudyFileDto;
+import com.cloudstudy.dto.StudyfileQueryParamDto;
 import com.cloudstudy.dto.WebResult;
-import com.cloudstudy.service.FileService;
+import com.cloudstudy.service.StudyFileService;
 import com.cloudstudy.util.WebResultUtil;
 
 import io.swagger.annotations.Api;
@@ -27,10 +27,10 @@ import io.swagger.annotations.ApiParam;
 @Api(value = "文件资源管理模块")
 @RestController
 @RequestMapping("/cloudstudy/file")
-public class FileController {
+public class StudyFileController {
 
 	@Autowired
-	private FileService fileService;
+	private StudyFileService fileService;
 
 	/**
 	 * 获取单个文件资源管理
@@ -43,8 +43,8 @@ public class FileController {
 	@RequestMapping(value = "/single/{id}", produces = { "application/json; charset=UTF-8" }, method = {
 			RequestMethod.POST, RequestMethod.GET })
 	@RequiresPermissions("File:view") // 权限管理;
-	public @ResponseBody WebResult<FileDto> find(@PathVariable("id") Integer id) {
-		FileDto fileDto = fileService.findById(id);
+	public @ResponseBody WebResult<StudyFileDto> find(@PathVariable("id") Integer id) {
+		StudyFileDto fileDto = fileService.findById(id);
 		return WebResultUtil.success(fileDto);
 	}
 
@@ -59,9 +59,9 @@ public class FileController {
 	@RequestMapping(value = "/list", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
 	@RequiresPermissions("File:del") // 权限管理;
-	public @ResponseBody WebResult<List<FileDto>> find(
-			@RequestParam(value = "fileQueryParamDto", required = true) FileQueryParamDto fileQueryParamDto) {
-		List<FileDto> fileDtoList = fileService.find(fileQueryParamDto);
+	public @ResponseBody WebResult<List<StudyFileDto>> find(
+			@RequestParam(value = "fileQueryParamDto", required = true) StudyfileQueryParamDto fileQueryParamDto) {
+		List<StudyFileDto> fileDtoList = fileService.find(fileQueryParamDto);
 		return WebResultUtil.success(fileDtoList);
 	}
 
@@ -77,26 +77,9 @@ public class FileController {
 	@RequestMapping(value = "/add", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
 	@RequiresPermissions("File:add") // 权限管理;
-	public @ResponseBody WebResult<FileDto> add(
-			@ApiParam(value = "文件资源管理数据", required = true) @RequestBody FileDto fileDto) {
+	public @ResponseBody WebResult<StudyFileDto> add(
+			@ApiParam(value = "文件资源管理数据", required = true) @RequestBody StudyFileDto fileDto) {
 		fileDto = fileService.add(fileDto);
-		return WebResultUtil.success(fileDto);
-	}
-
-	/**
-	 * 更新文件资源管理
-	 * 
-	 * @param fileDto
-	 * @return
-	 */
-	@ApiOperation(value = "更新文件资源管理", notes = "更新已存在文件资源管理")
-	@ApiImplicitParam(name = "file", value = "文件资源管理数据", required = true, paramType = "body", dataType = "File")
-	@RequestMapping(value = "/update", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
-			RequestMethod.GET })
-	@RequiresPermissions("File:update") // 权限管理;
-	public @ResponseBody WebResult<FileDto> update(
-			@ApiParam(value = "文件资源管理数据", required = true) @RequestBody FileDto fileDto) {
-		fileDto = fileService.update(fileDto);
 		return WebResultUtil.success(fileDto);
 	}
 
@@ -111,8 +94,8 @@ public class FileController {
 	@RequestMapping(value = "/delete", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
 	@RequiresPermissions("File:delete") // 权限管理;
-	public @ResponseBody WebResult<FileDto> delete(@RequestParam(value = "id", required = true) Integer id) {
-		FileDto fileDto = fileService.findById(id);
+	public @ResponseBody WebResult<StudyFileDto> delete(@RequestParam(value = "id", required = true) Integer id) {
+		StudyFileDto fileDto = fileService.findById(id);
 		fileService.delete(id);
 		return WebResultUtil.success(fileDto);
 	}

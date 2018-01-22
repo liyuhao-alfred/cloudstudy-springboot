@@ -27,6 +27,8 @@ public interface CourserelteacherService {
 	 */
 	CourserelteacherDto findById(Integer id);
 
+	List<CourserelteacherDto> findByTeacherNo(String teacherNo);
+
 	List<CourserelteacherDto> find(CourserelteacherQueryDto courseQueryParamDto);
 
 }

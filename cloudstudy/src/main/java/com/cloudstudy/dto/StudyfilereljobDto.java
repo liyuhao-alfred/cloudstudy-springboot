@@ -1,9 +1,9 @@
 package com.cloudstudy.dto;
 
-public class FilereltaskDto {
+public class StudyfilereljobDto {
     private Integer fileId;
 
-    private Integer taskId;
+    private Integer jobId;
 
     public Integer getFileId() {
         return fileId;
@@ -13,11 +13,11 @@ public class FilereltaskDto {
         this.fileId = fileId;
     }
 
-    public Integer getTaskId() {
-        return taskId;
+    public Integer getJobId() {
+        return jobId;
     }
 
-    public void setTaskId(Integer taskId) {
-        this.taskId = taskId;
+    public void setJobId(Integer jobId) {
+        this.jobId = jobId;
     }
 }

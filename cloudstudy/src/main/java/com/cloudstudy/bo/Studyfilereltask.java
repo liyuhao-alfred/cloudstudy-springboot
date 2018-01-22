@@ -1,11 +1,11 @@
 package com.cloudstudy.bo;
 
-public class Filereltask {
+public class Studyfilereltask {
 	private Integer fileId;
 
 	private Integer taskId;
 
-	public Filereltask(Integer fileId, Integer taskId) {
+	public Studyfilereltask(Integer fileId, Integer taskId) {
 		super();
 		this.fileId = fileId;
 		this.taskId = taskId;
