@@ -39,7 +39,18 @@ public class CourserelstudentServiceImpl implements CourserelstudentService {
 	private UserService userService;
 
 	@Override
-	public CourserelstudentDto add(CourserelstudentDto courserelstudentDto) {
+	public CourserelstudentDto addGradeByTeacher(CourserelstudentDto courserelstudentDto) {
+		userService.findTeacherByNo(courserelstudentDto.getStudentNo());
+
+		Courserelstudent courserelstudent = new Courserelstudent();
+		BeanUtils.copyProperties(courserelstudentDto, courserelstudent);
+		courserelstudentMapper.insert(courserelstudent);
+
+		return courserelstudentDto;
+	}
+	
+	@Override
+	public CourserelstudentDto editGradeByTeacher(CourserelstudentDto courserelstudentDto) {
 		userService.findTeacherByNo(courserelstudentDto.getStudentNo());
 
 		Courserelstudent courserelstudent = new Courserelstudent();
@@ -50,13 +61,13 @@ public class CourserelstudentServiceImpl implements CourserelstudentService {
 	}
 
 	@Override
-	public void delete(Integer courserelstudentId) {
+	public void deleteGradeByTeacher(Integer teacherCourseId) {
 
-		Courserelstudent courserelstudent = courserelstudentMapper.selectByPrimaryKey(courserelstudentId);
+		Courserelstudent courserelstudent = courserelstudentMapper.selectByPrimaryKey(teacherCourseId);
 		if (courserelstudent == null) {
 			return;
 		}
-		courserelstudentMapper.deleteByPrimaryKey(courserelstudentId);
+		courserelstudentMapper.deleteByPrimaryKey(teacherCourseId);
 	}
 
 	@Override

@@ -8,22 +8,12 @@ import com.cloudstudy.dto.CourserelstudentQueryDto;
 
 public interface CourserelstudentService {
 
-	/**
-	 * 教师或者管理员添加课程
-	 * 
-	 * @param courserelstudentDto
-	 * @return
-	 */
-	CourserelstudentDto add(CourserelstudentDto courserelstudentDto);
+	CourserelstudentDto addGradeByTeacher(CourserelstudentDto courserelstudentDto);
 
-	void delete(Integer teacherCourseId);
+	CourserelstudentDto editGradeByTeacher(CourserelstudentDto courserelstudentDto);
 
-	/**
-	 * 查找所有的课程
-	 * 
-	 * @param id
-	 * @return
-	 */
+	void deleteGradeByTeacher(Integer teacherCourseId);
+
 	CourserelstudentDto findById(Integer id);
 
 	List<CourserelstudentDto> findByStudentNo(String studentNo);

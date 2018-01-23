@@ -80,7 +80,7 @@ public class CourseStudentController {
 	@RequiresPermissions("Course:add") // 权限管理;
 	public @ResponseBody WebResult<CourserelstudentDto> add(
 			@ApiParam(value = "课程数据", required = true) @RequestBody CourserelstudentDto courserelteacherDto) {
-		courserelteacherDto = courserelstudentService.add(courserelteacherDto);
+		courserelteacherDto = courserelstudentService.addGradeByTeacher(courserelteacherDto);
 		return WebResultUtil.success(courserelteacherDto);
 	}
 
@@ -98,7 +98,7 @@ public class CourseStudentController {
 	public @ResponseBody WebResult<CourserelstudentDto> delete(
 			@RequestParam(value = "id", required = true) Integer id) {
 		CourserelstudentDto courserelteacherDto = courserelstudentService.findById(id);
-		courserelstudentService.delete(id);
+		courserelstudentService.deleteGradeByTeacher(id);
 		return WebResultUtil.success(courserelteacherDto);
 	}
 
