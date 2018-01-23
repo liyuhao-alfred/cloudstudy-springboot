@@ -19,6 +19,7 @@ import com.cloudstudy.bo.example.TaskExample;
 import com.cloudstudy.bo.example.UserExample;
 import com.cloudstudy.bo.example.UserExample.Criteria;
 import com.cloudstudy.constant.SearchType;
+import com.cloudstudy.dto.CourserelstudentDto;
 import com.cloudstudy.dto.CourserelteacherDto;
 import com.cloudstudy.dto.HomeworkQueryParamDto;
 import com.cloudstudy.dto.TaskDto;
@@ -29,6 +30,8 @@ import com.cloudstudy.mapper.StudyfilereljobMapper;
 import com.cloudstudy.mapper.StudyfilereltaskMapper;
 import com.cloudstudy.mapper.JobMapper;
 import com.cloudstudy.mapper.TaskMapper;
+import com.cloudstudy.service.CourserelstudentService;
+import com.cloudstudy.service.CourserelteacherService;
 import com.cloudstudy.service.TaskService;
 import com.cloudstudy.service.UserService;
 import com.cloudstudy.util.DateUtil;
@@ -53,6 +56,10 @@ public class TaskServiceImpl implements TaskService {
 	private StudyfilereltaskMapper studyfilereltaskMapper;
 	@Autowired
 	private StudyfilereljobMapper studyfilereljobMapper;
+	@Autowired
+	private CourserelteacherService courserelteacherService;
+	@Autowired
+	private CourserelstudentService courserelstudentService;
 
 	@Override
 	public TaskDto add(TaskDto taskDto) {
@@ -108,6 +115,12 @@ public class TaskServiceImpl implements TaskService {
 		Integer searchType = homeworkQueryParamDto.getSearchType();
 		if (!StringUtils.isEmpty(keyword)) {
 
+			if (searchType == SearchType.homeworkName.getCode()) {
+				criteria.andTitleLike("%" + keyword + "%");
+			} else if (searchType == SearchType.courseId.getCode()) {
+				criteria.andCourserelteacherIdEqualTo(Integer.valueOf(keyword));
+			}
+
 		}
 
 		if (!StringUtils.isEmpty(homeworkQueryParamDto.getFromTime())
@@ -147,26 +160,62 @@ public class TaskServiceImpl implements TaskService {
 
 	@Override
 	public List<TaskDto> findByTeacherNo(String no) {
-		HashSet<SearchType> searchTypeSet = new HashSet<SearchType>();
-		searchTypeSet.add(SearchType.courseId);
+		List<CourserelteacherDto> courserelteacherDtoList = courserelteacherService.findByTeacherNo(no);
+		if (courserelteacherDtoList == null || courserelteacherDtoList.isEmpty()) {
+			return null;
+		}
 
-		HomeworkQueryParamDto homeworkQueryParamDto = new HomeworkQueryParamDto();
-		homeworkQueryParamDto.setKeyword(no);
-		homeworkQueryParamDto.setSearchTypeSet(searchTypeSet);
+		List<Integer> taskDtoIdList = new ArrayList<Integer>();
+		for (CourserelteacherDto courserelteacherDto : courserelteacherDtoList) {
+			taskDtoIdList.add(courserelteacherDto.getId());
+		}
 
-		return find(homeworkQueryParamDto);
+		TaskExample taskExample = new TaskExample();
+		com.cloudstudy.bo.example.TaskExample.Criteria criteria = taskExample.createCriteria();
+		criteria.andCourserelteacherIdIn(taskDtoIdList);
+		List<Task> taskList = taskMapper.selectByExample(taskExample);
+		if (taskList == null || taskList.isEmpty()) {
+			return null;
+		}
+
+		List<TaskDto> taskDtoList = new ArrayList<TaskDto>();
+		for (Task task : taskList) {
+			TaskDto taskDto = new TaskDto();
+			BeanUtils.copyProperties(task, taskDto);
+			taskDtoList.add(taskDto);
+		}
+		return taskDtoList;
 	}
 
 	@Override
 	public List<TaskDto> findByStudentNo(String no) {
-		HashSet<SearchType> searchTypeSet = new HashSet<SearchType>();
-		searchTypeSet.add(SearchType.courseId);
 
-		HomeworkQueryParamDto homeworkQueryParamDto = new HomeworkQueryParamDto();
-		homeworkQueryParamDto.setKeyword(no);
-		homeworkQueryParamDto.setSearchTypeSet(searchTypeSet);
+		List<CourserelstudentDto> courserelstudentDtoList = courserelstudentService.findByStudentNo(no);
+		if (courserelstudentDtoList == null || courserelstudentDtoList.isEmpty()) {
+			return null;
+		}
 
-		return find(homeworkQueryParamDto);
+		List<Integer> courserelteacherDtoIdList = new ArrayList<Integer>();
+		for (CourserelstudentDto courserelstudentDto : courserelstudentDtoList) {
+			courserelteacherDtoIdList.add(courserelstudentDto.getCourserelteacherId());
+		}
+
+		TaskExample taskExample = new TaskExample();
+		com.cloudstudy.bo.example.TaskExample.Criteria criteria = taskExample.createCriteria();
+		criteria.andCourserelteacherIdIn(courserelteacherDtoIdList);
+		List<Task> taskList = taskMapper.selectByExample(taskExample);
+		if (taskList == null || taskList.isEmpty()) {
+			return null;
+		}
+
+		List<TaskDto> taskDtoList = new ArrayList<TaskDto>();
+		for (Task task : taskList) {
+			TaskDto taskDto = new TaskDto();
+			BeanUtils.copyProperties(task, taskDto);
+			taskDtoList.add(taskDto);
+		}
+		return taskDtoList;
+
 	}
 
 }

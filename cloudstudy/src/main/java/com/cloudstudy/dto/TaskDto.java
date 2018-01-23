@@ -1,5 +1,6 @@
 package com.cloudstudy.dto;
 
+import java.io.File;
 import java.util.Date;
 
 public class TaskDto {
@@ -19,7 +20,7 @@ public class TaskDto {
 
 	private String content;
 
-	private StudyFileDto studyFileDto;
+	private File studyFile;
 
 	public Integer getId() {
 		return id;
@@ -85,11 +86,11 @@ public class TaskDto {
 		this.content = content == null ? null : content.trim();
 	}
 
-	public StudyFileDto getStudyFileDto() {
-		return studyFileDto;
+	public File getStudyFile() {
+		return studyFile;
 	}
 
-	public void setStudyFileDto(StudyFileDto studyFileDto) {
-		this.studyFileDto = studyFileDto;
+	public void setStudyFile(File studyFile) {
+		this.studyFile = studyFile;
 	}
 }

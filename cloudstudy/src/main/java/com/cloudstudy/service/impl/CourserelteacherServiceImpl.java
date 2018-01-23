@@ -1,5 +1,7 @@
 package com.cloudstudy.service.impl;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -18,10 +20,12 @@ import com.cloudstudy.bo.example.UserExample.Criteria;
 import com.cloudstudy.constant.SearchType;
 import com.cloudstudy.dto.CourserelteacherDto;
 import com.cloudstudy.dto.CourserelteacherQueryDto;
+import com.cloudstudy.dto.StudyfileDto;
 import com.cloudstudy.mapper.CourserelstudentMapper;
 import com.cloudstudy.mapper.CourserelteacherMapper;
 import com.cloudstudy.mapper.UserMapper;
 import com.cloudstudy.service.CourserelteacherService;
+import com.cloudstudy.service.StudyfileService;
 import com.cloudstudy.service.UserService;
 import com.cloudstudy.util.DateUtil;
 import com.github.pagehelper.PageHelper;
@@ -37,20 +41,26 @@ public class CourserelteacherServiceImpl implements CourserelteacherService {
 	private UserMapper userMapper;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private StudyfileService studyfileService;
 
 	@Override
-	public CourserelteacherDto add(CourserelteacherDto courserelteacherDto) {
-		userService.findTeacherByNo(courserelteacherDto.getTeacherNo());
+	public CourserelteacherDto add(CourserelteacherDto courserelteacherDto) throws IOException {
 
 		Courserelteacher courserelteacher = new Courserelteacher();
 		BeanUtils.copyProperties(courserelteacherDto, courserelteacher);
 		courserelteacherMapper.insert(courserelteacher);
 
+		File studyFile = courserelteacherDto.getStudyFile();
+		if (studyFile != null && studyFile.length() > 0) {
+			StudyfileDto fileDto = new StudyfileDto(studyFile, courserelteacher.getId(), null, null);
+			studyfileService.add(fileDto);
+		}
 		return courserelteacherDto;
 	}
 
 	@Override
-	public void delete(Integer courserelteacherId) {
+	public void delete(Integer courserelteacherId) throws IOException {
 
 		Courserelteacher courserelteacher = courserelteacherMapper.selectByPrimaryKey(courserelteacherId);
 		if (courserelteacher == null) {
@@ -63,6 +73,7 @@ public class CourserelteacherServiceImpl implements CourserelteacherService {
 		criteria.andCourserelteacherIdEqualTo(courserelteacherId);
 		courserelstudentMapper.deleteByExample(courserelstudentExample);
 
+		studyfileService.deleteByCourserelteacherId(courserelteacherId);
 	}
 
 	@Override

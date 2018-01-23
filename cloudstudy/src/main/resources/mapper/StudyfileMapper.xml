@@ -7,11 +7,9 @@
     <result column="path" jdbcType="VARCHAR" property="path" />
     <result column="type" jdbcType="VARCHAR" property="type" />
     <result column="size" jdbcType="INTEGER" property="size" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="last_modify_time" jdbcType="TIMESTAMP" property="lastModifyTime" />
-  </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.cloudstudy.bo.Studyfile">
-    <result column="memo" jdbcType="LONGVARCHAR" property="memo" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -72,29 +70,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name, path, type, size, create_time, last_modify_time
+    id, name, path, type, size, memo, create_time, last_modify_time
   </sql>
-  <sql id="Blob_Column_List">
-    memo
-  </sql>
-  <select id="selectByExampleWithBLOBs" parameterType="com.cloudstudy.bo.example.StudyfileExample" resultMap="ResultMapWithBLOBs">
-    select
-    <if test="distinct">
-      distinct
-    </if>
-    'true' as QUERYID,
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from tbfile
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null">
-      order by ${orderByClause}
-    </if>
-  </select>
-   <select id="selectByExample" parameterType="com.cloudstudy.bo.example.StudyfileExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.cloudstudy.bo.example.StudyfileExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -109,11 +87,9 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
     from tbfile
     where id = #{id,jdbcType=INTEGER}
   </select>
@@ -132,11 +108,11 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into tbfile (name, path, type, 
-      size, create_time, last_modify_time, 
-      memo)
+      size, memo, create_time, 
+      last_modify_time)
     values (#{name,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
-      #{size,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{lastModifyTime,jdbcType=TIMESTAMP}, 
-      #{memo,jdbcType=LONGVARCHAR})
+      #{size,jdbcType=INTEGER}, #{memo,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{lastModifyTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.cloudstudy.bo.Studyfile">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -156,14 +132,14 @@
       <if test="size != null">
         size,
       </if>
+      <if test="memo != null">
+        memo,
+      </if>
       <if test="createTime != null">
         create_time,
       </if>
       <if test="lastModifyTime != null">
         last_modify_time,
-      </if>
-      <if test="memo != null">
-        memo,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -179,14 +155,14 @@
       <if test="size != null">
         #{size,jdbcType=INTEGER},
       </if>
+      <if test="memo != null">
+        #{memo,jdbcType=VARCHAR},
+      </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="lastModifyTime != null">
         #{lastModifyTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="memo != null">
-        #{memo,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -214,30 +190,16 @@
       <if test="record.size != null">
         size = #{record.size,jdbcType=INTEGER},
       </if>
+      <if test="record.memo != null">
+        memo = #{record.memo,jdbcType=VARCHAR},
+      </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.lastModifyTime != null">
         last_modify_time = #{record.lastModifyTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.memo != null">
-        memo = #{record.memo,jdbcType=LONGVARCHAR},
-      </if>
     </set>
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExampleWithBLOBs" parameterType="map">
-    update tbfile
-    set id = #{record.id,jdbcType=INTEGER},
-      name = #{record.name,jdbcType=VARCHAR},
-      path = #{record.path,jdbcType=VARCHAR},
-      type = #{record.type,jdbcType=VARCHAR},
-      size = #{record.size,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      last_modify_time = #{record.lastModifyTime,jdbcType=TIMESTAMP},
-      memo = #{record.memo,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -249,6 +211,7 @@
       path = #{record.path,jdbcType=VARCHAR},
       type = #{record.type,jdbcType=VARCHAR},
       size = #{record.size,jdbcType=INTEGER},
+      memo = #{record.memo,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       last_modify_time = #{record.lastModifyTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
@@ -270,27 +233,16 @@
       <if test="size != null">
         size = #{size,jdbcType=INTEGER},
       </if>
+      <if test="memo != null">
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="lastModifyTime != null">
         last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="memo != null">
-        memo = #{memo,jdbcType=LONGVARCHAR},
-      </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.cloudstudy.bo.Studyfile">
-    update tbfile
-    set name = #{name,jdbcType=VARCHAR},
-      path = #{path,jdbcType=VARCHAR},
-      type = #{type,jdbcType=VARCHAR},
-      size = #{size,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
-      memo = #{memo,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.cloudstudy.bo.Studyfile">
@@ -299,6 +251,7 @@
       path = #{path,jdbcType=VARCHAR},
       type = #{type,jdbcType=VARCHAR},
       size = #{size,jdbcType=INTEGER},
+      memo = #{memo,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

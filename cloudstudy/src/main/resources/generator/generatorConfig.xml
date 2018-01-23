@@ -119,13 +119,7 @@
 			<generatedKey column="id" sqlStatement="MySql" identity="true" />
 		</table>
 
-		<table tableName="tbfile" domainObjectName="File"
-			enableCountByExample="true" enableUpdateByExample="true"
-			enableDeleteByExample="true" enableSelectByExample="true"
-			selectByExampleQueryId="true">
-			<property name="useActualColumnNames" value="false" />
-			<generatedKey column="id" sqlStatement="MySql" identity="true" />
-		</table>
+
 		<table tableName="tbfilerelcourse" domainObjectName="Filerelcourse"
 			enableCountByExample="true" enableUpdateByExample="true"
 			enableDeleteByExample="true" enableSelectByExample="true"
@@ -180,13 +174,24 @@
 -->
 
 
-		<table tableName="tbcourserelteacher" domainObjectName="Courserelteacher"
+
+		<table tableName="tbfile" domainObjectName="File"
 			enableCountByExample="true" enableUpdateByExample="true"
 			enableDeleteByExample="true" enableSelectByExample="true"
 			selectByExampleQueryId="true">
 			<property name="useActualColumnNames" value="false" />
 			<generatedKey column="id" sqlStatement="MySql" identity="true" />
 		</table>
+		
+		
+		
+<!-- 		<table tableName="tbcourserelteacher" domainObjectName="Courserelteacher"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<property name="useActualColumnNames" value="false" />
+			<generatedKey column="id" sqlStatement="MySql" identity="true" />
+		</table> -->
 		
 		
 <!--

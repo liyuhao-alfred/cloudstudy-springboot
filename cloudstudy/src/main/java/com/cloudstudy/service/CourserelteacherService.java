@@ -1,5 +1,6 @@
 package com.cloudstudy.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.cloudstudy.dto.CourserelteacherDto;
@@ -13,9 +14,9 @@ public interface CourserelteacherService {
 	 * @param courserelteacherDto
 	 * @return
 	 */
-	CourserelteacherDto add(CourserelteacherDto courserelteacherDto);
+	CourserelteacherDto add(CourserelteacherDto courserelteacherDto) throws IOException;
 
-	void delete(Integer teacherCourseId);
+	void delete(Integer teacherCourseId) throws IOException;
 
 	CourserelteacherDto update(CourserelteacherDto courserelteacherDto);
 

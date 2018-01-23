@@ -8,10 +8,26 @@ import org.apache.ibatis.annotations.Param;
 
 public interface StudyfileMapper extends BaseMapper<Studyfile, StudyfileExample> {
 
-	List<Studyfile> selectByExampleWithBLOBs(StudyfileExample example);
+	long countByExample(StudyfileExample example);
 
-	int updateByExampleWithBLOBs(@Param("record") Studyfile record, @Param("example") StudyfileExample example);
+	int deleteByExample(StudyfileExample example);
 
-	int updateByPrimaryKeyWithBLOBs(Studyfile record);
+	int deleteByPrimaryKey(Integer id);
+
+	int insert(Studyfile record);
+
+	int insertSelective(Studyfile record);
+
+	List<Studyfile> selectByExample(StudyfileExample example);
+
+	Studyfile selectByPrimaryKey(Integer id);
+
+	int updateByExampleSelective(@Param("record") Studyfile record, @Param("example") StudyfileExample example);
+
+	int updateByExample(@Param("record") Studyfile record, @Param("example") StudyfileExample example);
+
+	int updateByPrimaryKeySelective(Studyfile record);
+
+	int updateByPrimaryKey(Studyfile record);
 
 }

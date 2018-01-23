@@ -1,5 +1,6 @@
 package com.cloudstudy.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -70,6 +71,7 @@ public class CourseTeacherController {
 	 * 
 	 * @param courserelteacherDto
 	 * @return
+	 * @throws IOException
 	 */
 	@ApiOperation(value = "新建课程", notes = "新建一个课程")
 	@ApiImplicitParams({
@@ -78,7 +80,8 @@ public class CourseTeacherController {
 			RequestMethod.GET })
 	@RequiresPermissions("Course:add") // 权限管理;
 	public @ResponseBody WebResult<CourserelteacherDto> add(
-			@ApiParam(value = "课程数据", required = true) @RequestBody CourserelteacherDto courserelteacherDto) {
+			@ApiParam(value = "课程数据", required = true) @RequestBody CourserelteacherDto courserelteacherDto)
+			throws IOException {
 		courserelteacherDto = courseService.add(courserelteacherDto);
 		return WebResultUtil.success(courserelteacherDto);
 	}
@@ -105,13 +108,15 @@ public class CourseTeacherController {
 	 *
 	 * @param id
 	 * @return
+	 * @throws IOException
 	 */
 	@ApiOperation(value = "删除课程", notes = "通过课程工号或者学号删除课程")
 	@ApiImplicitParam(name = "id", value = "课程工号或者学号", required = true, paramType = "body", dataType = "String")
 	@RequestMapping(value = "/delete", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
 	@RequiresPermissions("Course:delete") // 权限管理;
-	public @ResponseBody WebResult<CourserelteacherDto> delete(@RequestParam(value = "id", required = true) Integer id) {
+	public @ResponseBody WebResult<CourserelteacherDto> delete(@RequestParam(value = "id", required = true) Integer id)
+			throws IOException {
 		CourserelteacherDto courserelteacherDto = courseService.findById(id);
 		courseService.delete(id);
 		return WebResultUtil.success(courserelteacherDto);
