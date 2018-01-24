@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cloudstudy.bo.Permission;
-import com.cloudstudy.bo.Rolerelpermission;
-import com.cloudstudy.bo.example.RolerelpermissionExample;
-import com.cloudstudy.bo.example.RolerelpermissionExample.Criteria;
+import com.cloudstudy.bo.RoleToPermission;
+import com.cloudstudy.bo.RoleToPermissionExample;
+import com.cloudstudy.bo.RoleToPermissionExample.Criteria;
 import com.cloudstudy.mapper.PermissionMapper;
-import com.cloudstudy.mapper.RolerelpermissionMapper;
+import com.cloudstudy.mapper.RoleToPermissionMapper;
 import com.cloudstudy.service.PermissionService;
 
 @Service
@@ -19,25 +19,24 @@ public class PermissionServiceImpl implements PermissionService {
 	@Autowired
 	private PermissionMapper permissionMapper;
 	@Autowired
-	private RolerelpermissionMapper rolerelpermissionMapper;
+	private RoleToPermissionMapper roleToPermissionMapper;
 
 	@Override
 	public List<Permission> findByRoleId(int roleId) {
 
-		RolerelpermissionExample rolerelpermissionExample = new RolerelpermissionExample();
+		RoleToPermissionExample roleToPermissionExample = new RoleToPermissionExample();
 
-		Criteria criteria = rolerelpermissionExample.createCriteria();
+		Criteria criteria = roleToPermissionExample.createCriteria();
 		criteria.andRoleIdEqualTo(roleId);
 
-		List<Rolerelpermission> rolerelpermissionList = rolerelpermissionMapper
-				.selectByExample(rolerelpermissionExample);
-		if (rolerelpermissionList == null || rolerelpermissionList.isEmpty()) {
+		List<RoleToPermission> roleToPermissionList = roleToPermissionMapper.selectByExample(roleToPermissionExample);
+		if (roleToPermissionList == null || roleToPermissionList.isEmpty()) {
 			return null;
 		}
 
 		List<Permission> permissionList = new ArrayList<Permission>();
-		for (Rolerelpermission rolerelpermission : rolerelpermissionList) {
-			Permission permission = permissionMapper.selectByPrimaryKey(rolerelpermission.getPermissionId());
+		for (RoleToPermission roleToPermission : roleToPermissionList) {
+			Permission permission = permissionMapper.selectByPrimaryKey(roleToPermission.getPermissionId());
 			permissionList.add(permission);
 		}
 		return permissionList;

@@ -46,9 +46,9 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
 import com.alibaba.fastjson.JSON;
-import com.cloudstudy.dto.OperatelogDto;
+import com.cloudstudy.dto.OperateLogDto;
 import com.cloudstudy.dto.UserDto;
-import com.cloudstudy.log.OperatelogService;
+import com.cloudstudy.log.OperateLogService;
 import com.cloudstudy.service.UserService;
 import com.cloudstudy.util.Util;
 
@@ -63,11 +63,11 @@ import com.cloudstudy.util.Util;
 public class ControllerAop {
 	private Log log = LogFactory.getLog(ControllerAop.class);
 	@Autowired
-	private OperatelogService operatelogService;
+	private OperateLogService operateLogService;
 	@Autowired
 	private UserService userService;
 
-	private OperatelogDto operatelogDto = new OperatelogDto();
+	private OperateLogDto operateLogDto = new OperateLogDto();
 
 	// 匹配com.cloudstudy.controller包及其子包下的所有类的所有方法
 	@Pointcut("execution(* com.cloudstudy.controller..*.*(..))")
@@ -102,8 +102,8 @@ public class ControllerAop {
 
 //		UserDto userDto = userService.findByAccount(loginAccount);
 //		if (userDto != null) {
-//			operatelogDto.setOperatorNo(userDto.getNo());
-//			operatelogDto.setOperatorName(userDto.getName());
+//			operateLogDto.setOperatorNo(userDto.getNo());
+//			operateLogDto.setOperatorName(userDto.getName());
 //		}
 
 		String requestContent = null;
@@ -115,18 +115,18 @@ public class ControllerAop {
 			Map<String, String[]> parameterMap = new LinkedHashMap<String, String[]>(request.getParameterMap());
 			requestContent = Util.map2String(parameterMap);
 		}
-		operatelogDto.setRequestContent(requestContent);// 请求的参数信息
+		operateLogDto.setRequestContent(requestContent);// 请求的参数信息
 
 		Signature signature = joinPoint.getSignature();// 用的最多 通知的签名
 		signature.getDeclaringType();// AOP代理类的类（class）信息
 		String requestMethodName = signature.getName();// 代理的是哪一个方法
 		String declaringTypeName = signature.getDeclaringTypeName();// AOP代理类的名字
-		operatelogDto.setRequestIp(request.getRemoteAddr() + ":" + request.getRemotePort());
-		operatelogDto.setRequestIp(request.getRemoteAddr());
-		operatelogDto.setRequestUri(request.getRequestURI());
-		operatelogDto.setOperationDescription(declaringTypeName + "." + requestMethodName);
+		operateLogDto.setRequestIp(request.getRemoteAddr() + ":" + request.getRemotePort());
+		operateLogDto.setRequestIp(request.getRemoteAddr());
+		operateLogDto.setRequestUri(request.getRequestURI());
+		operateLogDto.setOperationDescription(declaringTypeName + "." + requestMethodName);
 
-		operatelogDto.setOperationStartTime(new Date());
+		operateLogDto.setOperationStartTime(new Date());
 
 		joinPoint.getThis();// AOP代理类的信息
 		joinPoint.getTarget(); // 代理的目标对象
@@ -135,21 +135,21 @@ public class ControllerAop {
 		try {
 			Object operationResult = joinPoint.proceed();
 
-			operatelogDto.setOperationStartTime(operationStartTime);
-			operatelogDto.setOperationEndTime(new Date());
-			operatelogDto.setOperationResultFlage(0);
-			operatelogDto.setOperationResult(operationResult != null ? operationResult.toString() : null);
-			operatelogService.save(operatelogDto);
+			operateLogDto.setOperationStartTime(operationStartTime);
+			operateLogDto.setOperationEndTime(new Date());
+			operateLogDto.setOperationResultFlage(0);
+			operateLogDto.setOperationResult(operationResult != null ? operationResult.toString() : null);
+			operateLogService.save(operateLogDto);
 			return operationResult;
 		} catch (Throwable e) {
 
-			operatelogDto.setOperationStartTime(operationStartTime);
-			operatelogDto.setOperationEndTime(new Date());
-			operatelogDto.setOperationResultFlage(1);
-			operatelogDto.setOperationErrorCode(e.getClass().getName());
-			operatelogDto.setOperationErrorMessage(e.getMessage());
-			operatelogService.save(operatelogDto);
-			log.error(operatelogDto);
+			operateLogDto.setOperationStartTime(operationStartTime);
+			operateLogDto.setOperationEndTime(new Date());
+			operateLogDto.setOperationResultFlage(1);
+			operateLogDto.setOperationErrorCode(e.getClass().getName());
+			operateLogDto.setOperationErrorMessage(e.getMessage());
+			operateLogService.save(operateLogDto);
+			log.error(operateLogDto);
 			throw e;
 		}
 	}

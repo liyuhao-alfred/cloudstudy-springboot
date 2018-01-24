@@ -10,19 +10,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cloudstudy.bo.Job;
-import com.cloudstudy.bo.example.JobExample;
-import com.cloudstudy.bo.example.JobExample;
+import com.cloudstudy.bo.JobExample;
+import com.cloudstudy.bo.JobExample;
 import com.cloudstudy.constant.SearchType;
-import com.cloudstudy.dto.HomeworkQueryParamDto;
+import com.cloudstudy.dto.HomeworkQueryDto;
 import com.cloudstudy.dto.JobDto;
 import com.cloudstudy.dto.JobDto;
-import com.cloudstudy.mapper.CourserelstudentMapper;
-import com.cloudstudy.mapper.CourserelteacherMapper;
+import com.cloudstudy.mapper.GradeMapper;
+import com.cloudstudy.mapper.CourseMapper;
 import com.cloudstudy.mapper.JobMapper;
-import com.cloudstudy.mapper.StudyfileMapper;
-import com.cloudstudy.mapper.StudyfilereljobMapper;
+import com.cloudstudy.mapper.FileOriginMapper;
+import com.cloudstudy.mapper.FileToJobMapper;
 import com.cloudstudy.mapper.TaskMapper;
-import com.cloudstudy.mapper.StudyfilereljobMapper;
+import com.cloudstudy.mapper.FileToJobMapper;
 import com.cloudstudy.mapper.JobMapper;
 import com.cloudstudy.service.JobService;
 import com.cloudstudy.service.UserService;
@@ -39,13 +39,13 @@ public class JobServiceImpl implements JobService {
 	@Autowired
 	private JobMapper jobMapper;
 	@Autowired
-	private CourserelteacherMapper courserelteacherMapper;
+	private CourseMapper courseMapper;
 	@Autowired
-	private CourserelstudentMapper courserelstudentMapper;
+	private GradeMapper gradeMapper;
 	@Autowired
-	private StudyfileMapper fileMapper;
+	private FileOriginMapper fileOriginMapper;
 	@Autowired
-	private StudyfilereljobMapper studyfilereljobMapper;
+	private FileToJobMapper fileOriginToJobMapper;
 
 	@Override
 	public JobDto add(JobDto jobDto) {
@@ -65,7 +65,7 @@ public class JobServiceImpl implements JobService {
 		jobMapper.deleteByPrimaryKey(jobId);
 
 		JobExample jobExample = new JobExample();
-		com.cloudstudy.bo.example.JobExample.Criteria criteria = jobExample.createCriteria();
+		com.cloudstudy.bo.JobExample.Criteria criteria = jobExample.createCriteria();
 		criteria.andIdEqualTo(jobId);
 		jobMapper.deleteByExample(jobExample);
 
@@ -83,25 +83,24 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public List<JobDto> find(HomeworkQueryParamDto homeworkQueryParamDto) {
+	public List<JobDto> find(HomeworkQueryDto homeworkQueryDto) {
 		JobExample jobExample = new JobExample();
-		com.cloudstudy.bo.example.JobExample.Criteria criteria = jobExample.createCriteria();
+		com.cloudstudy.bo.JobExample.Criteria criteria = jobExample.createCriteria();
 
-		String keyword = homeworkQueryParamDto.getKeyword();
-		Integer searchType = homeworkQueryParamDto.getSearchType();
+		String keyword = homeworkQueryDto.getKeyword();
+		Integer searchType = homeworkQueryDto.getSearchType();
 		if (!StringUtils.isEmpty(keyword)) {
 
 		}
 
-		if (!StringUtils.isEmpty(homeworkQueryParamDto.getFromTime())
-				&& !StringUtils.isEmpty(homeworkQueryParamDto.getToTime())) {
-			criteria.andLastModifyTimeBetween(DateUtil.stringToDate(homeworkQueryParamDto.getFromTime()),
-					DateUtil.stringToDate(homeworkQueryParamDto.getToTime()));
+		if (!StringUtils.isEmpty(homeworkQueryDto.getFromTime())
+				&& !StringUtils.isEmpty(homeworkQueryDto.getToTime())) {
+			criteria.andLastModifyTimeBetween(DateUtil.stringToDate(homeworkQueryDto.getFromTime()),
+					DateUtil.stringToDate(homeworkQueryDto.getToTime()));
 
 		}
 
-		PageHelper.startPage(homeworkQueryParamDto.getPageDto().getPage(),
-				homeworkQueryParamDto.getPageDto().getRows());
+		PageHelper.startPage(homeworkQueryDto.getPageDto().getPage(), homeworkQueryDto.getPageDto().getRows());
 		List<Job> jobList = jobMapper.selectByExample(jobExample);
 		if (jobList == null || jobList.isEmpty()) {
 			return null;
@@ -121,11 +120,11 @@ public class JobServiceImpl implements JobService {
 		HashSet<SearchType> searchTypeSet = new HashSet<SearchType>();
 		searchTypeSet.add(SearchType.courseId);
 
-		HomeworkQueryParamDto homeworkQueryParamDto = new HomeworkQueryParamDto();
-		homeworkQueryParamDto.setKeyword(id + "");
-		homeworkQueryParamDto.setSearchTypeSet(searchTypeSet);
+		HomeworkQueryDto homeworkQueryDto = new HomeworkQueryDto();
+		homeworkQueryDto.setKeyword(id + "");
+		homeworkQueryDto.setSearchTypeSet(searchTypeSet);
 
-		return find(homeworkQueryParamDto);
+		return find(homeworkQueryDto);
 	}
 
 	@Override
@@ -133,11 +132,11 @@ public class JobServiceImpl implements JobService {
 		HashSet<SearchType> searchTypeSet = new HashSet<SearchType>();
 		searchTypeSet.add(SearchType.courseId);
 
-		HomeworkQueryParamDto homeworkQueryParamDto = new HomeworkQueryParamDto();
-		homeworkQueryParamDto.setKeyword(id + "");
-		homeworkQueryParamDto.setSearchTypeSet(searchTypeSet);
+		HomeworkQueryDto homeworkQueryDto = new HomeworkQueryDto();
+		homeworkQueryDto.setKeyword(id + "");
+		homeworkQueryDto.setSearchTypeSet(searchTypeSet);
 
-		return find(homeworkQueryParamDto);
+		return find(homeworkQueryDto);
 	}
 
 	@Override
@@ -145,11 +144,11 @@ public class JobServiceImpl implements JobService {
 		HashSet<SearchType> searchTypeSet = new HashSet<SearchType>();
 		searchTypeSet.add(SearchType.courseId);
 
-		HomeworkQueryParamDto homeworkQueryParamDto = new HomeworkQueryParamDto();
-		homeworkQueryParamDto.setKeyword(no);
-		homeworkQueryParamDto.setSearchTypeSet(searchTypeSet);
+		HomeworkQueryDto homeworkQueryDto = new HomeworkQueryDto();
+		homeworkQueryDto.setKeyword(no);
+		homeworkQueryDto.setSearchTypeSet(searchTypeSet);
 
-		return find(homeworkQueryParamDto);
+		return find(homeworkQueryDto);
 	}
 
 	@Override
@@ -157,11 +156,11 @@ public class JobServiceImpl implements JobService {
 		HashSet<SearchType> searchTypeSet = new HashSet<SearchType>();
 		searchTypeSet.add(SearchType.courseId);
 
-		HomeworkQueryParamDto homeworkQueryParamDto = new HomeworkQueryParamDto();
-		homeworkQueryParamDto.setKeyword(no);
-		homeworkQueryParamDto.setSearchTypeSet(searchTypeSet);
+		HomeworkQueryDto homeworkQueryDto = new HomeworkQueryDto();
+		homeworkQueryDto.setKeyword(no);
+		homeworkQueryDto.setSearchTypeSet(searchTypeSet);
 
-		return find(homeworkQueryParamDto);
+		return find(homeworkQueryDto);
 	}
 
 }

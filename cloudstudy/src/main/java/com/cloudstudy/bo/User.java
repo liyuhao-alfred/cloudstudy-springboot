@@ -3,174 +3,153 @@ package com.cloudstudy.bo;
 import java.util.Date;
 
 public class User {
+    private String no;
 
-	private String no;
+    private String account;
 
-	private String account;
+    private String password;
 
-	private String password;
+    private String salt;
 
-	private String salt;
+    private String name;
 
-	private String name;
+    private String phone;
 
-	private String phone;
+    private String email;
 
-	private String email;
+    private Integer sex;
 
-	private Integer sex;
+    private Integer age;
 
-	private Integer age;
+    private Date birthday;
 
-	private Date birthday;
+    private Date createTime;
 
-	private Date createTime;
+    private Date lastModifyTime;
 
-	private Date lastModifyTime;
+    private Date registTime;
 
-	private Date registTime;
+    private Integer status;
 
-	private Integer status;
+    private String description;
 
-	private String description;
+    public String getNo() {
+        return no;
+    }
 
-	public User() {
-		super();
-	}
+    public void setNo(String no) {
+        this.no = no == null ? null : no.trim();
+    }
 
-	public User(String account, String password, String salt) {
-		super();
-		this.account = account;
-		this.password = password;
-		this.salt = salt;
-	}
+    public String getAccount() {
+        return account;
+    }
 
-	public String getNo() {
-		return no;
-	}
+    public void setAccount(String account) {
+        this.account = account == null ? null : account.trim();
+    }
 
-	public void setNo(String no) {
-		this.no = no == null ? null : no.trim();
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public String getAccount() {
-		return account;
-	}
+    public void setPassword(String password) {
+        this.password = password == null ? null : password.trim();
+    }
 
-	public void setAccount(String account) {
-		this.account = account == null ? null : account.trim();
-	}
+    public String getSalt() {
+        return salt;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public void setSalt(String salt) {
+        this.salt = salt == null ? null : salt.trim();
+    }
 
-	public void setPassword(String password) {
-		this.password = password == null ? null : password.trim();
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getSalt() {
-		return salt;
-	}
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
 
-	public void setSalt(String salt) {
-		this.salt = salt == null ? null : salt.trim();
-	}
+    public String getPhone() {
+        return phone;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setPhone(String phone) {
+        this.phone = phone == null ? null : phone.trim();
+    }
 
-	public void setName(String name) {
-		this.name = name == null ? null : name.trim();
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public String getPhone() {
-		return phone;
-	}
+    public void setEmail(String email) {
+        this.email = email == null ? null : email.trim();
+    }
 
-	public void setPhone(String phone) {
-		this.phone = phone == null ? null : phone.trim();
-	}
+    public Integer getSex() {
+        return sex;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public void setSex(Integer sex) {
+        this.sex = sex;
+    }
 
-	public void setEmail(String email) {
-		this.email = email == null ? null : email.trim();
-	}
+    public Integer getAge() {
+        return age;
+    }
 
-	public Integer getSex() {
-		return sex;
-	}
+    public void setAge(Integer age) {
+        this.age = age;
+    }
 
-	public void setSex(Integer sex) {
-		this.sex = sex;
-	}
+    public Date getBirthday() {
+        return birthday;
+    }
 
-	public Integer getAge() {
-		return age;
-	}
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
 
-	public void setAge(Integer age) {
-		this.age = age;
-	}
+    public Date getCreateTime() {
+        return createTime;
+    }
 
-	public Date getBirthday() {
-		return birthday;
-	}
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 
-	public void setBirthday(Date birthday) {
-		this.birthday = birthday;
-	}
+    public Date getLastModifyTime() {
+        return lastModifyTime;
+    }
 
-	public Date getCreateTime() {
-		return createTime;
-	}
+    public void setLastModifyTime(Date lastModifyTime) {
+        this.lastModifyTime = lastModifyTime;
+    }
 
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
+    public Date getRegistTime() {
+        return registTime;
+    }
 
-	public Date getLastModifyTime() {
-		return lastModifyTime;
-	}
+    public void setRegistTime(Date registTime) {
+        this.registTime = registTime;
+    }
 
-	public void setLastModifyTime(Date lastModifyTime) {
-		this.lastModifyTime = lastModifyTime;
-	}
+    public Integer getStatus() {
+        return status;
+    }
 
-	public Date getRegistTime() {
-		return registTime;
-	}
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
-	public void setRegistTime(Date registTime) {
-		this.registTime = registTime;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public Integer getStatus() {
-		return status;
-	}
-
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description == null ? null : description.trim();
-	}
-
-	/**
-	 * 密码盐.
-	 * 
-	 * @return
-	 */
-	public String getCredentialsSalt() {
-		return this.getAccount() + this.salt;
-	}
+    public void setDescription(String description) {
+        this.description = description == null ? null : description.trim();
+    }
 }

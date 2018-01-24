@@ -1,15 +1,16 @@
 package com.cloudstudy.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.cloudstudy.dto.UserDto;
-import com.cloudstudy.dto.UserQueryParamDto;
+import com.cloudstudy.dto.UserQueryDto;
 
 public interface UserService {
 
 	UserDto save(UserDto userDto);
 
-	void deleteByNo(String no);
+	void deleteByNo(String no) throws IOException;
 
 	UserDto update(UserDto userDto);
 
@@ -29,7 +30,15 @@ public interface UserService {
 
 	UserDto findStudentByAccount(String account);
 
-	List<UserDto> find(UserQueryParamDto userQueryParamDto);
+	UserDto findTeacherByCourseId(Integer courseId);
+
+	UserDto findStudentByCourseId(Integer courseId);
+
+	UserDto findTeacherByTaskId(Integer taskId);
+
+	UserDto findStudentByJobId(Integer jobId);
+
+	List<UserDto> find(UserQueryDto userQueryDto);
 
 	UserDto login(String account, String password);
 }

@@ -7,7 +7,7 @@ import javax.servlet.ServletContextListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import com.cloudstudy.bo.example.UserExample;
+import com.cloudstudy.bo.UserExample;
 import com.cloudstudy.init.Init;
 import com.cloudstudy.mapper.UserMapper;
 

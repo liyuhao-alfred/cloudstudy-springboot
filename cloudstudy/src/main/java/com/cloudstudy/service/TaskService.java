@@ -3,7 +3,7 @@ package com.cloudstudy.service;
 import java.util.List;
 
 import com.cloudstudy.dto.TaskDto;
-import com.cloudstudy.dto.HomeworkQueryParamDto;
+import com.cloudstudy.dto.HomeworkQueryDto;
 
 public interface TaskService {
 
@@ -15,12 +15,14 @@ public interface TaskService {
 
 	TaskDto findById(Integer id);
 
-	List<TaskDto> findByCourseId(Integer id);
+	List<TaskDto> findByJobId(Integer jobId);
 
-	List<TaskDto> findByTeacherNo(String no);
+	List<TaskDto> findByCourseId(Integer courseId);
 
-	List<TaskDto> findByStudentNo(String no);
+	List<TaskDto> findByTeacherNo(String teacherNo);
 
-	List<TaskDto> find(HomeworkQueryParamDto homeworkQueryParamDto);
+	List<TaskDto> findByStudentNo(String studentNo);
+
+	List<TaskDto> find(HomeworkQueryDto homeworkQueryDto);
 
 }

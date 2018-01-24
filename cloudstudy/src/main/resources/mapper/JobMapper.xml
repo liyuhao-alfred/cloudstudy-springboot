@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.cloudstudy.bo.Job">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="title" jdbcType="VARCHAR" property="title" />
-    <result column="courserelstudent_id" jdbcType="INTEGER" property="courserelstudentId" />
+    <result column="grade_id" jdbcType="INTEGER" property="gradeId" />
     <result column="task_id" jdbcType="INTEGER" property="taskId" />
     <result column="grade" jdbcType="INTEGER" property="grade" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -73,12 +73,12 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, title, courserelstudent_id, task_id, grade, create_time, last_modify_time, status
+    id, title, grade_id, task_id, grade, create_time, last_modify_time, status
   </sql>
   <sql id="Blob_Column_List">
     content
   </sql>
-  <select id="selectByExampleWithBLOBs" parameterType="com.cloudstudy.bo.example.JobExample" resultMap="ResultMapWithBLOBs">
+  <select id="selectByExampleWithBLOBs" parameterType="com.cloudstudy.bo.JobExample" resultMap="ResultMapWithBLOBs">
     select
     <if test="distinct">
       distinct
@@ -95,7 +95,7 @@
       order by ${orderByClause}
     </if>
   </select>
-   <select id="selectByExample" parameterType="com.cloudstudy.bo.example.JobExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.cloudstudy.bo.JobExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -122,7 +122,7 @@
     delete from tbjob
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.cloudstudy.bo.example.JobExample">
+  <delete id="deleteByExample" parameterType="com.cloudstudy.bo.JobExample">
     delete from tbjob
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -132,10 +132,10 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into tbjob (title, courserelstudent_id, task_id, 
+    insert into tbjob (title, grade_id, task_id, 
       grade, create_time, last_modify_time, 
       status, content)
-    values (#{title,jdbcType=VARCHAR}, #{courserelstudentId,jdbcType=INTEGER}, #{taskId,jdbcType=INTEGER}, 
+    values (#{title,jdbcType=VARCHAR}, #{gradeId,jdbcType=INTEGER}, #{taskId,jdbcType=INTEGER}, 
       #{grade,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{lastModifyTime,jdbcType=TIMESTAMP}, 
       #{status,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR})
   </insert>
@@ -148,8 +148,8 @@
       <if test="title != null">
         title,
       </if>
-      <if test="courserelstudentId != null">
-        courserelstudent_id,
+      <if test="gradeId != null">
+        grade_id,
       </if>
       <if test="taskId != null">
         task_id,
@@ -174,8 +174,8 @@
       <if test="title != null">
         #{title,jdbcType=VARCHAR},
       </if>
-      <if test="courserelstudentId != null">
-        #{courserelstudentId,jdbcType=INTEGER},
+      <if test="gradeId != null">
+        #{gradeId,jdbcType=INTEGER},
       </if>
       <if test="taskId != null">
         #{taskId,jdbcType=INTEGER},
@@ -197,7 +197,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.cloudstudy.bo.example.JobExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="com.cloudstudy.bo.JobExample" resultType="java.lang.Long">
     select count(*) from tbjob
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -212,8 +212,8 @@
       <if test="record.title != null">
         title = #{record.title,jdbcType=VARCHAR},
       </if>
-      <if test="record.courserelstudentId != null">
-        courserelstudent_id = #{record.courserelstudentId,jdbcType=INTEGER},
+      <if test="record.gradeId != null">
+        grade_id = #{record.gradeId,jdbcType=INTEGER},
       </if>
       <if test="record.taskId != null">
         task_id = #{record.taskId,jdbcType=INTEGER},
@@ -242,7 +242,7 @@
     update tbjob
     set id = #{record.id,jdbcType=INTEGER},
       title = #{record.title,jdbcType=VARCHAR},
-      courserelstudent_id = #{record.courserelstudentId,jdbcType=INTEGER},
+      grade_id = #{record.gradeId,jdbcType=INTEGER},
       task_id = #{record.taskId,jdbcType=INTEGER},
       grade = #{record.grade,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -257,7 +257,7 @@
     update tbjob
     set id = #{record.id,jdbcType=INTEGER},
       title = #{record.title,jdbcType=VARCHAR},
-      courserelstudent_id = #{record.courserelstudentId,jdbcType=INTEGER},
+      grade_id = #{record.gradeId,jdbcType=INTEGER},
       task_id = #{record.taskId,jdbcType=INTEGER},
       grade = #{record.grade,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -273,8 +273,8 @@
       <if test="title != null">
         title = #{title,jdbcType=VARCHAR},
       </if>
-      <if test="courserelstudentId != null">
-        courserelstudent_id = #{courserelstudentId,jdbcType=INTEGER},
+      <if test="gradeId != null">
+        grade_id = #{gradeId,jdbcType=INTEGER},
       </if>
       <if test="taskId != null">
         task_id = #{taskId,jdbcType=INTEGER},
@@ -300,7 +300,7 @@
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.cloudstudy.bo.Job">
     update tbjob
     set title = #{title,jdbcType=VARCHAR},
-      courserelstudent_id = #{courserelstudentId,jdbcType=INTEGER},
+      grade_id = #{gradeId,jdbcType=INTEGER},
       task_id = #{taskId,jdbcType=INTEGER},
       grade = #{grade,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -312,7 +312,7 @@
   <update id="updateByPrimaryKey" parameterType="com.cloudstudy.bo.Job">
     update tbjob
     set title = #{title,jdbcType=VARCHAR},
-      courserelstudent_id = #{courserelstudentId,jdbcType=INTEGER},
+      grade_id = #{gradeId,jdbcType=INTEGER},
       task_id = #{taskId,jdbcType=INTEGER},
       grade = #{grade,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},

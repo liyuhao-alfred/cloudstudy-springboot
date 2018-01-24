@@ -7,7 +7,7 @@ public class Job {
 
     private String title;
 
-    private Integer courserelstudentId;
+    private Integer gradeId;
 
     private Integer taskId;
 
@@ -37,12 +37,12 @@ public class Job {
         this.title = title == null ? null : title.trim();
     }
 
-    public Integer getCourserelstudentId() {
-        return courserelstudentId;
+    public Integer getGradeId() {
+        return gradeId;
     }
 
-    public void setCourserelstudentId(Integer courserelstudentId) {
-        this.courserelstudentId = courserelstudentId;
+    public void setGradeId(Integer gradeId) {
+        this.gradeId = gradeId;
     }
 
     public Integer getTaskId() {

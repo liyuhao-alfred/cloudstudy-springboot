@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.cloudstudy.dto.JobDto;
 import com.cloudstudy.dto.TaskDto;
-import com.cloudstudy.dto.HomeworkQueryParamDto;
+import com.cloudstudy.dto.HomeworkQueryDto;
 
 public interface JobService {
 
@@ -14,14 +14,14 @@ public interface JobService {
 
 	JobDto findById(Integer id);
 
-	List<JobDto> findByCourseId(Integer id);
+	List<JobDto> findByCourseId(Integer courseId);
 
-	List<JobDto> findByTaskId(Integer id);
+	List<JobDto> findByTaskId(Integer taskId);
 
-	List<JobDto> findByTeacherNo(String no);
+	List<JobDto> findByTeacherNo(String teacherNo);
 
-	List<JobDto> findByStudentNo(String no);
+	List<JobDto> findByStudentNo(String studentNo);
 
-	List<JobDto> find(HomeworkQueryParamDto jobQueryParamDto);
+	List<JobDto> find(HomeworkQueryDto jobQueryDto);
 
 }

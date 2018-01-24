@@ -8,7 +8,7 @@ public class TaskDto {
 
 	private String title;
 
-	private Integer courserelteacherId;
+	private Integer courseId;
 
 	private Date deadLine;
 
@@ -38,12 +38,12 @@ public class TaskDto {
 		this.title = title == null ? null : title.trim();
 	}
 
-	public Integer getCourserelteacherId() {
-		return courserelteacherId;
+	public Integer getCourseId() {
+		return courseId;
 	}
 
-	public void setCourserelteacherId(Integer courserelteacherId) {
-		this.courserelteacherId = courserelteacherId;
+	public void setCourseId(Integer courseId) {
+		this.courseId = courseId;
 	}
 
 	public Date getDeadLine() {
@@ -86,11 +86,11 @@ public class TaskDto {
 		this.content = content == null ? null : content.trim();
 	}
 
-	public File getStudyFile() {
+	public File getFileOrigin() {
 		return studyFile;
 	}
 
-	public void setStudyFile(File studyFile) {
+	public void setFileOrigin(File studyFile) {
 		this.studyFile = studyFile;
 	}
 }

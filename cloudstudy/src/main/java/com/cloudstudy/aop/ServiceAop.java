@@ -39,8 +39,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.cloudstudy.dto.SystemlogDto;
-import com.cloudstudy.log.SystemlogService;
+import com.cloudstudy.dto.SystemLogDto;
+import com.cloudstudy.log.SystemLogService;
 import com.cloudstudy.util.Util;
 
 /**
@@ -54,7 +54,7 @@ import com.cloudstudy.util.Util;
 public class ServiceAop {
 	private Log log = LogFactory.getLog(ServiceAop.class);
 	@Autowired
-	private SystemlogService systemlogService;
+	private SystemLogService systemlogService;
 
 	@Pointcut("(execution(* com.cloudstudy.service.impl.*.*(..)))")
 	public void serviceMethodCut() {
@@ -81,7 +81,7 @@ public class ServiceAop {
 		String argsStr = Arrays.toString(joinPoint.getArgs());
 		Long startTime = System.currentTimeMillis();
 
-		SystemlogDto systemlogDto = new SystemlogDto();
+		SystemLogDto systemlogDto = new SystemLogDto();
 		systemlogDto.setRemoteCallIp(Util.getIp(request));
 		systemlogDto.setLogTime(new Date());
 		systemlogDto.setLogType(Util.getOpTypeByAnnotation(joinPoint));

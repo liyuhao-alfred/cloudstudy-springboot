@@ -3,7 +3,7 @@ package com.cloudstudy.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.cloudstudy.exception.UnknownResourceException;
+import com.cloudstudy.exception.CloudStudyException;
 
 import java.io.IOException;
 
@@ -21,7 +21,7 @@ public class DefaultController {
 	@RequestMapping("/**")
 	public void unmappedRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String uri = request.getRequestURI();
-		throw new UnknownResourceException("There is no resource for path " + uri);
+		throw new CloudStudyException("There is no resource for path " + uri);
 	}
 
 }

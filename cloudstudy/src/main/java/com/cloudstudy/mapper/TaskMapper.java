@@ -1,17 +1,36 @@
 package com.cloudstudy.mapper;
 
 import com.cloudstudy.bo.Task;
-import com.cloudstudy.bo.example.TaskExample;
-
+import com.cloudstudy.bo.TaskExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
-public interface TaskMapper extends BaseMapper<Task, TaskExample> {
+public interface TaskMapper {
+    long countByExample(TaskExample example);
 
-	List<Task> selectByExampleWithBLOBs(TaskExample example);
+    int deleteByExample(TaskExample example);
 
-	int updateByExampleWithBLOBs(@Param("record") Task record, @Param("example") TaskExample example);
+    int deleteByPrimaryKey(Integer id);
 
-	int updateByPrimaryKeyWithBLOBs(Task record);
+    int insert(Task record);
 
+    int insertSelective(Task record);
+
+    List<Task> selectByExampleWithBLOBs(TaskExample example);
+
+    List<Task> selectByExample(TaskExample example);
+
+    Task selectByPrimaryKey(Integer id);
+
+    int updateByExampleSelective(@Param("record") Task record, @Param("example") TaskExample example);
+
+    int updateByExampleWithBLOBs(@Param("record") Task record, @Param("example") TaskExample example);
+
+    int updateByExample(@Param("record") Task record, @Param("example") TaskExample example);
+
+    int updateByPrimaryKeySelective(Task record);
+
+    int updateByPrimaryKeyWithBLOBs(Task record);
+
+    int updateByPrimaryKey(Task record);
 }

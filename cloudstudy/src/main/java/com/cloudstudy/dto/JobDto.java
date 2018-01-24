@@ -8,7 +8,7 @@ public class JobDto {
 
 	private String title;
 
-	private Integer courserelstudentId;
+	private Integer gradeId;
 
 	private Integer taskId;
 
@@ -40,12 +40,12 @@ public class JobDto {
 		this.title = title == null ? null : title.trim();
 	}
 
-	public Integer getCourserelstudentId() {
-		return courserelstudentId;
+	public Integer getGradeId() {
+		return gradeId;
 	}
 
-	public void setCourserelstudentId(Integer courserelstudentId) {
-		this.courserelstudentId = courserelstudentId;
+	public void setGradeId(Integer gradeId) {
+		this.gradeId = gradeId;
 	}
 
 	public Integer getTaskId() {
@@ -96,11 +96,11 @@ public class JobDto {
 		this.content = content == null ? null : content.trim();
 	}
 
-	public File getStudyFile() {
+	public File getFileOrigin() {
 		return studyFile;
 	}
 
-	public void setStudyFile(File studyFile) {
+	public void setFileOrigin(File studyFile) {
 		this.studyFile = studyFile;
 	}
 }

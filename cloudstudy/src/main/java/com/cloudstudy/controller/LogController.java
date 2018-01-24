@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cloudstudy.dto.OperatelogDto;
-import com.cloudstudy.dto.OperatelogQueryParamDto;
-import com.cloudstudy.dto.SystemlogDto;
-import com.cloudstudy.dto.SystemlogQueryParamDto;
+import com.cloudstudy.dto.OperateLogDto;
+import com.cloudstudy.dto.OperateLogQueryDto;
+import com.cloudstudy.dto.SystemLogDto;
+import com.cloudstudy.dto.SystemLogQueryDto;
 import com.cloudstudy.dto.WebResult;
-import com.cloudstudy.log.OperatelogService;
-import com.cloudstudy.log.SystemlogService;
+import com.cloudstudy.log.OperateLogService;
+import com.cloudstudy.log.SystemLogService;
 import com.cloudstudy.util.WebResultUtil;
 
 import io.swagger.annotations.Api;
@@ -29,9 +29,9 @@ import io.swagger.annotations.ApiOperation;
 public class LogController {
 
 	@Autowired
-	private OperatelogService operatelogService;
+	private OperateLogService operateLogService;
 	@Autowired
-	private SystemlogService systemlogService;
+	private SystemLogService systemlogService;
 
 	/**
 	 * 获取单个系统日志
@@ -43,9 +43,9 @@ public class LogController {
 	@ApiImplicitParam(name = "id", value = "系统日志编号", required = true, paramType = "path", dataType = "int")
 	@RequestMapping(value = "/single/systemlog/{id}", produces = { "application/json; charset=UTF-8" }, method = {
 			RequestMethod.POST, RequestMethod.GET })
-	// @RequiresPermissions("Systemlog:view")
-	public @ResponseBody WebResult<SystemlogDto> findSystemlog(@PathVariable("id") Integer id) {
-		SystemlogDto systemlogDto = systemlogService.findById(id);
+	// @RequiresPermissions("SystemLog:view")
+	public @ResponseBody WebResult<SystemLogDto> findSystemLog(@PathVariable("id") Integer id) {
+		SystemLogDto systemlogDto = systemlogService.findById(id);
 		return WebResultUtil.success(systemlogDto);
 	}
 
@@ -59,11 +59,11 @@ public class LogController {
 	@ApiOperation(value = "获取系统日志列表", notes = "获取系统日志列表")
 	@RequestMapping(value = "/list/systemlog/test", produces = { "application/json; charset=UTF-8" }, method = {
 			RequestMethod.POST, RequestMethod.GET })
-	// @RequiresPermissions("Systemlog:query")
-	public @ResponseBody WebResult<List<SystemlogDto>> findSystemlogTest(
+	// @RequiresPermissions("SystemLog:query")
+	public @ResponseBody WebResult<List<SystemLogDto>> findSystemLogTest(
 			@RequestParam(value = "index", required = true) Integer index,
 			@RequestParam(value = "limit", required = true) Integer limit) {
-		List<SystemlogDto> systemlogDtoList = systemlogService.find(null, null, null, null, null, null, null, null,
+		List<SystemLogDto> systemlogDtoList = systemlogService.find(null, null, null, null, null, null, null, null,
 				index, limit);
 		return WebResultUtil.success(systemlogDtoList);
 	}
@@ -78,10 +78,10 @@ public class LogController {
 	@ApiOperation(value = "获取系统日志列表", notes = "获取系统日志列表")
 	@RequestMapping(value = "/list/systemlog", produces = { "application/json; charset=UTF-8" }, method = {
 			RequestMethod.POST, RequestMethod.GET })
-	// @RequiresPermissions("Systemlog:query")
-	public @ResponseBody WebResult<List<SystemlogDto>> findSystemlog(
-			@RequestParam(value = "systemlogQueryParamDto", required = true) SystemlogQueryParamDto systemlogQueryParamDto) {
-		List<SystemlogDto> systemlogDtoList = systemlogService.find(systemlogQueryParamDto);
+	// @RequiresPermissions("SystemLog:query")
+	public @ResponseBody WebResult<List<SystemLogDto>> findSystemLog(
+			@RequestParam(value = "systemlogQueryDto", required = true) SystemLogQueryDto systemlogQueryDto) {
+		List<SystemLogDto> systemlogDtoList = systemlogService.find(systemlogQueryDto);
 		return WebResultUtil.success(systemlogDtoList);
 	}
 
@@ -93,29 +93,29 @@ public class LogController {
 	 */
 	@ApiOperation(value = "获取单个操作员日志", notes = "传入日志编号获取单个操作员日志")
 	@ApiImplicitParam(name = "id", value = "操作员日志编号", required = true, paramType = "path", dataType = "int")
-	@RequestMapping(value = "/single/operatelog/{id}", produces = { "application/json; charset=UTF-8" }, method = {
+	@RequestMapping(value = "/single/operateLog/{id}", produces = { "application/json; charset=UTF-8" }, method = {
 			RequestMethod.POST, RequestMethod.GET })
-	// @RequiresPermissions("Operatelog:view")
-	public @ResponseBody WebResult<OperatelogDto> findOperatelog(@PathVariable("id") Integer id) {
-		OperatelogDto operatelogDto = operatelogService.findById(id);
-		return WebResultUtil.success(operatelogDto);
+	// @RequiresPermissions("OperateLog:view")
+	public @ResponseBody WebResult<OperateLogDto> findOperateLog(@PathVariable("id") Integer id) {
+		OperateLogDto operateLogDto = operateLogService.findById(id);
+		return WebResultUtil.success(operateLogDto);
 	}
 
 	/**
 	 * 获取日志列表
 	 * 
-	 * @param operatelog
+	 * @param operateLog
 	 * @param keyword
 	 * @return
 	 */
 	@ApiOperation(value = "获取操作员日志列表", notes = "获取操作员日志列表")
-	@RequestMapping(value = "/list/operatelog", produces = { "application/json; charset=UTF-8" }, method = {
+	@RequestMapping(value = "/list/operateLog", produces = { "application/json; charset=UTF-8" }, method = {
 			RequestMethod.POST, RequestMethod.GET })
-	// @RequiresPermissions("Operatelog:query")
-	public @ResponseBody WebResult<List<OperatelogDto>> findOperatelog(
-			@RequestParam(value = "operatelogQueryParamDto", required = true) OperatelogQueryParamDto operatelogQueryParamDto) {
-		List<OperatelogDto> operatelogDtoList = operatelogService.find(operatelogQueryParamDto);
-		return WebResultUtil.success(operatelogDtoList);
+	// @RequiresPermissions("OperateLog:query")
+	public @ResponseBody WebResult<List<OperateLogDto>> findOperateLog(
+			@RequestParam(value = "operateLogQueryDto", required = true) OperateLogQueryDto operateLogQueryDto) {
+		List<OperateLogDto> operateLogDtoList = operateLogService.find(operateLogQueryDto);
+		return WebResultUtil.success(operateLogDtoList);
 	}
 
 }

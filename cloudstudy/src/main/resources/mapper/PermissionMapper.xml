@@ -70,7 +70,7 @@
   <sql id="Base_Column_List">
     id, name, code, description, parent_id, status
   </sql>
-  <select id="selectByExample" parameterType="com.cloudstudy.bo.example.PermissionExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.cloudstudy.bo.PermissionExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -95,7 +95,7 @@
     delete from tbpermission
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.cloudstudy.bo.example.PermissionExample">
+  <delete id="deleteByExample" parameterType="com.cloudstudy.bo.PermissionExample">
     delete from tbpermission
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -152,7 +152,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.cloudstudy.bo.example.PermissionExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="com.cloudstudy.bo.PermissionExample" resultType="java.lang.Long">
     select count(*) from tbpermission
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />

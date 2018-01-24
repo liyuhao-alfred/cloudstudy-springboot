@@ -69,7 +69,7 @@
   <sql id="Base_Column_List">
     id, name, code, description, status
   </sql>
-  <select id="selectByExample" parameterType="com.cloudstudy.bo.example.RoleExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.cloudstudy.bo.RoleExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -94,7 +94,7 @@
     delete from tbrole
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.cloudstudy.bo.example.RoleExample">
+  <delete id="deleteByExample" parameterType="com.cloudstudy.bo.RoleExample">
     delete from tbrole
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -143,7 +143,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.cloudstudy.bo.example.RoleExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="com.cloudstudy.bo.RoleExample" resultType="java.lang.Long">
     select count(*) from tbrole
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />

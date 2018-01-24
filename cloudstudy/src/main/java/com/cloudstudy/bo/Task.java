@@ -7,7 +7,7 @@ public class Task {
 
     private String title;
 
-    private Integer courserelteacherId;
+    private Integer courseId;
 
     private Date deadLine;
 
@@ -35,12 +35,12 @@ public class Task {
         this.title = title == null ? null : title.trim();
     }
 
-    public Integer getCourserelteacherId() {
-        return courserelteacherId;
+    public Integer getCourseId() {
+        return courseId;
     }
 
-    public void setCourserelteacherId(Integer courserelteacherId) {
-        this.courserelteacherId = courserelteacherId;
+    public void setCourseId(Integer courseId) {
+        this.courseId = courseId;
     }
 
     public Date getDeadLine() {

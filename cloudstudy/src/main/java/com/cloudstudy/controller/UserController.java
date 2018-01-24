@@ -1,5 +1,6 @@
 package com.cloudstudy.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.shiro.SecurityUtils;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cloudstudy.aop.annotation.LogPointcut;
 import com.cloudstudy.dto.UserDto;
-import com.cloudstudy.dto.UserQueryParamDto;
+import com.cloudstudy.dto.UserQueryDto;
 import com.cloudstudy.dto.WebResult;
 import com.cloudstudy.exception.CloudStudyException;
 import com.cloudstudy.service.UserService;
@@ -88,8 +89,8 @@ public class UserController {
 			RequestMethod.GET })
 	@RequiresPermissions("User:del") // 权限管理;
 	public @ResponseBody WebResult<List<UserDto>> find(
-			@RequestParam(value = "userQueryParamDto", required = true) UserQueryParamDto userQueryParamDto) {
-		List<UserDto> userDtoList = userService.find(userQueryParamDto);
+			@RequestParam(value = "userQueryDto", required = true) UserQueryDto userQueryDto) {
+		List<UserDto> userDtoList = userService.find(userQueryDto);
 		return WebResultUtil.success(userDtoList);
 	}
 
@@ -133,13 +134,15 @@ public class UserController {
 	 *
 	 * @param no
 	 * @return
+	 * @throws IOException
 	 */
 	@ApiOperation(value = "删除系统用户", notes = "通过系统用户工号或者学号删除系统用户")
 	@ApiImplicitParam(name = "no", value = "系统用户工号或者学号", required = true, paramType = "body", dataType = "String")
 	@RequestMapping(value = "/delete", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
 	@RequiresPermissions("User:delete") // 权限管理;
-	public @ResponseBody WebResult<UserDto> delete(@RequestParam(value = "no", required = true) String no) {
+	public @ResponseBody WebResult<UserDto> delete(@RequestParam(value = "no", required = true) String no)
+			throws IOException {
 		UserDto userDto = userService.findUserByNo(no);
 		userService.deleteByNo(no);
 		return WebResultUtil.success(userDto);

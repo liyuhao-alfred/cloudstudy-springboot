@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.cloudstudy.bo.Task">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="title" jdbcType="VARCHAR" property="title" />
-    <result column="courserelteacher_id" jdbcType="INTEGER" property="courserelteacherId" />
+    <result column="course_id" jdbcType="INTEGER" property="courseId" />
     <result column="dead_line" jdbcType="TIMESTAMP" property="deadLine" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="last_modify_time" jdbcType="TIMESTAMP" property="lastModifyTime" />
@@ -72,12 +72,12 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, title, courserelteacher_id, dead_line, create_time, last_modify_time, status
+    id, title, course_id, dead_line, create_time, last_modify_time, status
   </sql>
   <sql id="Blob_Column_List">
     content
   </sql>
-  <select id="selectByExampleWithBLOBs" parameterType="com.cloudstudy.bo.example.TaskExample" resultMap="ResultMapWithBLOBs">
+  <select id="selectByExampleWithBLOBs" parameterType="com.cloudstudy.bo.TaskExample" resultMap="ResultMapWithBLOBs">
     select
     <if test="distinct">
       distinct
@@ -94,7 +94,7 @@
       order by ${orderByClause}
     </if>
   </select>
-   <select id="selectByExample" parameterType="com.cloudstudy.bo.example.TaskExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.cloudstudy.bo.TaskExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -121,7 +121,7 @@
     delete from tbtask
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.cloudstudy.bo.example.TaskExample">
+  <delete id="deleteByExample" parameterType="com.cloudstudy.bo.TaskExample">
     delete from tbtask
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -131,10 +131,10 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into tbtask (title, courserelteacher_id, dead_line, 
+    insert into tbtask (title, course_id, dead_line, 
       create_time, last_modify_time, status, 
       content)
-    values (#{title,jdbcType=VARCHAR}, #{courserelteacherId,jdbcType=INTEGER}, #{deadLine,jdbcType=TIMESTAMP}, 
+    values (#{title,jdbcType=VARCHAR}, #{courseId,jdbcType=INTEGER}, #{deadLine,jdbcType=TIMESTAMP}, 
       #{createTime,jdbcType=TIMESTAMP}, #{lastModifyTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, 
       #{content,jdbcType=LONGVARCHAR})
   </insert>
@@ -147,8 +147,8 @@
       <if test="title != null">
         title,
       </if>
-      <if test="courserelteacherId != null">
-        courserelteacher_id,
+      <if test="courseId != null">
+        course_id,
       </if>
       <if test="deadLine != null">
         dead_line,
@@ -170,8 +170,8 @@
       <if test="title != null">
         #{title,jdbcType=VARCHAR},
       </if>
-      <if test="courserelteacherId != null">
-        #{courserelteacherId,jdbcType=INTEGER},
+      <if test="courseId != null">
+        #{courseId,jdbcType=INTEGER},
       </if>
       <if test="deadLine != null">
         #{deadLine,jdbcType=TIMESTAMP},
@@ -190,7 +190,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.cloudstudy.bo.example.TaskExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="com.cloudstudy.bo.TaskExample" resultType="java.lang.Long">
     select count(*) from tbtask
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -205,8 +205,8 @@
       <if test="record.title != null">
         title = #{record.title,jdbcType=VARCHAR},
       </if>
-      <if test="record.courserelteacherId != null">
-        courserelteacher_id = #{record.courserelteacherId,jdbcType=INTEGER},
+      <if test="record.courseId != null">
+        course_id = #{record.courseId,jdbcType=INTEGER},
       </if>
       <if test="record.deadLine != null">
         dead_line = #{record.deadLine,jdbcType=TIMESTAMP},
@@ -232,7 +232,7 @@
     update tbtask
     set id = #{record.id,jdbcType=INTEGER},
       title = #{record.title,jdbcType=VARCHAR},
-      courserelteacher_id = #{record.courserelteacherId,jdbcType=INTEGER},
+      course_id = #{record.courseId,jdbcType=INTEGER},
       dead_line = #{record.deadLine,jdbcType=TIMESTAMP},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       last_modify_time = #{record.lastModifyTime,jdbcType=TIMESTAMP},
@@ -246,7 +246,7 @@
     update tbtask
     set id = #{record.id,jdbcType=INTEGER},
       title = #{record.title,jdbcType=VARCHAR},
-      courserelteacher_id = #{record.courserelteacherId,jdbcType=INTEGER},
+      course_id = #{record.courseId,jdbcType=INTEGER},
       dead_line = #{record.deadLine,jdbcType=TIMESTAMP},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       last_modify_time = #{record.lastModifyTime,jdbcType=TIMESTAMP},
@@ -261,8 +261,8 @@
       <if test="title != null">
         title = #{title,jdbcType=VARCHAR},
       </if>
-      <if test="courserelteacherId != null">
-        courserelteacher_id = #{courserelteacherId,jdbcType=INTEGER},
+      <if test="courseId != null">
+        course_id = #{courseId,jdbcType=INTEGER},
       </if>
       <if test="deadLine != null">
         dead_line = #{deadLine,jdbcType=TIMESTAMP},
@@ -285,7 +285,7 @@
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.cloudstudy.bo.Task">
     update tbtask
     set title = #{title,jdbcType=VARCHAR},
-      courserelteacher_id = #{courserelteacherId,jdbcType=INTEGER},
+      course_id = #{courseId,jdbcType=INTEGER},
       dead_line = #{deadLine,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
@@ -296,7 +296,7 @@
   <update id="updateByPrimaryKey" parameterType="com.cloudstudy.bo.Task">
     update tbtask
     set title = #{title,jdbcType=VARCHAR},
-      courserelteacher_id = #{courserelteacherId,jdbcType=INTEGER},
+      course_id = #{courseId,jdbcType=INTEGER},
       dead_line = #{deadLine,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},

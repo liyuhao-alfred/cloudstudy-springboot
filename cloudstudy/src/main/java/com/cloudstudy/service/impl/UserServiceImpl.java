@@ -1,5 +1,6 @@
 package com.cloudstudy.service.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -10,19 +11,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cloudstudy.aop.annotation.LogPointcut;
-import com.cloudstudy.bo.Rolereluser;
+import com.cloudstudy.bo.RoleToUser;
+import com.cloudstudy.bo.RoleToUserExample;
 import com.cloudstudy.bo.User;
-import com.cloudstudy.bo.example.RoleExample;
-import com.cloudstudy.bo.example.RolereluserExample;
-import com.cloudstudy.bo.example.UserExample;
-import com.cloudstudy.bo.example.UserExample.Criteria;
+import com.cloudstudy.bo.UserExample;
+import com.cloudstudy.bo.UserExample.Criteria;
 import com.cloudstudy.constant.RoleTypeConstant;
 import com.cloudstudy.constant.SearchType;
+import com.cloudstudy.dto.FileOriginDto;
 import com.cloudstudy.dto.UserDto;
-import com.cloudstudy.dto.UserQueryParamDto;
+import com.cloudstudy.dto.UserQueryDto;
 import com.cloudstudy.mapper.RoleMapper;
-import com.cloudstudy.mapper.RolereluserMapper;
+import com.cloudstudy.mapper.RoleToUserMapper;
 import com.cloudstudy.mapper.UserMapper;
+import com.cloudstudy.service.FileOriginService;
 import com.cloudstudy.service.UserService;
 import com.cloudstudy.util.DateUtil;
 
@@ -34,7 +36,9 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private RoleMapper roleMapper;
 	@Autowired
-	private RolereluserMapper rolereluserMapper;
+	private RoleToUserMapper roleToUserMapper;
+	@Autowired
+	private FileOriginService fileOriginService;
 
 	@Override
 	@LogPointcut(description = "添加用户", code = "save")
@@ -48,7 +52,17 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@LogPointcut(description = "删除用户", code = "deleteByNo")
-	public void deleteByNo(String no) {
+	public void deleteByNo(String no) throws IOException {
+		List<FileOriginDto> FileOriginDtoList = fileOriginService.findByUserNo(no, true);
+
+		if (FileOriginDtoList != null) {
+			List<Integer> idList = new ArrayList<Integer>();
+			for (FileOriginDto fileOriginDto : FileOriginDtoList) {
+				idList.add(fileOriginDto.getId());
+			}
+			fileOriginService.deleteByIdList(idList);
+		}
+
 		userMapper.deleteByPrimaryKey(no);
 	}
 
@@ -57,7 +71,7 @@ public class UserServiceImpl implements UserService {
 	public UserDto update(UserDto userDto) {
 		User user = new User();
 		BeanUtils.copyProperties(userDto, user);
-		userMapper.update(user);
+		userMapper.updateByPrimaryKeyWithBLOBs(user);
 		BeanUtils.copyProperties(user, userDto);
 		return userDto;
 	}
@@ -69,14 +83,14 @@ public class UserServiceImpl implements UserService {
 		UserDto userDto = new UserDto();
 		BeanUtils.copyProperties(user, userDto);
 
-		RolereluserExample rolereluserExample = new RolereluserExample();
-		com.cloudstudy.bo.example.RolereluserExample.Criteria criteria = rolereluserExample.createCriteria();
+		RoleToUserExample roleToUserExample = new RoleToUserExample();
+		com.cloudstudy.bo.RoleToUserExample.Criteria criteria = roleToUserExample.createCriteria();
 		criteria.andUserNoEqualTo(no);
-		List<Rolereluser> rolereluserList = rolereluserMapper.selectByExample(rolereluserExample);
+		List<RoleToUser> roleToUserList = roleToUserMapper.selectByExample(roleToUserExample);
 		HashSet<Integer> roleTypeSet = new HashSet<Integer>();
-		if (rolereluserList != null && !rolereluserList.isEmpty()) {
-			for (Rolereluser rolereluser : rolereluserList) {
-				roleTypeSet.add(rolereluser.getRoleId());
+		if (roleToUserList != null && !roleToUserList.isEmpty()) {
+			for (RoleToUser roleToUser : roleToUserList) {
+				roleTypeSet.add(roleToUser.getRoleId());
 			}
 		}
 		userDto.setRoleType(new ArrayList<Integer>(roleTypeSet));
@@ -86,12 +100,12 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@LogPointcut(description = "通过条件查找用户", code = "find")
-	public List<UserDto> find(UserQueryParamDto userQueryParamDto) {
+	public List<UserDto> find(UserQueryDto userQueryDto) {
 		UserExample userExample = new UserExample();
 		Criteria criteria = userExample.createCriteria();
 
-		String keyword = userQueryParamDto.getKeyword();
-		Integer searchType = userQueryParamDto.getSearchType();
+		String keyword = userQueryDto.getKeyword();
+		Integer searchType = userQueryDto.getSearchType();
 		if (!StringUtils.isEmpty(keyword)) {
 			if (searchType == SearchType.account.getCode()) {
 				criteria.andAccountLike(keyword);
@@ -106,14 +120,13 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 
-		if (!StringUtils.isEmpty(userQueryParamDto.getFromTime())
-				&& !StringUtils.isEmpty(userQueryParamDto.getToTime())) {
-			criteria.andRegistTimeBetween(DateUtil.stringToDate(userQueryParamDto.getFromTime()),
-					DateUtil.stringToDate(userQueryParamDto.getToTime()));
+		if (!StringUtils.isEmpty(userQueryDto.getFromTime()) && !StringUtils.isEmpty(userQueryDto.getToTime())) {
+			criteria.andRegistTimeBetween(DateUtil.stringToDate(userQueryDto.getFromTime()),
+					DateUtil.stringToDate(userQueryDto.getToTime()));
 
 		}
-		if (userQueryParamDto.getSex() != null && userQueryParamDto.getSex() == 0) {
-			criteria.andSexEqualTo(userQueryParamDto.getSex());
+		if (userQueryDto.getSex() != null && userQueryDto.getSex() == 0) {
+			criteria.andSexEqualTo(userQueryDto.getSex());
 		}
 
 		List<User> userList = userMapper.selectByExample(userExample);
@@ -146,14 +159,14 @@ public class UserServiceImpl implements UserService {
 		UserDto userDto = new UserDto();
 		BeanUtils.copyProperties(user, userDto);
 
-		RolereluserExample rolereluserExample = new RolereluserExample();
-		com.cloudstudy.bo.example.RolereluserExample.Criteria criteria1 = rolereluserExample.createCriteria();
+		RoleToUserExample roleToUserExample = new RoleToUserExample();
+		com.cloudstudy.bo.RoleToUserExample.Criteria criteria1 = roleToUserExample.createCriteria();
 		criteria1.andUserNoEqualTo(userDto.getNo());
-		List<Rolereluser> rolereluserList = rolereluserMapper.selectByExample(rolereluserExample);
+		List<RoleToUser> roleToUserList = roleToUserMapper.selectByExample(roleToUserExample);
 		HashSet<Integer> roleTypeSet = new HashSet<Integer>();
-		if (rolereluserList != null && !rolereluserList.isEmpty()) {
-			for (Rolereluser rolereluser : rolereluserList) {
-				roleTypeSet.add(rolereluser.getRoleId());
+		if (roleToUserList != null && !roleToUserList.isEmpty()) {
+			for (RoleToUser roleToUser : roleToUserList) {
+				roleTypeSet.add(roleToUser.getRoleId());
 			}
 		}
 		userDto.setRoleType(new ArrayList<Integer>(roleTypeSet));
@@ -252,5 +265,29 @@ public class UserServiceImpl implements UserService {
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	public UserDto findTeacherByCourseId(Integer courseId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public UserDto findStudentByCourseId(Integer courseId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public UserDto findTeacherByTaskId(Integer taskId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public UserDto findStudentByJobId(Integer jobId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

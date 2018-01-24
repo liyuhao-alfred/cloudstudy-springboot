@@ -6,7 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.cloudstudy.dto.UserDto;
-import com.cloudstudy.dto.UserQueryParamDto;
+import com.cloudstudy.dto.UserQueryDto;
 import com.cloudstudy.service.UserService;
 
 import java.util.List;
@@ -33,7 +33,7 @@ public class FTLController {
 
 	@RequestMapping(value = "/userList", method = RequestMethod.GET)
 	public String find(Model model) {
-		List<UserDto> userList = userService.find(new UserQueryParamDto());
+		List<UserDto> userList = userService.find(new UserQueryDto());
 		model.addAttribute("userList", userList);
 		return "userList";
 	}

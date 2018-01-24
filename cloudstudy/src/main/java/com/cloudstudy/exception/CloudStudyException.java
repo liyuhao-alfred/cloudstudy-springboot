@@ -10,6 +10,10 @@ public class CloudStudyException extends RuntimeException {
 	private String errorMsg;
 	private HashMap<Integer, String> errorMap;// 存放错误的map
 
+	public CloudStudyException() {
+		super();
+	}
+
 	public CloudStudyException(String message) {
 		super(message);
 		this.errorMsg = message;

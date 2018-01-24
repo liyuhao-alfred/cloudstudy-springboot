@@ -12,6 +12,6 @@ public interface RoleService {
 	 * @param no
 	 * @return
 	 */
-	List<RoleDto> findRoleByUserNo(String no);
+	List<RoleDto> findRoleByUserNo(String userNo);
 
 }
