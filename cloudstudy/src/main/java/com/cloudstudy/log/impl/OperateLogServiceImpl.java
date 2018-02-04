@@ -34,8 +34,8 @@ public class OperateLogServiceImpl implements OperateLogService {
 	}
 
 	@Override
-	public OperateLogDto findById(Integer id) {
-		OperateLog operateLog = operateLogMapper.selectByPrimaryKey(id);
+	public OperateLogDto findById(Integer primaryKey) {
+		OperateLog operateLog = operateLogMapper.selectByPrimaryKey(primaryKey);
 		OperateLogDto operateLogDto = new OperateLogDto();
 		BeanUtils.copyProperties(operateLog, operateLogDto);
 		return operateLogDto;
@@ -75,7 +75,7 @@ public class OperateLogServiceImpl implements OperateLogService {
 		}
 
 		if (index != null && limit != null) {
-			PageHelper.offsetPage(index, limit);
+			PageHelper.startPage(index, limit);
 
 		}
 
@@ -95,7 +95,7 @@ public class OperateLogServiceImpl implements OperateLogService {
 
 	@Override
 	public List<OperateLogDto> find(OperateLogQueryDto operateLogQueryDto) {
-		return find(null, null, null, null, null, operateLogQueryDto.getFromTime(),
-				operateLogQueryDto.getToTime(), null, null);
+		return find(null, null, null, null, null, operateLogQueryDto.getFromTime(), operateLogQueryDto.getToTime(),
+				null, null);
 	}
 }

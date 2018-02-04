@@ -9,12 +9,16 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cloudstudy.bo.FileOrigin;
 import com.cloudstudy.bo.Job;
 import com.cloudstudy.bo.JobExample;
+import com.cloudstudy.bo.Job;
 import com.cloudstudy.bo.JobExample;
 import com.cloudstudy.constant.SearchType;
-import com.cloudstudy.dto.HomeworkQueryDto;
+import com.cloudstudy.dto.FileOriginDto;
+import com.cloudstudy.dto.JobQueryDto;
 import com.cloudstudy.dto.JobDto;
+import com.cloudstudy.exception.CloudStudyException;
 import com.cloudstudy.dto.JobDto;
 import com.cloudstudy.mapper.GradeMapper;
 import com.cloudstudy.mapper.CourseMapper;
@@ -30,6 +34,7 @@ import com.cloudstudy.util.DateUtil;
 import com.github.pagehelper.PageHelper;
 
 @Service
+@SuppressWarnings("unused")
 public class JobServiceImpl implements JobService {
 
 	@Autowired
@@ -72,8 +77,8 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public JobDto findById(Integer id) {
-		Job course = jobMapper.selectByPrimaryKey(id);
+	public JobDto findById(Integer primaryKey) {
+		Job course = jobMapper.selectByPrimaryKey(primaryKey);
 		if (course == null) {
 			return null;
 		}
@@ -83,24 +88,26 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public List<JobDto> find(HomeworkQueryDto homeworkQueryDto) {
+	public List<JobDto> find(JobQueryDto jobQueryDto) {
 		JobExample jobExample = new JobExample();
 		com.cloudstudy.bo.JobExample.Criteria criteria = jobExample.createCriteria();
 
-		String keyword = homeworkQueryDto.getKeyword();
-		Integer searchType = homeworkQueryDto.getSearchType();
+		String keyword = jobQueryDto.getKeyword();
+		Integer searchType = jobQueryDto.getSearchType();
 		if (!StringUtils.isEmpty(keyword)) {
 
 		}
 
-		if (!StringUtils.isEmpty(homeworkQueryDto.getFromTime())
-				&& !StringUtils.isEmpty(homeworkQueryDto.getToTime())) {
-			criteria.andLastModifyTimeBetween(DateUtil.stringToDate(homeworkQueryDto.getFromTime()),
-					DateUtil.stringToDate(homeworkQueryDto.getToTime()));
+		if (!StringUtils.isEmpty(jobQueryDto.getFromTime()) && !StringUtils.isEmpty(jobQueryDto.getToTime())) {
+			criteria.andLastModifyTimeBetween(DateUtil.stringToDate(jobQueryDto.getFromTime()),
+					DateUtil.stringToDate(jobQueryDto.getToTime()));
 
 		}
 
-		PageHelper.startPage(homeworkQueryDto.getPageDto().getPage(), homeworkQueryDto.getPageDto().getRows());
+		Integer page = jobQueryDto.getPageDto().getCurrent();
+		Integer rows = jobQueryDto.getPageDto().getSize();
+		PageHelper.startPage(page, rows);
+
 		List<Job> jobList = jobMapper.selectByExample(jobExample);
 		if (jobList == null || jobList.isEmpty()) {
 			return null;
@@ -116,27 +123,27 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public List<JobDto> findByCourseId(Integer id) {
+	public List<JobDto> findByCourseId(Integer primaryKey) {
 		HashSet<SearchType> searchTypeSet = new HashSet<SearchType>();
 		searchTypeSet.add(SearchType.courseId);
 
-		HomeworkQueryDto homeworkQueryDto = new HomeworkQueryDto();
-		homeworkQueryDto.setKeyword(id + "");
-		homeworkQueryDto.setSearchTypeSet(searchTypeSet);
+		JobQueryDto jobQueryDto = new JobQueryDto();
+		jobQueryDto.setKeyword(primaryKey + "");
+		jobQueryDto.setSearchTypeSet(searchTypeSet);
 
-		return find(homeworkQueryDto);
+		return find(jobQueryDto);
 	}
 
 	@Override
-	public List<JobDto> findByTaskId(Integer id) {
+	public List<JobDto> findByTaskId(Integer primaryKey) {
 		HashSet<SearchType> searchTypeSet = new HashSet<SearchType>();
 		searchTypeSet.add(SearchType.courseId);
 
-		HomeworkQueryDto homeworkQueryDto = new HomeworkQueryDto();
-		homeworkQueryDto.setKeyword(id + "");
-		homeworkQueryDto.setSearchTypeSet(searchTypeSet);
+		JobQueryDto jobQueryDto = new JobQueryDto();
+		jobQueryDto.setKeyword(primaryKey + "");
+		jobQueryDto.setSearchTypeSet(searchTypeSet);
 
-		return find(homeworkQueryDto);
+		return find(jobQueryDto);
 	}
 
 	@Override
@@ -144,11 +151,11 @@ public class JobServiceImpl implements JobService {
 		HashSet<SearchType> searchTypeSet = new HashSet<SearchType>();
 		searchTypeSet.add(SearchType.courseId);
 
-		HomeworkQueryDto homeworkQueryDto = new HomeworkQueryDto();
-		homeworkQueryDto.setKeyword(no);
-		homeworkQueryDto.setSearchTypeSet(searchTypeSet);
+		JobQueryDto jobQueryDto = new JobQueryDto();
+		jobQueryDto.setKeyword(no);
+		jobQueryDto.setSearchTypeSet(searchTypeSet);
 
-		return find(homeworkQueryDto);
+		return find(jobQueryDto);
 	}
 
 	@Override
@@ -156,11 +163,64 @@ public class JobServiceImpl implements JobService {
 		HashSet<SearchType> searchTypeSet = new HashSet<SearchType>();
 		searchTypeSet.add(SearchType.courseId);
 
-		HomeworkQueryDto homeworkQueryDto = new HomeworkQueryDto();
-		homeworkQueryDto.setKeyword(no);
-		homeworkQueryDto.setSearchTypeSet(searchTypeSet);
+		JobQueryDto jobQueryDto = new JobQueryDto();
+		jobQueryDto.setKeyword(no);
+		jobQueryDto.setSearchTypeSet(searchTypeSet);
 
-		return find(homeworkQueryDto);
+		return find(jobQueryDto);
+	}
+
+	private List<Integer> getPrimaryKeyList(List<Job> jobList) {
+		if (jobList == null || jobList.isEmpty()) {
+			return new ArrayList<Integer>();
+		}
+		List<Integer> primaryKeyList = new ArrayList<Integer>();
+		for (Job job : jobList) {
+			primaryKeyList.add(job.getId());
+		}
+		return primaryKeyList;
+	}
+
+	private List<JobDto> generateDto(List<Job> jobList) {
+		if (jobList == null || jobList.isEmpty()) {
+			return new ArrayList<JobDto>();
+		}
+		List<JobDto> JobDtoList = new ArrayList<JobDto>();
+		for (Job job : jobList) {
+			JobDto jobDto = generateDto(job);
+			JobDtoList.add(jobDto);
+		}
+		return JobDtoList;
+	}
+
+	private List<Job> generate(List<JobDto> jobDtoList) {
+		if (jobDtoList == null || jobDtoList.isEmpty()) {
+			return new ArrayList<Job>();
+		}
+		List<Job> JobList = new ArrayList<Job>();
+		for (JobDto jobDto : jobDtoList) {
+			Job job = generate(jobDto);
+			JobList.add(job);
+		}
+		return JobList;
+	}
+
+	private JobDto generateDto(Job job) {
+		if (job == null) {
+			throw new CloudStudyException();
+		}
+		JobDto jobDto = new JobDto();
+		BeanUtils.copyProperties(job, jobDto);
+		return jobDto;
+	}
+
+	private Job generate(JobDto jobDto) {
+		if (jobDto == null) {
+			throw new CloudStudyException();
+		}
+		Job job = new Job();
+		BeanUtils.copyProperties(jobDto, job);
+		return job;
 	}
 
 }

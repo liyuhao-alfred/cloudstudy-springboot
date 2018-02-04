@@ -4,7 +4,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import com.cloudstudy.dto.WebResult;
 import com.cloudstudy.exception.CloudStudyException;
+import com.cloudstudy.util.WebResultUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +18,7 @@ import java.util.Map;
  * @since 2018年1月19日09:36:01
  */
 @ControllerAdvice
+@CrossOrigin
 public class AdviceController {
 
 	/**
@@ -45,17 +48,16 @@ public class AdviceController {
 	 */
 	@ResponseBody
 	@ExceptionHandler(value = Exception.class)
-	public Map<String, Object> errorHandler(Exception ex) {
-		Map<String, Object> map = new HashMap<String, Object>();
+	public WebResult<?> errorHandler(Exception ex) {
+		ex.printStackTrace();
+		String errorMsg = "";
 		if (CloudStudyException.class.isInstance(ex)) {
 			CloudStudyException cloudStudyException = (CloudStudyException) ex;
-			map.put("code", cloudStudyException.getErrorCode());
-			map.put("msg", cloudStudyException.getErrorMsg());
+			errorMsg = cloudStudyException.getErrorMsg();
 		} else {
-			map.put("code", 100);
-			map.put("msg", ex.getMessage());
+			errorMsg = ex.getMessage();
 		}
-		return map;
+		return WebResultUtil.error(errorMsg);
 	}
 
 }

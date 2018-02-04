@@ -73,7 +73,7 @@
     </if>
     'true' as QUERYID,
     <include refid="Base_Column_List" />
-    from tbfileToTask
+    from tbfilereltask
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -82,17 +82,17 @@
     </if>
   </select>
   <delete id="deleteByExample" parameterType="com.cloudstudy.bo.FileToTaskExample">
-    delete from tbfileToTask
+    delete from tbfilereltask
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
   <insert id="insert" parameterType="com.cloudstudy.bo.FileToTask">
-    insert into tbfileToTask (file_id, task_id)
+    insert into tbfilereltask (file_id, task_id)
     values (#{fileId,jdbcType=INTEGER}, #{taskId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.cloudstudy.bo.FileToTask">
-    insert into tbfileToTask
+    insert into tbfilereltask
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="fileId != null">
         file_id,
@@ -111,13 +111,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.cloudstudy.bo.FileToTaskExample" resultType="java.lang.Long">
-    select count(*) from tbfileToTask
+    select count(*) from tbfilereltask
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update tbfileToTask
+    update tbfilereltask
     <set>
       <if test="record.fileId != null">
         file_id = #{record.fileId,jdbcType=INTEGER},
@@ -131,7 +131,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update tbfileToTask
+    update tbfilereltask
     set file_id = #{record.fileId,jdbcType=INTEGER},
       task_id = #{record.taskId,jdbcType=INTEGER}
     <if test="_parameter != null">

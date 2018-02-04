@@ -60,6 +60,7 @@ import com.cloudstudy.util.Util;
  */
 @Component
 @Aspect
+@SuppressWarnings("unused")
 public class ControllerAop {
 	private Log log = LogFactory.getLog(ControllerAop.class);
 	@Autowired
@@ -96,15 +97,20 @@ public class ControllerAop {
 		HttpSession session = (HttpSession) requestAttributes.resolveReference(RequestAttributes.REFERENCE_SESSION); // 如果要获取Session信息
 		String loginAccount = (String) session.getAttribute("login_account");
 		if (StringUtils.isEmpty(loginAccount)) {
-//			Object operationResult = joinPoint.proceed();
-//			return operationResult;
+			// Object operationResult = joinPoint.proceed();
+			// return operationResult;
 		}
 
-//		UserDto userDto = userService.findByAccount(loginAccount);
-//		if (userDto != null) {
-//			operateLogDto.setOperatorNo(userDto.getNo());
-//			operateLogDto.setOperatorName(userDto.getName());
-//		}
+		// UserDto userDto = userService.findByAccount(loginAccount);
+		// if (userDto != null) {
+		// operateLogDto.setOperatorNo(userDto.getNo());
+		// operateLogDto.setOperatorName(userDto.getName());
+		// }
+		// UserDto userDto = userService.findByAccount(loginAccount);
+		// if (userDto != null) {
+		// operateLogDto.setOperatorNo(userDto.getNo());
+		// operateLogDto.setOperatorName(userDto.getName());
+		// }
 
 		String requestContent = null;
 		String contentType = request.getContentType();

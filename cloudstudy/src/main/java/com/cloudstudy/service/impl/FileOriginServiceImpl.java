@@ -77,77 +77,91 @@ public class FileOriginServiceImpl implements FileOriginService {
 	private String filePath;
 
 	@Override
-	public FileOriginDto add(FileOriginDto fileDto) throws IOException {
-		fileDto = generateFileDtoAndSaveFile(fileDto);
+	public FileOriginDto add(FileOriginDto fileOriginDto) throws IOException {
+		fileOriginDto = generateFileDtoAndSaveFile(fileOriginDto);
 
-		com.cloudstudy.bo.FileOrigin file = new FileOrigin();
-		BeanUtils.copyProperties(fileDto, file);
-		fileOriginMapper.insert(file);
-		fileDto.setId(file.getId());
+		com.cloudstudy.bo.FileOrigin fileOrigin = generate(fileOriginDto);
+		fileOriginMapper.insert(fileOrigin);
+		fileOriginDto.setId(fileOrigin.getId());
 
-		if (fileDto.getCourseId() != null) {
-			com.cloudstudy.bo.FileToCourse fileToCourse = new com.cloudstudy.bo.FileToCourse(fileDto.getId(),
-					fileDto.getCourseId());
+		if (fileOriginDto.getCourseId() != null) {
+			com.cloudstudy.bo.FileToCourse fileToCourse = new com.cloudstudy.bo.FileToCourse();
+			fileToCourse.setCourseId(fileOriginDto.getCourseId());
+			fileToCourse.setFileId(fileOriginDto.getId());
 			fileToCourseMapper.insert(fileToCourse);
 		}
 
-		if (fileDto.getTaskId() != null) {
-			com.cloudstudy.bo.FileToTask fileToTask = new com.cloudstudy.bo.FileToTask(fileDto.getId(),
-					fileDto.getTaskId());
+		if (fileOriginDto.getTaskId() != null) {
+			com.cloudstudy.bo.FileToTask fileToTask = new com.cloudstudy.bo.FileToTask();
+			fileToTask.setFileId(fileOriginDto.getId());
+			fileToTask.setTaskId(fileOriginDto.getTaskId());
 			fileToTaskMapper.insert(fileToTask);
 		}
 
-		if (fileDto.getJobId() != null) {
-			com.cloudstudy.bo.FileToJob fileToJob = new com.cloudstudy.bo.FileToJob(fileDto.getId(),
-					fileDto.getJobId());
+		if (fileOriginDto.getJobId() != null) {
+			com.cloudstudy.bo.FileToJob fileToJob = new com.cloudstudy.bo.FileToJob();
+			fileToJob.setFileId(fileOriginDto.getId());
+			fileToJob.setJobId(fileOriginDto.getJobId());
 			fileToJobMapper.insert(fileToJob);
 		}
-		return fileDto;
+		return fileOriginDto;
 	}
 
 	@Override
-	public void deleteById(Integer id) throws IOException {
-		FileOrigin fileOrigin = fileOriginMapper.selectByPrimaryKey(id);
+	public void deleteById(Integer fileOriginId) throws IOException {
+		FileOrigin fileOrigin = fileOriginMapper.selectByPrimaryKey(fileOriginId);
 		String absolutePath = filePath + fileOrigin.getPath();
 		FileUtil.deleteFile(absolutePath);
-		fileOriginMapper.deleteByPrimaryKey(id);
+		fileOriginMapper.deleteByPrimaryKey(fileOriginId);
 	}
 
 	@Override
-	public void deleteByIdList(List<Integer> idList) throws IOException {
+	public void deleteByUserNo(String userNo) throws IOException {
+		List<FileOriginDto> FileOriginDtoList = findByUserNo(userNo, true);
+		if (FileOriginDtoList != null) {
+			List<Integer> primaryKeyList = new ArrayList<Integer>();
+			for (FileOriginDto fileOriginDto : FileOriginDtoList) {
+				primaryKeyList.add(fileOriginDto.getId());
+			}
+			deleteByIdList(primaryKeyList);
+		}
+	}
 
-		com.cloudstudy.bo.FileOriginExample FileOriginExample = new com.cloudstudy.bo.FileOriginExample();
-		com.cloudstudy.bo.FileOriginExample.Criteria criteria3 = FileOriginExample.createCriteria();
-		criteria3.andIdIn(idList);
-		List<FileOrigin> FileOriginList = fileOriginMapper.selectByExample(FileOriginExample);
+	@Override
+	public void deleteByIdList(List<Integer> fileOriginIdList) throws IOException {
+		com.cloudstudy.bo.FileOriginExample fileOriginExample = new com.cloudstudy.bo.FileOriginExample();
+		com.cloudstudy.bo.FileOriginExample.Criteria criteria3 = fileOriginExample.createCriteria();
+		criteria3.andIdIn(fileOriginIdList);
+		List<FileOrigin> FileOriginList = fileOriginMapper.selectByExample(fileOriginExample);
 		if (FileOriginList != null) {
 			for (FileOrigin fileOrigin : FileOriginList) {
 				String absolutePath = filePath + fileOrigin.getPath();
 				FileUtil.deleteFile(absolutePath);
 			}
 		}
-
-		fileOriginMapper.deleteByExample(FileOriginExample);
-
+		fileOriginMapper.deleteByExample(fileOriginExample);
 	}
 
 	@Override
-	public FileOriginDto findById(Integer id) {
+	public FileOriginDto findById(Integer primaryKey) {
+		FileOrigin fileOrigin = fileOriginMapper.selectByPrimaryKey(primaryKey);
+		FileOriginDto fileOriginDto = generateDto(fileOrigin);
+		return fileOriginDto;
+	}
 
-		FileOrigin studyFile = fileOriginMapper.selectByPrimaryKey(id);
-		FileOriginDto studyFileDto = new FileOriginDto();
-		BeanUtils.copyProperties(studyFile, studyFileDto);
-
-		return studyFileDto;
-
+	@Override
+	public List<FileOriginDto> findByIdList(List<Integer> primaryKeyList) {
+		com.cloudstudy.bo.FileOriginExample fileOriginExample = new com.cloudstudy.bo.FileOriginExample();
+		com.cloudstudy.bo.FileOriginExample.Criteria criteria3 = fileOriginExample.createCriteria();
+		criteria3.andIdIn(primaryKeyList);
+		List<FileOrigin> fileOriginList = fileOriginMapper.selectByExample(fileOriginExample);
+		return generateDto(fileOriginList);
 	}
 
 	@Override
 	public List<FileOriginDto> find(FileOriginQueryDto fileQueryDto) {
-
-		FileOriginExample fileExample = new FileOriginExample();
-		com.cloudstudy.bo.FileOriginExample.Criteria criteria = fileExample.createCriteria();
-
+		FileOriginExample FileOriginExample = new FileOriginExample();
+		com.cloudstudy.bo.FileOriginExample.Criteria criteria = FileOriginExample.createCriteria();
 		String keyword = fileQueryDto.getKeyword();
 		if (!StringUtils.isEmpty(keyword)) {
 			criteria.andMemoLike("%" + keyword + "%");
@@ -156,6 +170,7 @@ public class FileOriginServiceImpl implements FileOriginService {
 		if (fileQueryDto.getFromFileSize() != null) {
 			criteria.andSizeGreaterThanOrEqualTo(fileQueryDto.getFromFileSize());
 		}
+
 		if (fileQueryDto.getToFileSize() != null) {
 			criteria.andSizeLessThanOrEqualTo(fileQueryDto.getToFileSize());
 		}
@@ -164,69 +179,61 @@ public class FileOriginServiceImpl implements FileOriginService {
 			criteria.andTypeEqualTo(fileQueryDto.getFileType());
 		}
 
-		Integer page = fileQueryDto.getPageDto().getPage();
-		Integer rows = fileQueryDto.getPageDto().getRows();
-		if (page != null && rows != null) {
-			PageHelper.startPage(page, rows);
-		}
+		Integer page = fileQueryDto.getPageDto().getCurrent();
+		Integer rows = fileQueryDto.getPageDto().getSize();
+		PageHelper.startPage(page, rows);
 
-		List<FileOrigin> fileList = fileOriginMapper.selectByExample(fileExample);
-		if (fileList == null || fileList.isEmpty()) {
+		List<FileOrigin> fileOriginList = fileOriginMapper.selectByExample(FileOriginExample);
+		if (fileOriginList == null || fileOriginList.isEmpty()) {
 			return null;
 		}
 
-		List<FileOriginDto> fileDtoList = new ArrayList<FileOriginDto>();
-		for (FileOrigin file : fileList) {
-			FileOriginDto fileDto = new FileOriginDto();
-			BeanUtils.copyProperties(file, fileDto);
-			fileDtoList.add(fileDto);
-		}
+		List<FileOriginDto> fileDtoList = generateDto(fileOriginList);
 		return fileDtoList;
 	}
 
-	public FileOriginDto generateFileDtoAndSaveFile(FileOriginDto studyFileDto) throws IOException {
-		File recFile = studyFileDto.getFile();
+	private FileOriginDto generateFileDtoAndSaveFile(FileOriginDto fileOriginDto) throws IOException {
+		File recFile = fileOriginDto.getFile();
 		String fileName = System.currentTimeMillis() + "_" + recFile.getName();
 		String fileExtension = FileUtil.getExtensionName(fileName);// 没有点的
 		Integer fileSize = (int) recFile.length();
 
-		Integer fileDtoType_course = studyFileDto.getCourseId();
-		Integer fileDtoType_task = studyFileDto.getTaskId();
-		Integer fileDtoType_job = studyFileDto.getJobId();
+		Integer fileDtoType_course = fileOriginDto.getCourseId();
+		Integer fileDtoType_task = fileOriginDto.getTaskId();
+		Integer fileDtoType_job = fileOriginDto.getJobId();
 
-		String studyFilePath = null;
+		String fileOriginPath = null;
 		if (fileDtoType_course != null) {
-			studyFilePath = File.separator + "course" + File.separator + fileName;
+			fileOriginPath = File.separator + "course" + File.separator + fileName;
 		} else if (fileDtoType_task != null) {
-			studyFilePath = File.separator + "task" + File.separator + fileName;
+			fileOriginPath = File.separator + "task" + File.separator + fileName;
 		} else if (fileDtoType_job != null) {
-			studyFilePath = File.separator + "job" + File.separator + fileName;
+			fileOriginPath = File.separator + "job" + File.separator + fileName;
 		} else {
-			studyFilePath = File.separator + "default" + File.separator + fileName;
+			fileOriginPath = File.separator + "default" + File.separator + fileName;
 		}
 
-		String absoluteFileOriginPath = filePath + studyFilePath;
-
+		String absoluteFileOriginPath = filePath + fileOriginPath;
 		File saveFile = FileUtil.createFile(absoluteFileOriginPath);
 		FileCopyUtils.copy(recFile, saveFile);
 
-		studyFileDto.setCreateTime(new Date());
-		studyFileDto.setLastModifyTime(new Date());
-		studyFileDto.setPath(studyFilePath);
-		studyFileDto.setSize(fileSize);
-		studyFileDto.setType(fileExtension);
-		studyFileDto.setName(fileName);
-		studyFileDto.setMemo(generateFileOriginMemo(studyFileDto));
+		fileOriginDto.setCreateTime(new Date());
+		fileOriginDto.setLastModifyTime(new Date());
+		fileOriginDto.setPath(fileOriginPath);
+		fileOriginDto.setSize(fileSize);
+		fileOriginDto.setType(fileExtension);
+		fileOriginDto.setName(fileName);
+		fileOriginDto.setMemo(generateFileOriginMemo(fileOriginDto));
 
-		return studyFileDto;
+		return fileOriginDto;
 	}
 
-	private String generateFileOriginMemo(FileOriginDto studyFileDto) {
-		Integer fileDtoType_course_id = studyFileDto.getCourseId();
-		Integer fileDtoType_task_id = studyFileDto.getTaskId();
-		Integer fileDtoType_job_id = studyFileDto.getJobId();
+	private String generateFileOriginMemo(FileOriginDto fileOriginDto) {
+		Integer fileDtoType_course_id = fileOriginDto.getCourseId();
+		Integer fileDtoType_task_id = fileOriginDto.getTaskId();
+		Integer fileDtoType_job_id = fileOriginDto.getJobId();
 
-		String memo = studyFileDto.getName();
+		String memo = fileOriginDto.getName();
 		if (fileDtoType_course_id != null) {
 			Course course = courseMapper.selectByPrimaryKey(fileDtoType_course_id);
 			String courseName = course.getName();
@@ -301,10 +308,10 @@ public class FileOriginServiceImpl implements FileOriginService {
 	public List<FileOriginDto> findByJobId(Integer jobId, boolean isUpRecursion) {
 
 		HashSet<Integer> FileOriginIdSet = new HashSet<Integer>();
-		com.cloudstudy.bo.FileToJobExample FileToJobExample = new com.cloudstudy.bo.FileToJobExample();
-		com.cloudstudy.bo.FileToJobExample.Criteria criteria1 = FileToJobExample.createCriteria();
+		com.cloudstudy.bo.FileToJobExample fileToJobExample = new com.cloudstudy.bo.FileToJobExample();
+		com.cloudstudy.bo.FileToJobExample.Criteria criteria1 = fileToJobExample.createCriteria();
 		criteria1.andJobIdEqualTo(jobId);
-		List<FileToJob> FileToJobList = fileToJobMapper.selectByExample(FileToJobExample);
+		List<FileToJob> FileToJobList = fileToJobMapper.selectByExample(fileToJobExample);
 		if (FileToJobList != null) {
 			for (FileToJob fileToJob : FileToJobList) {
 				FileOriginIdSet.add(fileToJob.getFileId());
@@ -312,16 +319,14 @@ public class FileOriginServiceImpl implements FileOriginService {
 		}
 
 		if (isUpRecursion) {
-			List<TaskDto> taskDtoList = taskService.findByJobId(jobId);
+			TaskDto taskDto = taskService.findByJobId(jobId);
 
-			if (taskDtoList != null) {
+			if (taskDto != null) {
 				List<Integer> taskIdList = new ArrayList<Integer>();
 				List<Integer> courseIdList = new ArrayList<Integer>();
 
-				for (TaskDto taskDto : taskDtoList) {
-					taskIdList.add(taskDto.getId());
-					courseIdList.add(taskDto.getCourseId());
-				}
+				taskIdList.add(taskDto.getId());
+				courseIdList.add(taskDto.getCourseId());
 
 				com.cloudstudy.bo.FileToTaskExample FileToTaskExample = new com.cloudstudy.bo.FileToTaskExample();
 				com.cloudstudy.bo.FileToTaskExample.Criteria criteria2 = FileToTaskExample.createCriteria();
@@ -350,29 +355,8 @@ public class FileOriginServiceImpl implements FileOriginService {
 		criteria4.andIdIn(new ArrayList<Integer>(FileOriginIdSet));
 		List<FileOrigin> FileOriginList = fileOriginMapper.selectByExample(FileOriginExample);
 
-		List<FileOriginDto> FileOriginDtoList = generate(FileOriginList);
+		List<FileOriginDto> FileOriginDtoList = generateDto(FileOriginList);
 		return FileOriginDtoList;
-	}
-
-	private List<FileOriginDto> generate(List<FileOrigin> FileOriginList) {
-		List<FileOriginDto> FileOriginDtoList = new ArrayList<FileOriginDto>();
-		if (FileOriginList != null) {
-			for (FileOrigin fileOrigin : FileOriginList) {
-				FileOriginDto FileOriginDto = generate(fileOrigin);
-				FileOriginDtoList.add(FileOriginDto);
-			}
-		}
-		return FileOriginDtoList;
-	}
-
-	private FileOriginDto generate(FileOrigin fileOrigin) {
-		if (fileOrigin == null) {
-			throw new CloudStudyException();
-		}
-
-		FileOriginDto FileOriginDto = new FileOriginDto();
-		BeanUtils.copyProperties(fileOrigin, FileOriginDto);
-		return FileOriginDto;
 	}
 
 	@Override
@@ -434,7 +418,7 @@ public class FileOriginServiceImpl implements FileOriginService {
 		criteria4.andIdIn(new ArrayList<Integer>(FileOriginIdSet));
 		List<FileOrigin> FileOriginList = fileOriginMapper.selectByExample(FileOriginExample);
 
-		List<FileOriginDto> FileOriginDtoList = generate(FileOriginList);
+		List<FileOriginDto> FileOriginDtoList = generateDto(FileOriginList);
 		return FileOriginDtoList;
 	}
 
@@ -528,14 +512,44 @@ public class FileOriginServiceImpl implements FileOriginService {
 			}
 		}
 
-		com.cloudstudy.bo.FileOriginExample FileOriginExample = new com.cloudstudy.bo.FileOriginExample();
-		com.cloudstudy.bo.FileOriginExample.Criteria criteria4 = FileOriginExample.createCriteria();
+		com.cloudstudy.bo.FileOriginExample fileOriginExample = new com.cloudstudy.bo.FileOriginExample();
+		com.cloudstudy.bo.FileOriginExample.Criteria criteria4 = fileOriginExample.createCriteria();
 		criteria4.andIdIn(new ArrayList<Integer>(FileOriginIdSet));
-		List<FileOrigin> FileOriginList = fileOriginMapper.selectByExample(FileOriginExample);
+		List<FileOrigin> FileOriginList = fileOriginMapper.selectByExample(fileOriginExample);
 
-		List<FileOriginDto> FileOriginDtoList = generate(FileOriginList);
+		List<FileOriginDto> FileOriginDtoList = generateDto(FileOriginList);
 		return FileOriginDtoList;
 
+	}
+
+	private List<FileOriginDto> generateDto(List<FileOrigin> fileOriginList) {
+		if (fileOriginList == null || fileOriginList.isEmpty()) {
+			return new ArrayList<FileOriginDto>();
+		}
+		List<FileOriginDto> FileOriginDtoList = new ArrayList<FileOriginDto>();
+		for (FileOrigin fileOrigin : fileOriginList) {
+			FileOriginDto fileOriginDto = generateDto(fileOrigin);
+			FileOriginDtoList.add(fileOriginDto);
+		}
+		return FileOriginDtoList;
+	}
+
+	private FileOriginDto generateDto(FileOrigin fileOrigin) {
+		if (fileOrigin == null) {
+			throw new CloudStudyException();
+		}
+		FileOriginDto fileOriginDto = new FileOriginDto();
+		BeanUtils.copyProperties(fileOrigin, fileOriginDto);
+		return fileOriginDto;
+	}
+
+	private FileOrigin generate(FileOriginDto fileOriginDto) {
+		if (fileOriginDto == null) {
+			throw new CloudStudyException();
+		}
+		FileOrigin fileOrigin = new FileOrigin();
+		BeanUtils.copyProperties(fileOriginDto, fileOrigin);
+		return fileOrigin;
 	}
 
 }

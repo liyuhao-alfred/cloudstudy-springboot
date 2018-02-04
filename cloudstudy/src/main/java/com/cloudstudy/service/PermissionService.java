@@ -2,10 +2,10 @@ package com.cloudstudy.service;
 
 import java.util.List;
 
-import com.cloudstudy.bo.Permission;
+import com.cloudstudy.dto.PermissionDto;
 
 public interface PermissionService {
 
-	List<Permission> findByRoleId(int roleId);
+	List<PermissionDto> findByRoleId(int roleId);
 
 }

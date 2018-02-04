@@ -73,7 +73,7 @@
     </if>
     'true' as QUERYID,
     <include refid="Base_Column_List" />
-    from tbroleToPermission
+    from tbrolerelpermission
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -82,17 +82,17 @@
     </if>
   </select>
   <delete id="deleteByExample" parameterType="com.cloudstudy.bo.RoleToPermissionExample">
-    delete from tbroleToPermission
+    delete from tbrolerelpermission
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
   <insert id="insert" parameterType="com.cloudstudy.bo.RoleToPermission">
-    insert into tbroleToPermission (role_id, permission_id)
+    insert into tbrolerelpermission (role_id, permission_id)
     values (#{roleId,jdbcType=INTEGER}, #{permissionId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.cloudstudy.bo.RoleToPermission">
-    insert into tbroleToPermission
+    insert into tbrolerelpermission
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="roleId != null">
         role_id,
@@ -111,13 +111,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.cloudstudy.bo.RoleToPermissionExample" resultType="java.lang.Long">
-    select count(*) from tbroleToPermission
+    select count(*) from tbrolerelpermission
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update tbroleToPermission
+    update tbrolerelpermission
     <set>
       <if test="record.roleId != null">
         role_id = #{record.roleId,jdbcType=INTEGER},
@@ -131,7 +131,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update tbroleToPermission
+    update tbrolerelpermission
     set role_id = #{record.roleId,jdbcType=INTEGER},
       permission_id = #{record.permissionId,jdbcType=INTEGER}
     <if test="_parameter != null">

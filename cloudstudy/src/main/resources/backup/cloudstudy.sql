@@ -135,7 +135,7 @@ CREATE TABLE `tbjob` (
   `id` int(20) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `title` varchar(60) NOT NULL COMMENT '标题',
   `content` text NOT NULL COMMENT '内容',
-  `courserelstudent_id` int(20) DEFAULT NULL COMMENT '课程的id',
+  `grade_id` int(20) DEFAULT NULL COMMENT '课程的id',
   `task_id` int(20) NOT NULL COMMENT '任务id',
   `grade` int(20) NOT NULL COMMENT '分数',
   `create_time` datetime NOT NULL COMMENT '创建时间',
@@ -143,9 +143,9 @@ CREATE TABLE `tbjob` (
   `status` int(1) NOT NULL COMMENT '状态',
   PRIMARY KEY (`id`),
   KEY `title` (`title`),
-  KEY `courserelstudent_id` (`courserelstudent_id`),
+  KEY `courserelstudent_id` (`grade_id`),
   KEY `task_id` (`task_id`),
-  CONSTRAINT `tbjob_ibfk_1` FOREIGN KEY (`courserelstudent_id`) REFERENCES `tbgrade` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `tbjob_ibfk_1` FOREIGN KEY (`grade_id`) REFERENCES `tbgrade` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `tbjob_ibfk_2` FOREIGN KEY (`task_id`) REFERENCES `tbtask` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -2648,15 +2648,15 @@ CREATE TABLE `tbtask` (
   `id` int(20) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `title` varchar(60) NOT NULL COMMENT '题目',
   `content` longtext NOT NULL COMMENT '内容',
-  `courserelteacher_id` int(20) NOT NULL COMMENT '关联的课程id',
+  `course_id` int(20) NOT NULL COMMENT '关联的课程id',
   `dead_line` datetime NOT NULL COMMENT '最后提交时间',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `last_modify_time` datetime NOT NULL COMMENT '最后修改时间',
   `status` int(1) NOT NULL DEFAULT '0' COMMENT '状态',
   PRIMARY KEY (`id`),
   KEY `title` (`title`),
-  KEY `courserelteacher_id` (`courserelteacher_id`),
-  CONSTRAINT `tbtask_ibfk_1` FOREIGN KEY (`courserelteacher_id`) REFERENCES `tbcourse` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `courserelteacher_id` (`course_id`),
+  CONSTRAINT `tbtask_ibfk_1` FOREIGN KEY (`course_id`) REFERENCES `tbcourse` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `tbtask` */

@@ -13,16 +13,22 @@ import com.cloudstudy.bo.Course;
 import com.cloudstudy.bo.Task;
 import com.cloudstudy.bo.User;
 import com.cloudstudy.bo.GradeExample;
+import com.cloudstudy.bo.Job;
 import com.cloudstudy.bo.CourseExample;
+import com.cloudstudy.bo.FileOrigin;
 import com.cloudstudy.bo.JobExample;
+import com.cloudstudy.bo.RoleToPermission;
 import com.cloudstudy.bo.TaskExample;
 import com.cloudstudy.bo.UserExample;
 import com.cloudstudy.bo.UserExample.Criteria;
 import com.cloudstudy.constant.SearchType;
 import com.cloudstudy.dto.GradeDto;
 import com.cloudstudy.dto.CourseDto;
-import com.cloudstudy.dto.HomeworkQueryDto;
+import com.cloudstudy.dto.FileOriginDto;
+import com.cloudstudy.dto.TaskQueryDto;
 import com.cloudstudy.dto.TaskDto;
+import com.cloudstudy.dto.TaskQueryDto;
+import com.cloudstudy.exception.CloudStudyException;
 import com.cloudstudy.mapper.GradeMapper;
 import com.cloudstudy.mapper.CourseMapper;
 import com.cloudstudy.mapper.FileOriginMapper;
@@ -38,6 +44,7 @@ import com.cloudstudy.util.DateUtil;
 import com.github.pagehelper.PageHelper;
 
 @Service
+@SuppressWarnings("unused")
 public class TaskServiceImpl implements TaskService {
 
 	@Autowired
@@ -96,8 +103,8 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public TaskDto findById(Integer id) {
-		Task course = taskMapper.selectByPrimaryKey(id);
+	public TaskDto findById(Integer primaryKey) {
+		Task course = taskMapper.selectByPrimaryKey(primaryKey);
 		if (course == null) {
 			return null;
 		}
@@ -107,12 +114,12 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public List<TaskDto> find(HomeworkQueryDto homeworkQueryDto) {
+	public List<TaskDto> find(TaskQueryDto taskQueryDto) {
 		TaskExample taskExample = new TaskExample();
 		com.cloudstudy.bo.TaskExample.Criteria criteria = taskExample.createCriteria();
 
-		String keyword = homeworkQueryDto.getKeyword();
-		Integer searchType = homeworkQueryDto.getSearchType();
+		String keyword = taskQueryDto.getKeyword();
+		Integer searchType = taskQueryDto.getSearchType();
 		if (!StringUtils.isEmpty(keyword)) {
 
 			if (searchType == SearchType.homeworkName.getCode()) {
@@ -123,38 +130,30 @@ public class TaskServiceImpl implements TaskService {
 
 		}
 
-		if (!StringUtils.isEmpty(homeworkQueryDto.getFromTime())
-				&& !StringUtils.isEmpty(homeworkQueryDto.getToTime())) {
-			criteria.andLastModifyTimeBetween(DateUtil.stringToDate(homeworkQueryDto.getFromTime()),
-					DateUtil.stringToDate(homeworkQueryDto.getToTime()));
+		if (!StringUtils.isEmpty(taskQueryDto.getFromTime()) && !StringUtils.isEmpty(taskQueryDto.getToTime())) {
+			criteria.andLastModifyTimeBetween(DateUtil.stringToDate(taskQueryDto.getFromTime()),
+					DateUtil.stringToDate(taskQueryDto.getToTime()));
 
 		}
 
-		PageHelper.startPage(homeworkQueryDto.getPageDto().getPage(), homeworkQueryDto.getPageDto().getRows());
+		Integer page = taskQueryDto.getPageDto().getCurrent();
+		Integer rows = taskQueryDto.getPageDto().getSize();
+		PageHelper.startPage(page, rows);
+
 		List<Task> taskList = taskMapper.selectByExample(taskExample);
-		if (taskList == null || taskList.isEmpty()) {
-			return null;
-		}
-
-		List<TaskDto> taskDtoList = new ArrayList<TaskDto>();
-		for (Task task : taskList) {
-			TaskDto taskDto = new TaskDto();
-			BeanUtils.copyProperties(task, taskDto);
-			taskDtoList.add(taskDto);
-		}
-		return taskDtoList;
+		return generateDto(taskList);
 	}
 
 	@Override
-	public List<TaskDto> findByCourseId(Integer id) {
+	public List<TaskDto> findByCourseId(Integer primaryKey) {
 		HashSet<SearchType> searchTypeSet = new HashSet<SearchType>();
 		searchTypeSet.add(SearchType.courseId);
 
-		HomeworkQueryDto homeworkQueryDto = new HomeworkQueryDto();
-		homeworkQueryDto.setKeyword(id + "");
-		homeworkQueryDto.setSearchTypeSet(searchTypeSet);
+		TaskQueryDto taskQueryDto = new TaskQueryDto();
+		taskQueryDto.setKeyword(primaryKey + "");
+		taskQueryDto.setSearchTypeSet(searchTypeSet);
 
-		return find(homeworkQueryDto);
+		return find(taskQueryDto);
 	}
 
 	@Override
@@ -218,9 +217,63 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public List<TaskDto> findByJobId(Integer jobId) {
-		// TODO Auto-generated method stub
-		return null;
+	public TaskDto findByJobId(Integer jobId) {
+		Job job = jobMapper.selectByPrimaryKey(jobId);
+		Task task = taskMapper.selectByPrimaryKey(job.getTaskId());
+		return generateDto(task);
+	}
+
+	private List<Integer> getPrimaryKeyList(List<Task> taskList) {
+		if (taskList == null || taskList.isEmpty()) {
+			return new ArrayList<Integer>();
+		}
+		List<Integer> primaryKeyList = new ArrayList<Integer>();
+		for (Task task : taskList) {
+			primaryKeyList.add(task.getId());
+		}
+		return primaryKeyList;
+	}
+
+	private List<TaskDto> generateDto(List<Task> taskList) {
+		if (taskList == null || taskList.isEmpty()) {
+			return new ArrayList<TaskDto>();
+		}
+		List<TaskDto> TaskDtoList = new ArrayList<TaskDto>();
+		for (Task task : taskList) {
+			TaskDto taskDto = generateDto(task);
+			TaskDtoList.add(taskDto);
+		}
+		return TaskDtoList;
+	}
+
+	private List<Task> generate(List<TaskDto> taskDtoList) {
+		if (taskDtoList == null || taskDtoList.isEmpty()) {
+			return new ArrayList<Task>();
+		}
+		List<Task> TaskList = new ArrayList<Task>();
+		for (TaskDto taskDto : taskDtoList) {
+			Task task = generate(taskDto);
+			TaskList.add(task);
+		}
+		return TaskList;
+	}
+
+	private TaskDto generateDto(Task task) {
+		if (task == null) {
+			throw new CloudStudyException();
+		}
+		TaskDto taskDto = new TaskDto();
+		BeanUtils.copyProperties(task, taskDto);
+		return taskDto;
+	}
+
+	private Task generate(TaskDto taskDto) {
+		if (taskDto == null) {
+			throw new CloudStudyException();
+		}
+		Task task = new Task();
+		BeanUtils.copyProperties(taskDto, task);
+		return task;
 	}
 
 }

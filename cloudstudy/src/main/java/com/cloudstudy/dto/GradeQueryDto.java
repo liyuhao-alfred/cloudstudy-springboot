@@ -1,142 +1,105 @@
 package com.cloudstudy.dto;
 
-import java.util.HashSet;
+import java.util.Date;
 
-import com.cloudstudy.constant.SearchType;
-
-@SuppressWarnings("unused")
 public class GradeQueryDto {
+	private Integer id;
 
-	private HashSet<SearchType> searchTypeSet = new HashSet<SearchType>() {
-		private static final long serialVersionUID = 1L;
-		{
-			searchTypeSet.add(SearchType.all);
-			searchTypeSet.add(SearchType.adminName);
-			searchTypeSet.add(SearchType.teacherName);
-			searchTypeSet.add(SearchType.studentName);
-			searchTypeSet.add(SearchType.courseName);
-			searchTypeSet.add(SearchType.homeworkName);
-			searchTypeSet.add(SearchType.no);
-			searchTypeSet.add(SearchType.account);
-			searchTypeSet.add(SearchType.phone);
-			searchTypeSet.add(SearchType.email);
+	private Integer courseId;
 
-		}
-	};
-	private Integer searchType;
+	private String courseName;
 
-	/**
-	 * 时间开始
-	 */
-	private String fromTime;
+	private String studentNo;
 
-	/**
-	 * 时间结束
-	 */
-	private String toTime;
+	private Integer grade;
 
-	/**
-	 * 分数从
-	 */
-	private Integer fromGrade;
+	private Integer taskDeclareNum;
 
-	/**
-	 * 分数到
-	 */
-	private Integer toGrade;
+	private Integer taskAcceptNum;
 
-	/**
-	 * 关键字
-	 */
-	private String keyword;
+	private Date createTime;
 
-	private PageDto pageDto;
+	private Date lastModifyTime;
 
-	public HashSet<SearchType> getSearchTypeSet() {
-		return searchTypeSet;
+	private Integer status;
+
+	public Integer getId() {
+		return id;
 	}
 
-	public void setSearchTypeSet(HashSet<SearchType> searchTypeSet) {
-		this.searchTypeSet = searchTypeSet;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
-	public Integer getSearchType() {
-		return searchType;
+	public Integer getCourseId() {
+		return courseId;
 	}
 
-	public void setSearchType(Integer searchType) {
-		this.searchType = searchType;
+	public void setCourseId(Integer courseId) {
+		this.courseId = courseId;
 	}
 
-	public String getFromTime() {
-		return fromTime;
+	public String getStudentNo() {
+		return studentNo;
 	}
 
-	public void setFromTime(String fromTime) {
-		this.fromTime = fromTime;
+	public void setStudentNo(String studentNo) {
+		this.studentNo = studentNo == null ? null : studentNo.trim();
 	}
 
-	public String getToTime() {
-		return toTime;
+	public Integer getGrade() {
+		return grade;
 	}
 
-	public void setToTime(String toTime) {
-		this.toTime = toTime;
+	public void setGrade(Integer grade) {
+		this.grade = grade;
 	}
 
-	public String getKeyword() {
-		return keyword;
+	public Integer getTaskDeclareNum() {
+		return taskDeclareNum;
 	}
 
-	public void setKeyword(String keyword) {
-		this.keyword = keyword;
+	public void setTaskDeclareNum(Integer taskDeclareNum) {
+		this.taskDeclareNum = taskDeclareNum;
 	}
 
-	public PageDto getPageDto() {
-		return pageDto;
+	public Integer getTaskAcceptNum() {
+		return taskAcceptNum;
 	}
 
-	public void setPageDto(PageDto pageDto) {
-		this.pageDto = pageDto;
+	public void setTaskAcceptNum(Integer taskAcceptNum) {
+		this.taskAcceptNum = taskAcceptNum;
 	}
 
-	public Integer getFromGrade() {
-		return fromGrade;
+	public Date getCreateTime() {
+		return createTime;
 	}
 
-	public void setFromGrade(Integer fromGrade) {
-		this.fromGrade = fromGrade;
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 
-	public Integer getToGrade() {
-		return toGrade;
+	public Date getLastModifyTime() {
+		return lastModifyTime;
 	}
 
-	public void setToGrade(Integer toGrade) {
-		this.toGrade = toGrade;
+	public void setLastModifyTime(Date lastModifyTime) {
+		this.lastModifyTime = lastModifyTime;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("GradeQueryDto [searchTypeSet=");
-		builder.append(searchTypeSet);
-		builder.append(", searchType=");
-		builder.append(searchType);
-		builder.append(", fromTime=");
-		builder.append(fromTime);
-		builder.append(", toTime=");
-		builder.append(toTime);
-		builder.append(", fromGrade=");
-		builder.append(fromGrade);
-		builder.append(", toGrade=");
-		builder.append(toGrade);
-		builder.append(", keyword=");
-		builder.append(keyword);
-		builder.append(", pageDto=");
-		builder.append(pageDto);
-		builder.append("]");
-		return builder.toString();
+	public Integer getStatus() {
+		return status;
 	}
 
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public String getCourseName() {
+		return courseName;
+	}
+
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
+	}
 }

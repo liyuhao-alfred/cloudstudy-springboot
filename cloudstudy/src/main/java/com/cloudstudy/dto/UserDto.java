@@ -1,9 +1,7 @@
 package com.cloudstudy.dto;
 
-import java.awt.List;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 
 public class UserDto {
 	private String no;
@@ -14,29 +12,31 @@ public class UserDto {
 
 	private String salt;
 
+	private String token;
+
 	private String name;
 
 	private String phone;
 
 	private String email;
 
-	private Integer sex;
+	private String sex;
 
 	private Integer age;
 
-	private Date birthday;
+	private String birthday;
 
-	private Date createTime;
+	private String createTime;
 
-	private Date lastModifyTime;
+	private String lastModifyTime;
 
-	private Date registTime;
+	private String registTime;
 
-	private Integer status;
+	private Boolean status;
 
 	private String description;
 
-	private ArrayList<Integer> roleType = new ArrayList<Integer>();
+	private ArrayList<String> role;
 
 	private ShiroDto shiro;
 
@@ -107,59 +107,11 @@ public class UserDto {
 		this.email = email == null ? null : email.trim();
 	}
 
-	public Integer getSex() {
-		return sex;
-	}
-
-	public void setSex(Integer sex) {
-		this.sex = sex;
-	}
-
-	public Integer getAge() {
-		return age;
-	}
-
-	public void setAge(Integer age) {
-		this.age = age;
-	}
-
-	public Date getBirthday() {
-		return birthday;
-	}
-
-	public void setBirthday(Date birthday) {
-		this.birthday = birthday;
-	}
-
-	public Date getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
-
-	public Date getLastModifyTime() {
-		return lastModifyTime;
-	}
-
-	public void setLastModifyTime(Date lastModifyTime) {
-		this.lastModifyTime = lastModifyTime;
-	}
-
-	public Date getRegistTime() {
-		return registTime;
-	}
-
-	public void setRegistTime(Date registTime) {
-		this.registTime = registTime;
-	}
-
-	public Integer getStatus() {
+	public Boolean getStatus() {
 		return status;
 	}
 
-	public void setStatus(Integer status) {
+	public void setStatus(Boolean status) {
 		this.status = status;
 	}
 
@@ -225,12 +177,74 @@ public class UserDto {
 		this.shiro = shiro;
 	}
 
-	public ArrayList<Integer> getRoleType() {
-		return roleType;
+	public String getToken() {
+		return token;
 	}
 
-	public void setRoleType(ArrayList<Integer> roleType) {
-		this.roleType = roleType;
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+
+	public Integer getAge() {
+		return age;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
+	}
+
+	public String getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(String birthday) {
+		this.birthday = birthday;
+	}
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public String getLastModifyTime() {
+		return lastModifyTime;
+	}
+
+	public void setLastModifyTime(String lastModifyTime) {
+		this.lastModifyTime = lastModifyTime;
+	}
+
+	public String getRegistTime() {
+		return registTime;
+	}
+
+	public void setRegistTime(String registTime) {
+		this.registTime = registTime;
+	}
+
+	public void setRoleByList(ArrayList<String> roleDtoList) {
+		String[] array = new String[roleDtoList.size()];
+		array = roleDtoList.toArray(array);
+		this.role = roleDtoList;
+	}
+
+	public void setRole(ArrayList<String> role) {
+		this.role = role;
+	}
+
+	public ArrayList<String> getRole() {
+		return role;
 	}
 
 }

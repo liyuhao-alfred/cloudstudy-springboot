@@ -16,57 +16,45 @@ public class PageDto {
 	 * 当前页
 	 */
 	@Transient
-	private Integer page = 1;
+	private Integer current = 1;
 
 	/**
 	 * 每页数据量
 	 */
 	@Transient
-	private Integer rows = 10;
+	private Integer size = 10;
 
 	/**
-	 * 排序
+	 * 总数
 	 */
 	@Transient
-	private String orderBy;
+	private Integer total = 0;
 
 	@JsonIgnore
-	public String getOrderBy() {
-		return orderBy;
+	public Integer getCurrent() {
+		return current;
 	}
 
-	public void setOrderBy(String orderBy) {
-		this.orderBy = orderBy;
-	}
-
-	@JsonIgnore
-	public Integer getPage() {
-		return page;
-	}
-
-	public void setPage(Integer page) {
-		this.page = page;
+	public void setCurrent(Integer current) {
+		this.current = current;
 	}
 
 	@JsonIgnore
-	public Integer getRows() {
-		return rows;
+	public Integer getSize() {
+		return size;
 	}
 
-	public void setRows(Integer rows) {
-		this.rows = rows;
+	public void setSize(Integer size) {
+		this.size = size;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("PageDto [page=");
-		builder.append(page);
-		builder.append(", rows=");
-		builder.append(rows);
-		builder.append(", orderBy=");
-		builder.append(orderBy);
-		builder.append("]");
-		return builder.toString();
+	@JsonIgnore
+	public Integer getTotal() {
+		return total;
 	}
+
+	public void setTotal(Integer total) {
+		this.total = total;
+	}
+
 }

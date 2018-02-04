@@ -10,27 +10,19 @@ public class WebResult<T> {
 	/**
 	 * @CertManagerStatusConstant
 	 */
-	private Integer status;
+	private Integer code;
 
 	private String message;
 
-	private T contents;
+	private T data;
 
 	public WebResult() {
 
 	}
 
-	public WebResult(Integer status, String message) {
-		this.status = status;
+	public WebResult(Integer code, String message) {
+		this.code = code;
 		this.message = message;
-	}
-
-	public Integer getStatus() {
-		return status;
-	}
-
-	public void setStatus(Integer status) {
-		this.status = status;
 	}
 
 	public String getMessage() {
@@ -41,25 +33,20 @@ public class WebResult<T> {
 		this.message = message;
 	}
 
-	public T getContents() {
-		return contents;
+	public Integer getCode() {
+		return code;
 	}
 
-	public void setContents(T contents) {
-		this.contents = contents;
+	public void setCode(Integer code) {
+		this.code = code;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("WebResult [status=");
-		builder.append(status);
-		builder.append(", message=");
-		builder.append(message);
-		builder.append(", contents=");
-		builder.append(contents);
-		builder.append("]");
-		return builder.toString();
+	public T getData() {
+		return data;
+	}
+
+	public void setData(T data) {
+		this.data = data;
 	}
 
 }

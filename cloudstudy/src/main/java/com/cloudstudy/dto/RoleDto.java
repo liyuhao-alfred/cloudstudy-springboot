@@ -1,53 +1,65 @@
 package com.cloudstudy.dto;
 
+import java.util.List;
+
 public class RoleDto {
-    private Integer id;
+	private Integer id;
 
-    private String name;
+	private String name;
 
-    private String code;
+	private String code;
 
-    private String description;
+	private String description;
 
-    private Integer status;
+	private Integer status;
 
-    public Integer getId() {
-        return id;
-    }
+	private List<PermissionDto> permissionDtoList;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
+	public String getName() {
+		return name;
+	}
 
-    public String getCode() {
-        return code;
-    }
+	public void setName(String name) {
+		this.name = name == null ? null : name.trim();
+	}
 
-    public void setCode(String code) {
-        this.code = code == null ? null : code.trim();
-    }
+	public String getCode() {
+		return code;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public void setCode(String code) {
+		this.code = code == null ? null : code.trim();
+	}
 
-    public void setDescription(String description) {
-        this.description = description == null ? null : description.trim();
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public Integer getStatus() {
-        return status;
-    }
+	public void setDescription(String description) {
+		this.description = description == null ? null : description.trim();
+	}
 
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public List<PermissionDto> getPermissionDtoList() {
+		return permissionDtoList;
+	}
+
+	public void setPermissionDtoList(List<PermissionDto> permissionDtoList) {
+		this.permissionDtoList = permissionDtoList;
+	}
 }

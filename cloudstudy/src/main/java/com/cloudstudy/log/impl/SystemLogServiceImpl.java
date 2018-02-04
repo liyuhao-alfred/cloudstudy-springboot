@@ -34,8 +34,8 @@ public class SystemLogServiceImpl implements SystemLogService {
 	}
 
 	@Override
-	public SystemLogDto findById(Integer id) {
-		SystemLog systemlog = systemlogMapper.selectByPrimaryKey(id);
+	public SystemLogDto findById(Integer primaryKey) {
+		SystemLog systemlog = systemlogMapper.selectByPrimaryKey(primaryKey);
 		SystemLogDto systemlogDto = new SystemLogDto();
 		BeanUtils.copyProperties(systemlog, systemlogDto);
 		return systemlogDto;
@@ -82,7 +82,6 @@ public class SystemLogServiceImpl implements SystemLogService {
 		if (index != null && limit != null) {
 			PageHelper.startPage(index, limit);
 		}
-
 		List<SystemLog> systemlogList = systemlogMapper.selectByExampleWithBLOBs(systemlogExample);
 		if (systemlogList == null || systemlogList.isEmpty()) {
 			return null;
@@ -101,8 +100,8 @@ public class SystemLogServiceImpl implements SystemLogService {
 
 	@Override
 	public List<SystemLogDto> find(SystemLogQueryDto systemlogQueryDto) {
-		return find(null, null, null, null, null, null, systemlogQueryDto.getFromTime(),
-				systemlogQueryDto.getToTime(), null, null);
+		return find(null, null, null, null, null, null, systemlogQueryDto.getFromTime(), systemlogQueryDto.getToTime(),
+				null, null);
 	}
 
 }

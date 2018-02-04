@@ -1,127 +1,201 @@
 package com.cloudstudy.dto;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.cloudstudy.constant.SearchType;
-
-@SuppressWarnings("unused")
 public class UserQueryDto {
+	private String no;
 
-	private HashSet<SearchType> searchTypeSet = new HashSet<SearchType>() {
-		private static final long serialVersionUID = 1L;
-		{
-			searchTypeSet.add(SearchType.all);
-			searchTypeSet.add(SearchType.adminName);
-			searchTypeSet.add(SearchType.teacherName);
-			searchTypeSet.add(SearchType.studentName);
-			searchTypeSet.add(SearchType.courseName);
-			searchTypeSet.add(SearchType.homeworkName);
-			searchTypeSet.add(SearchType.no);
-			searchTypeSet.add(SearchType.account);
-			searchTypeSet.add(SearchType.phone);
-			searchTypeSet.add(SearchType.email);
+	private String account;
 
-		}
-	};
+	private String name;
 
-	private Integer searchType;
+	private String phone;
 
-	private Integer sex;
+	private String email;
 
-	/**
-	 * 时间开始
-	 */
-	private String fromTime;
+	private String sex;
 
-	/**
-	 * 时间结束
-	 */
-	private String toTime;
+	private String age;
 
-	/**
-	 * 关键字
-	 */
-	private String keyword;
+	private String birthday;
 
-	private PageDto pageDto;
+	private String createTime;
 
-	public HashSet<SearchType> getSearchTypeSet() {
-		return searchTypeSet;
+	private String lastModifyTime;
+
+	private String registTime;
+
+	private Boolean status;
+
+	private String statusMemo;
+
+	private String description;
+
+	private List<RoleDto> roleDto;
+
+	private ArrayList<String> role;
+
+	private ArrayList<CourseQueryDto> teachCourse = new ArrayList<CourseQueryDto>();
+
+	private ArrayList<GradeQueryDto> studyCourse = new ArrayList<GradeQueryDto>();
+
+	private ShiroDto shiro;
+
+	public UserQueryDto() {
+		super();
 	}
 
-	public void setSearchTypeSet(HashSet<SearchType> searchTypeSet) {
-		this.searchTypeSet = searchTypeSet;
+	public String getNo() {
+		return no;
 	}
 
-	public Integer getSearchType() {
-		return searchType;
+	public void setNo(String no) {
+		this.no = no == null ? null : no.trim();
 	}
 
-	public void setSearchType(Integer searchType) {
-		this.searchType = searchType;
+	public String getAccount() {
+		return account;
 	}
 
-	public String getFromTime() {
-		return fromTime;
+	public void setAccount(String account) {
+		this.account = account == null ? null : account.trim();
 	}
 
-	public void setFromTime(String fromTime) {
-		this.fromTime = fromTime;
+	public String getName() {
+		return name;
 	}
 
-	public String getToTime() {
-		return toTime;
+	public void setName(String name) {
+		this.name = name == null ? null : name.trim();
 	}
 
-	public void setToTime(String toTime) {
-		this.toTime = toTime;
+	public String getPhone() {
+		return phone;
 	}
 
-	public String getKeyword() {
-		return keyword;
+	public void setPhone(String phone) {
+		this.phone = phone == null ? null : phone.trim();
 	}
 
-	public void setKeyword(String keyword) {
-		this.keyword = keyword;
+	public String getEmail() {
+		return email;
 	}
 
-	public PageDto getPageDto() {
-		return pageDto;
+	public void setEmail(String email) {
+		this.email = email == null ? null : email.trim();
 	}
 
-	public void setPageDto(PageDto pageDto) {
-		this.pageDto = pageDto;
+	public String getDescription() {
+		return description;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("UserQueryDto [searchTypeSet=");
-		builder.append(searchTypeSet);
-		builder.append(", searchType=");
-		builder.append(searchType);
-		builder.append(", sex=");
-		builder.append(sex);
-		builder.append(", fromTime=");
-		builder.append(fromTime);
-		builder.append(", toTime=");
-		builder.append(toTime);
-		builder.append(", keyword=");
-		builder.append(keyword);
-		builder.append(", pageDto=");
-		builder.append(pageDto);
-		builder.append("]");
-		return builder.toString();
+	public void setDescription(String description) {
+		this.description = description == null ? null : description.trim();
 	}
 
-	public Integer getSex() {
+	public ShiroDto getShiro() {
+		return shiro;
+	}
+
+	public void setShiro(ShiroDto shiro) {
+		this.shiro = shiro;
+	}
+
+	public String getSex() {
 		return sex;
 	}
 
-	public void setSex(Integer sex) {
+	public void setSex(String sex) {
 		this.sex = sex;
+	}
+
+	public String getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(String birthday) {
+		this.birthday = birthday;
+	}
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public String getRegistTime() {
+		return registTime;
+	}
+
+	public void setRegistTime(String registTime) {
+		this.registTime = registTime;
+	}
+
+	public Boolean getStatus() {
+		return status;
+	}
+
+	public void setStatus(Boolean status) {
+		this.status = status;
+	}
+
+	public String getStatusMemo() {
+		return statusMemo;
+	}
+
+	public void setStatusMemo(String statusMemo) {
+		this.statusMemo = statusMemo;
+	}
+
+	public String getLastModifyTime() {
+		return lastModifyTime;
+	}
+
+	public void setLastModifyTime(String lastModifyTime) {
+		this.lastModifyTime = lastModifyTime;
+	}
+
+	public String getAge() {
+		return age;
+	}
+
+	public void setAge(String age) {
+		this.age = age;
+	}
+
+	public ArrayList<CourseQueryDto> getTeachCourse() {
+		return teachCourse;
+	}
+
+	public void setTeachCourse(ArrayList<CourseQueryDto> teachCourse) {
+		this.teachCourse = teachCourse;
+	}
+
+	public List<RoleDto> getRoleDto() {
+		return roleDto;
+	}
+
+	public void setRoleDto(List<RoleDto> roleDto) {
+		this.roleDto = roleDto;
+	}
+
+	public void setRole(ArrayList<String> role) {
+		this.role = role;
+	}
+
+	public ArrayList<String> getRole() {
+		return role;
+	}
+
+	public ArrayList<GradeQueryDto> getStudyCourse() {
+		return studyCourse;
+	}
+
+	public void setStudyCourse(ArrayList<GradeQueryDto> studyCourse) {
+		this.studyCourse = studyCourse;
 	}
 
 }

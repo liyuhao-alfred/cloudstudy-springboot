@@ -73,7 +73,7 @@
     </if>
     'true' as QUERYID,
     <include refid="Base_Column_List" />
-    from tbfileToCourse
+    from tbfilerelcourse
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -82,17 +82,17 @@
     </if>
   </select>
   <delete id="deleteByExample" parameterType="com.cloudstudy.bo.FileToCourseExample">
-    delete from tbfileToCourse
+    delete from tbfilerelcourse
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
   <insert id="insert" parameterType="com.cloudstudy.bo.FileToCourse">
-    insert into tbfileToCourse (file_id, course_id)
+    insert into tbfilerelcourse (file_id, course_id)
     values (#{fileId,jdbcType=INTEGER}, #{courseId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.cloudstudy.bo.FileToCourse">
-    insert into tbfileToCourse
+    insert into tbfilerelcourse
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="fileId != null">
         file_id,
@@ -111,13 +111,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.cloudstudy.bo.FileToCourseExample" resultType="java.lang.Long">
-    select count(*) from tbfileToCourse
+    select count(*) from tbfilerelcourse
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update tbfileToCourse
+    update tbfilerelcourse
     <set>
       <if test="record.fileId != null">
         file_id = #{record.fileId,jdbcType=INTEGER},
@@ -131,7 +131,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update tbfileToCourse
+    update tbfilerelcourse
     set file_id = #{record.fileId,jdbcType=INTEGER},
       course_id = #{record.courseId,jdbcType=INTEGER}
     <if test="_parameter != null">

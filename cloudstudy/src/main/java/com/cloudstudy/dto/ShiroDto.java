@@ -6,7 +6,6 @@ public class ShiroDto {
 
 	private HashSet<String> roleType = new HashSet<String>();
 	private HashSet<String> permissionType = new HashSet<String>();
-	private HashSet<String> htmlPath = new HashSet<String>();
 
 	public HashSet<String> getRoleType() {
 		return roleType;
@@ -22,14 +21,6 @@ public class ShiroDto {
 
 	public void setPermissionType(HashSet<String> permissionType) {
 		this.permissionType = permissionType;
-	}
-
-	public HashSet<String> getHtmlPath() {
-		return htmlPath;
-	}
-
-	public void setHtmlPath(HashSet<String> htmlPath) {
-		this.htmlPath = htmlPath;
 	}
 
 }

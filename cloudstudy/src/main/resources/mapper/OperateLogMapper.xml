@@ -93,7 +93,7 @@
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
-    from tboperateLog
+    from tboperatelog
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -108,7 +108,7 @@
     </if>
     'true' as QUERYID,
     <include refid="Base_Column_List" />
-    from tboperateLog
+    from tboperatelog
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -121,15 +121,15 @@
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
-    from tboperateLog
+    from tboperatelog
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from tboperateLog
+    delete from tboperatelog
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="com.cloudstudy.bo.OperateLogExample">
-    delete from tboperateLog
+    delete from tboperatelog
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -138,7 +138,7 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into tboperateLog (operator_no, operator_type, operator_name, 
+    insert into tboperatelog (operator_no, operator_type, operator_name, 
       request_ip, request_uri, operation_start_time, 
       operation_end_time, operation_description, 
       operation_result_flage, operation_error_code, 
@@ -155,7 +155,7 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into tboperateLog
+    insert into tboperatelog
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="operatorNo != null">
         operator_no,
@@ -240,13 +240,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.cloudstudy.bo.OperateLogExample" resultType="java.lang.Long">
-    select count(*) from tboperateLog
+    select count(*) from tboperatelog
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update tboperateLog
+    update tboperatelog
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=INTEGER},
@@ -296,7 +296,7 @@
     </if>
   </update>
   <update id="updateByExampleWithBLOBs" parameterType="map">
-    update tboperateLog
+    update tboperatelog
     set id = #{record.id,jdbcType=INTEGER},
       operator_no = #{record.operatorNo,jdbcType=VARCHAR},
       operator_type = #{record.operatorType,jdbcType=VARCHAR},
@@ -316,7 +316,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update tboperateLog
+    update tboperatelog
     set id = #{record.id,jdbcType=INTEGER},
       operator_no = #{record.operatorNo,jdbcType=VARCHAR},
       operator_type = #{record.operatorType,jdbcType=VARCHAR},
@@ -333,7 +333,7 @@
     </if>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.cloudstudy.bo.OperateLog">
-    update tboperateLog
+    update tboperatelog
     <set>
       <if test="operatorNo != null">
         operator_no = #{operatorNo,jdbcType=VARCHAR},
@@ -378,7 +378,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.cloudstudy.bo.OperateLog">
-    update tboperateLog
+    update tboperatelog
     set operator_no = #{operatorNo,jdbcType=VARCHAR},
       operator_type = #{operatorType,jdbcType=VARCHAR},
       operator_name = #{operatorName,jdbcType=VARCHAR},
@@ -395,7 +395,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.cloudstudy.bo.OperateLog">
-    update tboperateLog
+    update tboperatelog
     set operator_no = #{operatorNo,jdbcType=VARCHAR},
       operator_type = #{operatorType,jdbcType=VARCHAR},
       operator_name = #{operatorName,jdbcType=VARCHAR},

@@ -1,6 +1,7 @@
 package com.cloudstudy.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.cloudstudy.exception.CloudStudyException;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping("/cloudstudy") // 避免swagger文档的url被拦截
+@CrossOrigin
 public class DefaultController {
 	@RequestMapping({ "/", "/index" })
 	public String index() {

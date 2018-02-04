@@ -10,11 +10,13 @@ public interface FileOriginService {
 
 	FileOriginDto add(FileOriginDto fileOriginDto) throws IOException;
 
-	void deleteById(Integer id) throws IOException;
+	void deleteById(Integer fileOriginId) throws IOException;
 
-	void deleteByIdList(List<Integer> idList) throws IOException;
+	void deleteByIdList(List<Integer> fileOriginIdList) throws IOException;
 
-	FileOriginDto findById(Integer id);
+	FileOriginDto findById(Integer fileOriginId);
+
+	List<FileOriginDto> findByIdList(List<Integer> fileOriginIdList);
 
 	List<FileOriginDto> findByJobId(Integer jobId, boolean isUpRecursion);
 
@@ -25,5 +27,7 @@ public interface FileOriginService {
 	List<FileOriginDto> findByCourseId(Integer courseId, boolean isDownRecursion);
 
 	List<FileOriginDto> find(FileOriginQueryDto fileQueryDto);
+
+	void deleteByUserNo(String userNo) throws IOException;
 
 }

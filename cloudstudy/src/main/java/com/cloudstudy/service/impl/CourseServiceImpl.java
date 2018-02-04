@@ -17,6 +17,7 @@ import com.cloudstudy.bo.Course;
 import com.cloudstudy.bo.User;
 import com.cloudstudy.bo.GradeExample;
 import com.cloudstudy.bo.Job;
+import com.cloudstudy.bo.Course;
 import com.cloudstudy.bo.Task;
 import com.cloudstudy.bo.CourseExample;
 import com.cloudstudy.bo.FileOrigin;
@@ -25,7 +26,7 @@ import com.cloudstudy.bo.UserExample;
 import com.cloudstudy.bo.UserExample.Criteria;
 import com.cloudstudy.constant.SearchType;
 import com.cloudstudy.dto.CourseDto;
-import com.cloudstudy.dto.CourseQueryDto;
+import com.cloudstudy.dto.CourseQueryParamDto;
 import com.cloudstudy.dto.FileOriginDto;
 import com.cloudstudy.exception.CloudStudyException;
 import com.cloudstudy.mapper.GradeMapper;
@@ -43,10 +44,10 @@ import com.cloudstudy.service.JobService;
 import com.cloudstudy.service.TaskService;
 import com.cloudstudy.service.UserService;
 import com.cloudstudy.util.DateUtil;
-import com.cloudstudy.util.FileUtil;
 import com.github.pagehelper.PageHelper;
 
 @Service
+@SuppressWarnings("unused")
 public class CourseServiceImpl implements CourseService {
 
 	@Autowired
@@ -76,8 +77,7 @@ public class CourseServiceImpl implements CourseService {
 	private TaskService taskService;
 	@Autowired
 	private JobService jobService;
-	@Autowired
-	private CourseService courseService;
+
 	@Value("${web.upload-path}")
 	private String filePath;
 
@@ -90,8 +90,8 @@ public class CourseServiceImpl implements CourseService {
 
 		File studyFile = courseDto.getFileOrigin();
 		if (studyFile != null && studyFile.length() > 0) {
-			FileOriginDto fileDto = new FileOriginDto(studyFile, course.getId(), null, null);
-			fileOriginService.add(fileDto);
+			FileOriginDto fileOriginDto = new FileOriginDto(studyFile, course.getId(), null, null);
+			fileOriginService.add(fileOriginDto);
 		}
 		return courseDto;
 	}
@@ -106,22 +106,37 @@ public class CourseServiceImpl implements CourseService {
 
 		List<FileOriginDto> FileOriginDtoList = fileOriginService.findByCourseId(courseId, true);
 
-		List<Integer> idList = new ArrayList<Integer>();
+		List<Integer> primaryKeyList = new ArrayList<Integer>();
 		if (FileOriginDtoList != null) {
 			for (FileOriginDto fileOriginDto : FileOriginDtoList) {
-				idList.add(fileOriginDto.getId());
+				primaryKeyList.add(fileOriginDto.getId());
 			}
 		}
 
-		fileOriginService.deleteByIdList(idList);
+		fileOriginService.deleteByIdList(primaryKeyList);
 
 		courseMapper.deleteByPrimaryKey(courseId);
 	}
 
 	@Override
-	public CourseDto update(CourseDto courseDto) {
-		userService.findTeacherByNo(courseDto.getTeacherNo());
+	public CourseDto update(CourseDto courseDto) throws IOException {
+		File studyFile = courseDto.getFileOrigin();
+		if (studyFile != null && studyFile.length() > 0) {
 
+			List<FileOriginDto> fileOriginDtoList = fileOriginService.findByCourseId(courseDto.getId(), false);
+			if (fileOriginDtoList != null) {
+				List<Integer> primaryKeyList = new ArrayList<Integer>();
+				for (FileOriginDto fileOriginDto : fileOriginDtoList) {
+					primaryKeyList.add(fileOriginDto.getId());
+				}
+				fileOriginService.deleteByIdList(primaryKeyList);
+			}
+
+			FileOriginDto fileOriginDto = new FileOriginDto(studyFile, courseDto.getId(), null, null);
+			fileOriginService.add(fileOriginDto);
+		}
+
+		userService.findTeacherByNo(courseDto.getTeacherNo());
 		Course course = new Course();
 		BeanUtils.copyProperties(courseDto, course);
 		courseMapper.updateByPrimaryKeyWithBLOBs(course);
@@ -130,8 +145,8 @@ public class CourseServiceImpl implements CourseService {
 	}
 
 	@Override
-	public CourseDto findById(Integer id) {
-		Course course = courseMapper.selectByPrimaryKey(id);
+	public CourseDto findById(Integer primaryKey) {
+		Course course = courseMapper.selectByPrimaryKey(primaryKey);
 		if (course == null) {
 			return null;
 		}
@@ -141,7 +156,7 @@ public class CourseServiceImpl implements CourseService {
 	}
 
 	@Override
-	public List<CourseDto> find(CourseQueryDto courseQueryDto) {
+	public List<CourseDto> find(CourseQueryParamDto courseQueryDto) {
 
 		CourseExample courseExample = new CourseExample();
 		com.cloudstudy.bo.CourseExample.Criteria criteria = courseExample.createCriteria();
@@ -153,7 +168,11 @@ public class CourseServiceImpl implements CourseService {
 
 				UserExample userExample = new UserExample();
 				Criteria criteria1 = userExample.createCriteria();
-				criteria1.andNameLike(keyword);
+				criteria1.andNameLike("%" + keyword + "%");
+
+				Integer page = courseQueryDto.getPageDto().getCurrent();
+				Integer rows = courseQueryDto.getPageDto().getSize();
+				PageHelper.startPage(page, rows);
 
 				List<User> userList = userMapper.selectByExample(userExample);
 				if (userList == null || userList.isEmpty()) {
@@ -176,7 +195,10 @@ public class CourseServiceImpl implements CourseService {
 
 		}
 
-		PageHelper.startPage(courseQueryDto.getPageDto().getPage(), courseQueryDto.getPageDto().getRows());
+		Integer page = courseQueryDto.getPageDto().getCurrent();
+		Integer rows = courseQueryDto.getPageDto().getSize();
+		PageHelper.startPage(page, rows);
+
 		List<Course> courseList = courseMapper.selectByExample(courseExample);
 		if (courseList == null || courseList.isEmpty()) {
 			return null;
@@ -191,32 +213,11 @@ public class CourseServiceImpl implements CourseService {
 		return courseDtoList;
 	}
 
-	private List<CourseDto> generate(List<Course> CourseList) {
-		List<CourseDto> CourseDtoList = new ArrayList<CourseDto>();
-		if (CourseList != null) {
-			for (Course course : CourseList) {
-				CourseDto CourseDto = generate(course);
-				CourseDtoList.add(CourseDto);
-			}
-		}
-		return CourseDtoList;
-	}
-
-	private CourseDto generate(Course course) {
-		if (course == null) {
-			throw new CloudStudyException();
-		}
-
-		CourseDto CourseDto = new CourseDto();
-		BeanUtils.copyProperties(course, CourseDto);
-		return CourseDto;
-	}
-
 	@Override
 	public CourseDto findByTaskId(Integer taskId) {
 		Task task = taskMapper.selectByPrimaryKey(taskId);
 		Course course = courseMapper.selectByPrimaryKey(task.getCourseId());
-		CourseDto courseDto = generate(course);
+		CourseDto courseDto = generateDto(course);
 		return courseDto;
 	}
 
@@ -225,7 +226,7 @@ public class CourseServiceImpl implements CourseService {
 		Job job = jobMapper.selectByPrimaryKey(jobId);
 		Task task = taskMapper.selectByPrimaryKey(job.getTaskId());
 		Course course = courseMapper.selectByPrimaryKey(task.getCourseId());
-		CourseDto courseDto = generate(course);
+		CourseDto courseDto = generateDto(course);
 		return courseDto;
 	}
 
@@ -234,6 +235,7 @@ public class CourseServiceImpl implements CourseService {
 		com.cloudstudy.bo.GradeExample GradeExample = new com.cloudstudy.bo.GradeExample();
 		com.cloudstudy.bo.GradeExample.Criteria criteria3 = GradeExample.createCriteria();
 		criteria3.andStudentNoEqualTo(studentNo);
+
 		List<Grade> GradeList = gradeMapper.selectByExample(GradeExample);
 
 		List<Integer> courseIdList = new ArrayList<Integer>();
@@ -244,8 +246,9 @@ public class CourseServiceImpl implements CourseService {
 		com.cloudstudy.bo.CourseExample CourseExample = new com.cloudstudy.bo.CourseExample();
 		com.cloudstudy.bo.CourseExample.Criteria criteria4 = CourseExample.createCriteria();
 		criteria4.andIdIn(courseIdList);
+
 		List<Course> CourseList = courseMapper.selectByExample(CourseExample);
-		List<CourseDto> CourseDtoList = generate(CourseList);
+		List<CourseDto> CourseDtoList = generateDto(CourseList);
 
 		return CourseDtoList;
 	}
@@ -257,9 +260,62 @@ public class CourseServiceImpl implements CourseService {
 		criteria3.andTeacherNoEqualTo(teacherNo);
 		List<Course> CourseList = courseMapper.selectByExample(CourseExample);
 
-		List<CourseDto> CourseDtoList = generate(CourseList);
+		List<CourseDto> CourseDtoList = generateDto(CourseList);
 
 		return CourseDtoList;
+	}
+
+	private List<Integer> getPrimaryKeyList(List<Course> courseList) {
+		if (courseList == null || courseList.isEmpty()) {
+			return new ArrayList<Integer>();
+		}
+		List<Integer> primaryKeyList = new ArrayList<Integer>();
+		for (Course course : courseList) {
+			primaryKeyList.add(course.getId());
+		}
+		return primaryKeyList;
+	}
+
+	private List<CourseDto> generateDto(List<Course> courseList) {
+		if (courseList == null || courseList.isEmpty()) {
+			return new ArrayList<CourseDto>();
+		}
+		List<CourseDto> CourseDtoList = new ArrayList<CourseDto>();
+		for (Course course : courseList) {
+			CourseDto courseDto = generateDto(course);
+			CourseDtoList.add(courseDto);
+		}
+		return CourseDtoList;
+	}
+
+	private List<Course> generate(List<CourseDto> courseDtoList) {
+		if (courseDtoList == null || courseDtoList.isEmpty()) {
+			return new ArrayList<Course>();
+		}
+		List<Course> CourseList = new ArrayList<Course>();
+		for (CourseDto courseDto : courseDtoList) {
+			Course course = generate(courseDto);
+			CourseList.add(course);
+		}
+		return CourseList;
+	}
+
+	private CourseDto generateDto(Course course) {
+		if (course == null) {
+			throw new CloudStudyException();
+		}
+		CourseDto courseDto = new CourseDto();
+		BeanUtils.copyProperties(course, courseDto);
+		return courseDto;
+	}
+
+	private Course generate(CourseDto courseDto) {
+		if (courseDto == null) {
+			throw new CloudStudyException();
+		}
+		Course course = new Course();
+		BeanUtils.copyProperties(courseDto, course);
+		return course;
 	}
 
 }

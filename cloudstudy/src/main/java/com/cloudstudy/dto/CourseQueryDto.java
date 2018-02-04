@@ -1,94 +1,136 @@
 package com.cloudstudy.dto;
 
-import java.util.HashSet;
+import java.io.File;
+import java.util.Date;
 
-import com.cloudstudy.constant.SearchType;
-
-@SuppressWarnings("unused")
 public class CourseQueryDto {
+	private Integer id;
 
-	private HashSet<SearchType> searchTypeSet = new HashSet<SearchType>() {
-		private static final long serialVersionUID = 1L;
-		{
-			searchTypeSet.add(SearchType.all);
-			searchTypeSet.add(SearchType.adminName);
-			searchTypeSet.add(SearchType.teacherName);
-			searchTypeSet.add(SearchType.studentName);
-			searchTypeSet.add(SearchType.courseName);
-			searchTypeSet.add(SearchType.homeworkName);
-			searchTypeSet.add(SearchType.no);
-			searchTypeSet.add(SearchType.account);
-			searchTypeSet.add(SearchType.phone);
-			searchTypeSet.add(SearchType.email);
+	private String teacherNo;
 
-		}
-	};
-	private Integer searchType;
+	private String name;
 
-	/**
-	 * 时间开始
-	 */
-	private String fromTime;
+	private Date createTime;
 
-	/**
-	 * 时间结束
-	 */
-	private String toTime;
+	private Date lastModifyTime;
 
-	/**
-	 * 关键字
-	 */
+	private Date beginTime;
 
-	private String keyword;
+	private Date endTime;
 
-	private PageDto pageDto;
+	private Integer declareNum;
 
-	public HashSet<SearchType> getSearchTypeSet() {
-		return searchTypeSet;
+	private Integer acceptNum;
+
+	private Integer count;
+
+	private Integer status;
+
+	private String description;
+
+	private File studyFile;
+
+	public Integer getId() {
+		return id;
 	}
 
-	public void setSearchTypeSet(HashSet<SearchType> searchTypeSet) {
-		this.searchTypeSet = searchTypeSet;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
-	public Integer getSearchType() {
-		return searchType;
+	public String getTeacherNo() {
+		return teacherNo;
 	}
 
-	public void setSearchType(Integer searchType) {
-		this.searchType = searchType;
+	public void setTeacherNo(String teacherNo) {
+		this.teacherNo = teacherNo == null ? null : teacherNo.trim();
 	}
 
-	public String getFromTime() {
-		return fromTime;
+	public String getName() {
+		return name;
 	}
 
-	public void setFromTime(String fromTime) {
-		this.fromTime = fromTime;
+	public void setName(String name) {
+		this.name = name == null ? null : name.trim();
 	}
 
-	public String getToTime() {
-		return toTime;
+	public Date getCreateTime() {
+		return createTime;
 	}
 
-	public void setToTime(String toTime) {
-		this.toTime = toTime;
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 
-	public String getKeyword() {
-		return keyword;
+	public Date getLastModifyTime() {
+		return lastModifyTime;
 	}
 
-	public void setKeyword(String keyword) {
-		this.keyword = keyword;
+	public void setLastModifyTime(Date lastModifyTime) {
+		this.lastModifyTime = lastModifyTime;
 	}
 
-	public PageDto getPageDto() {
-		return pageDto;
+	public Date getBeginTime() {
+		return beginTime;
 	}
 
-	public void setPageDto(PageDto pageDto) {
-		this.pageDto = pageDto;
+	public void setBeginTime(Date beginTime) {
+		this.beginTime = beginTime;
 	}
 
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+
+	public Integer getDeclareNum() {
+		return declareNum;
+	}
+
+	public void setDeclareNum(Integer declareNum) {
+		this.declareNum = declareNum;
+	}
+
+	public Integer getAcceptNum() {
+		return acceptNum;
+	}
+
+	public void setAcceptNum(Integer acceptNum) {
+		this.acceptNum = acceptNum;
+	}
+
+	public Integer getCount() {
+		return count;
+	}
+
+	public void setCount(Integer count) {
+		this.count = count;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description == null ? null : description.trim();
+	}
+
+	public File getFileOrigin() {
+		return studyFile;
+	}
+
+	public void setFileOrigin(File studyFile) {
+		this.studyFile = studyFile;
+	}
 }

@@ -3,8 +3,10 @@ package com.cloudstudy.service;
 import java.io.IOException;
 import java.util.List;
 
+import com.cloudstudy.dto.PageResultDto;
 import com.cloudstudy.dto.UserDto;
 import com.cloudstudy.dto.UserQueryDto;
+import com.cloudstudy.dto.UserQueryParamDto;
 
 public interface UserService {
 
@@ -32,13 +34,13 @@ public interface UserService {
 
 	UserDto findTeacherByCourseId(Integer courseId);
 
-	UserDto findStudentByCourseId(Integer courseId);
+	List<UserDto> findStudentByCourseId(Integer courseId);
 
 	UserDto findTeacherByTaskId(Integer taskId);
 
 	UserDto findStudentByJobId(Integer jobId);
 
-	List<UserDto> find(UserQueryDto userQueryDto);
+	PageResultDto<List<UserQueryDto>> find(UserQueryParamDto userQueryDto);
 
 	UserDto login(String account, String password);
 }

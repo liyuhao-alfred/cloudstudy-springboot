@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.cloudstudy.dto.CourseDto;
-import com.cloudstudy.dto.CourseQueryDto;
+import com.cloudstudy.dto.CourseQueryParamDto;
 
 public interface CourseService {
 
@@ -18,9 +18,9 @@ public interface CourseService {
 
 	void delete(Integer courseId) throws IOException;
 
-	CourseDto update(CourseDto courseDto);
+	CourseDto update(CourseDto courseDto) throws IOException;
 
-	CourseDto findById(Integer id);
+	CourseDto findById(Integer primaryKey);
 
 	CourseDto findByTaskId(Integer taskId);
 
@@ -30,5 +30,5 @@ public interface CourseService {
 
 	List<CourseDto> findByTeacherNo(String teacherNo);
 
-	List<CourseDto> find(CourseQueryDto courseQueryDto);
+	List<CourseDto> find(CourseQueryParamDto courseQueryDto);
 }

@@ -73,7 +73,7 @@
     </if>
     'true' as QUERYID,
     <include refid="Base_Column_List" />
-    from tbroleToUser
+    from tbrolereluser
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -82,17 +82,17 @@
     </if>
   </select>
   <delete id="deleteByExample" parameterType="com.cloudstudy.bo.RoleToUserExample">
-    delete from tbroleToUser
+    delete from tbrolereluser
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
   <insert id="insert" parameterType="com.cloudstudy.bo.RoleToUser">
-    insert into tbroleToUser (user_no, role_id)
+    insert into tbrolereluser (user_no, role_id)
     values (#{userNo,jdbcType=VARCHAR}, #{roleId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.cloudstudy.bo.RoleToUser">
-    insert into tbroleToUser
+    insert into tbrolereluser
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="userNo != null">
         user_no,
@@ -111,13 +111,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.cloudstudy.bo.RoleToUserExample" resultType="java.lang.Long">
-    select count(*) from tbroleToUser
+    select count(*) from tbrolereluser
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update tbroleToUser
+    update tbrolereluser
     <set>
       <if test="record.userNo != null">
         user_no = #{record.userNo,jdbcType=VARCHAR},
@@ -131,7 +131,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update tbroleToUser
+    update tbrolereluser
     set user_no = #{record.userNo,jdbcType=VARCHAR},
       role_id = #{record.roleId,jdbcType=INTEGER}
     <if test="_parameter != null">

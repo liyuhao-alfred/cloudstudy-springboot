@@ -3,19 +3,19 @@ package com.cloudstudy.service;
 import java.util.List;
 
 import com.cloudstudy.dto.TaskDto;
-import com.cloudstudy.dto.HomeworkQueryDto;
+import com.cloudstudy.dto.TaskQueryDto;
 
 public interface TaskService {
 
 	TaskDto add(TaskDto taskDto);
 
-	void delete(Integer id);
+	void delete(Integer primaryKey);
 
 	TaskDto update(TaskDto taskDto);
 
-	TaskDto findById(Integer id);
+	TaskDto findById(Integer primaryKey);
 
-	List<TaskDto> findByJobId(Integer jobId);
+	TaskDto findByJobId(Integer jobId);
 
 	List<TaskDto> findByCourseId(Integer courseId);
 
@@ -23,6 +23,6 @@ public interface TaskService {
 
 	List<TaskDto> findByStudentNo(String studentNo);
 
-	List<TaskDto> find(HomeworkQueryDto homeworkQueryDto);
+	List<TaskDto> find(TaskQueryDto taskQueryDto);
 
 }

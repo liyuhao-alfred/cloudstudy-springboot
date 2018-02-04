@@ -31,7 +31,11 @@ public class FileOriginDto {
 
 	public FileOriginDto() {
 		super();
-		// TODO Auto-generated constructor stub
+	}
+
+	public FileOriginDto(File file) {
+		super();
+		this.file = file;
 	}
 
 	public FileOriginDto(File file, Integer courseId, Integer taskId, Integer jobId) {
