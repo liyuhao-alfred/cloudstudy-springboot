@@ -8,19 +8,24 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.cloudstudy.bo.Grade;
 import com.cloudstudy.bo.Course;
 import com.cloudstudy.bo.Job;
 import com.cloudstudy.bo.FileOrigin;
 import com.cloudstudy.bo.FileToCourse;
+import com.cloudstudy.bo.FileToCourseExample;
 import com.cloudstudy.bo.FileToJob;
+import com.cloudstudy.bo.FileToJobExample;
 import com.cloudstudy.bo.FileToTask;
+import com.cloudstudy.bo.FileToTaskExample;
 import com.cloudstudy.bo.Task;
 import com.cloudstudy.bo.FileOriginExample;
 import com.cloudstudy.dto.JobDto;
@@ -77,34 +82,100 @@ public class FileOriginServiceImpl implements FileOriginService {
 	private String filePath;
 
 	@Override
+	public FileOriginDto add(MultipartFile multipartFile) throws IOException {
+
+		String fileName = null;
+		if (multipartFile != null && multipartFile.getSize() > 0) {// 上传文件步骤一
+			FileOriginDto fileOriginDto = new FileOriginDto();
+
+			fileName = System.currentTimeMillis() + "_" + multipartFile.getOriginalFilename();
+			fileOriginDto.setName(fileName);
+
+			String fileExtension = FileUtil.getExtensionName(fileName);// 没有点的
+			fileOriginDto.setType(fileExtension);
+
+			Integer fileSize = (int) multipartFile.getSize();
+			fileOriginDto.setSize(fileSize);
+
+			String fileOriginPath = null;
+			fileOriginPath = File.separator + "default" + File.separator + fileName;
+
+			String absoluteFileOriginPath = filePath + fileOriginPath;
+			File saveFile = FileUtil.createFile(absoluteFileOriginPath);
+			multipartFile.transferTo(saveFile);
+			fileOriginDto.setPath(fileOriginPath);
+
+			fileOriginDto.setMemo(generateFileOriginMemo(fileOriginDto));
+
+			fileOriginDto.setCreateTime(new Date());
+			fileOriginDto.setLastModifyTime(new Date());
+
+			com.cloudstudy.bo.FileOrigin fileOrigin = generate(fileOriginDto);
+			fileOriginMapper.insert(fileOrigin);
+			fileOriginDto.setId(fileOrigin.getId());
+
+			addFileToOther(fileOriginDto);
+
+			return fileOriginDto;
+		} else {
+			return null;
+		}
+	}
+
+	@Override
 	public FileOriginDto add(FileOriginDto fileOriginDto) throws IOException {
-		fileOriginDto = generateFileDtoAndSaveFile(fileOriginDto);
+		File recFile = fileOriginDto.getFile();
+		Integer fileDtoType_course = fileOriginDto.getCourseId();
+		Integer fileDtoType_task = fileOriginDto.getTaskId();
+		Integer fileDtoType_job = fileOriginDto.getJobId();
 
-		com.cloudstudy.bo.FileOrigin fileOrigin = generate(fileOriginDto);
-		fileOriginMapper.insert(fileOrigin);
-		fileOriginDto.setId(fileOrigin.getId());
+		String fileName = null;
+		if (recFile != null && recFile.length() > 0) {// 上传文件步骤一
+			fileName = System.currentTimeMillis() + "_" + recFile.getName();
+			fileOriginDto.setName(fileName);
 
-		if (fileOriginDto.getCourseId() != null) {
-			com.cloudstudy.bo.FileToCourse fileToCourse = new com.cloudstudy.bo.FileToCourse();
-			fileToCourse.setCourseId(fileOriginDto.getCourseId());
-			fileToCourse.setFileId(fileOriginDto.getId());
-			fileToCourseMapper.insert(fileToCourse);
+			String fileExtension = FileUtil.getExtensionName(fileName);// 没有点的
+			fileOriginDto.setType(fileExtension);
+
+			Integer fileSize = (int) recFile.length();
+			fileOriginDto.setSize(fileSize);
+
+			String fileOriginPath = null;
+			if (fileDtoType_course != null) {
+				fileOriginPath = File.separator + "course" + File.separator + fileName;
+			} else if (fileDtoType_task != null) {
+				fileOriginPath = File.separator + "task" + File.separator + fileName;
+			} else if (fileDtoType_job != null) {
+				fileOriginPath = File.separator + "job" + File.separator + fileName;
+			} else {
+				fileOriginPath = File.separator + "default" + File.separator + fileName;
+			}
+
+			String absoluteFileOriginPath = filePath + fileOriginPath;
+			File saveFile = FileUtil.createFile(absoluteFileOriginPath);
+			FileCopyUtils.copy(recFile, saveFile);
+			fileOriginDto.setPath(fileOriginPath);
+
+			fileOriginDto.setMemo(generateFileOriginMemo(fileOriginDto));
+
+			fileOriginDto.setCreateTime(new Date());
+			fileOriginDto.setLastModifyTime(new Date());
+
+			com.cloudstudy.bo.FileOrigin fileOrigin = generate(fileOriginDto);
+			fileOriginMapper.insert(fileOrigin);
+			fileOriginDto.setId(fileOrigin.getId());
+
+			addFileToOther(fileOriginDto);
+
+			return fileOriginDto;
+
+		} else if (fileOriginDto.getId() != null) {// 上传文件步骤2
+			addFileToOther(fileOriginDto);
+
+			return findById(fileOriginDto.getId());
+		} else {
+			throw new CloudStudyException();
 		}
-
-		if (fileOriginDto.getTaskId() != null) {
-			com.cloudstudy.bo.FileToTask fileToTask = new com.cloudstudy.bo.FileToTask();
-			fileToTask.setFileId(fileOriginDto.getId());
-			fileToTask.setTaskId(fileOriginDto.getTaskId());
-			fileToTaskMapper.insert(fileToTask);
-		}
-
-		if (fileOriginDto.getJobId() != null) {
-			com.cloudstudy.bo.FileToJob fileToJob = new com.cloudstudy.bo.FileToJob();
-			fileToJob.setFileId(fileOriginDto.getId());
-			fileToJob.setJobId(fileOriginDto.getJobId());
-			fileToJobMapper.insert(fileToJob);
-		}
-		return fileOriginDto;
 	}
 
 	@Override
@@ -192,40 +263,53 @@ public class FileOriginServiceImpl implements FileOriginService {
 		return fileDtoList;
 	}
 
-	private FileOriginDto generateFileDtoAndSaveFile(FileOriginDto fileOriginDto) throws IOException {
-		File recFile = fileOriginDto.getFile();
-		String fileName = System.currentTimeMillis() + "_" + recFile.getName();
-		String fileExtension = FileUtil.getExtensionName(fileName);// 没有点的
-		Integer fileSize = (int) recFile.length();
+	private void addFileToOther(FileOriginDto fileOriginDto) throws IOException {
 
 		Integer fileDtoType_course = fileOriginDto.getCourseId();
 		Integer fileDtoType_task = fileOriginDto.getTaskId();
 		Integer fileDtoType_job = fileOriginDto.getJobId();
 
-		String fileOriginPath = null;
 		if (fileDtoType_course != null) {
-			fileOriginPath = File.separator + "course" + File.separator + fileName;
-		} else if (fileDtoType_task != null) {
-			fileOriginPath = File.separator + "task" + File.separator + fileName;
-		} else if (fileDtoType_job != null) {
-			fileOriginPath = File.separator + "job" + File.separator + fileName;
-		} else {
-			fileOriginPath = File.separator + "default" + File.separator + fileName;
+			FileToCourseExample FileToCourseExample = new FileToCourseExample();
+			com.cloudstudy.bo.FileToCourseExample.Criteria criteria = FileToCourseExample.createCriteria();
+			criteria.andCourseIdEqualTo(fileDtoType_course);
+			criteria.andFileIdEqualTo(fileOriginDto.getId());
+			List<FileToCourse> fileToCourseList = fileToCourseMapper.selectByExample(FileToCourseExample);
+			if (fileToCourseList == null || fileToCourseList.isEmpty()) {
+				com.cloudstudy.bo.FileToCourse fileToCourse = new com.cloudstudy.bo.FileToCourse();
+				fileToCourse.setCourseId(fileOriginDto.getCourseId());
+				fileToCourse.setFileId(fileOriginDto.getId());
+				fileToCourseMapper.insert(fileToCourse);
+			}
 		}
 
-		String absoluteFileOriginPath = filePath + fileOriginPath;
-		File saveFile = FileUtil.createFile(absoluteFileOriginPath);
-		FileCopyUtils.copy(recFile, saveFile);
+		if (fileDtoType_task != null) {
+			FileToTaskExample FileToTaskExample = new FileToTaskExample();
+			com.cloudstudy.bo.FileToTaskExample.Criteria criteria = FileToTaskExample.createCriteria();
+			criteria.andTaskIdEqualTo(fileDtoType_task);
+			criteria.andFileIdEqualTo(fileOriginDto.getId());
+			List<FileToTask> fileToTaskList = fileToTaskMapper.selectByExample(FileToTaskExample);
+			if (fileToTaskList == null || fileToTaskList.isEmpty()) {
+				com.cloudstudy.bo.FileToTask fileToTask = new com.cloudstudy.bo.FileToTask();
+				fileToTask.setTaskId(fileOriginDto.getTaskId());
+				fileToTask.setFileId(fileOriginDto.getId());
+				fileToTaskMapper.insert(fileToTask);
+			}
+		}
 
-		fileOriginDto.setCreateTime(new Date());
-		fileOriginDto.setLastModifyTime(new Date());
-		fileOriginDto.setPath(fileOriginPath);
-		fileOriginDto.setSize(fileSize);
-		fileOriginDto.setType(fileExtension);
-		fileOriginDto.setName(fileName);
-		fileOriginDto.setMemo(generateFileOriginMemo(fileOriginDto));
-
-		return fileOriginDto;
+		if (fileDtoType_job != null) {
+			FileToJobExample FileToJobExample = new FileToJobExample();
+			com.cloudstudy.bo.FileToJobExample.Criteria criteria = FileToJobExample.createCriteria();
+			criteria.andJobIdEqualTo(fileDtoType_job);
+			criteria.andFileIdEqualTo(fileOriginDto.getId());
+			List<FileToJob> fileToJobList = fileToJobMapper.selectByExample(FileToJobExample);
+			if (fileToJobList == null || fileToJobList.isEmpty()) {
+				com.cloudstudy.bo.FileToJob fileToJob = new com.cloudstudy.bo.FileToJob();
+				fileToJob.setJobId(fileOriginDto.getJobId());
+				fileToJob.setFileId(fileOriginDto.getId());
+				fileToJobMapper.insert(fileToJob);
+			}
+		}
 	}
 
 	private String generateFileOriginMemo(FileOriginDto fileOriginDto) {

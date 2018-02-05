@@ -3,10 +3,14 @@ package com.cloudstudy.service;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.cloudstudy.dto.FileOriginDto;
 import com.cloudstudy.dto.FileOriginQueryDto;
 
 public interface FileOriginService {
+
+	FileOriginDto add(MultipartFile file) throws IOException;
 
 	FileOriginDto add(FileOriginDto fileOriginDto) throws IOException;
 

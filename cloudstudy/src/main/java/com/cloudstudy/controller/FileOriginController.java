@@ -1,6 +1,9 @@
 package com.cloudstudy.controller;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.cloudstudy.dto.FileOriginDto;
 import com.cloudstudy.dto.FileOriginQueryDto;
@@ -79,14 +83,34 @@ public class FileOriginController {
 	@ApiOperation(value = "添加文件步骤1", notes = "添加文件步骤1")
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "fileOriginDto", value = "文件数据", required = true, paramType = "body", dataType = "File") }) // 注意：paramType需要指定为body
-	@RequestMapping(value = "/addFileStep1", produces = { "application/json; charset=UTF-8" }, method = {
-			RequestMethod.POST, RequestMethod.GET })
+	@RequestMapping(value = "/addFileStep1", method = { RequestMethod.POST, RequestMethod.GET })
 	// @RequiresPermissions("File:add") // 权限管理;
 	public @ResponseBody WebResult<FileOriginDto> addFileStep1(
-			@ApiParam(value = "文件", required = true) @RequestBody File file) throws IOException {
-		FileOriginDto fileOriginDto = new FileOriginDto(file);
-		fileOriginDto = fileOriginService.add(fileOriginDto);
-		return WebResultUtil.success(fileOriginDto);
+			@ApiParam(value = "文件", required = true) @RequestParam("file") MultipartFile file) throws IOException {
+		if (!file.isEmpty()) {
+			try {
+				/*
+				 * 这段代码执行完毕之后，图片上传到了工程的跟路径； 大家自己扩散下思维，如果我们想把图片上传到 d:/files大家是否能实现呢？ 等等;
+				 * 这里只是简单一个例子,请自行参考，融入到实际中可能需要大家自己做一些思考，比如： 1、文件路径； 2、文件名； 3、文件格式; 4、文件大小的限制;
+				 */
+				System.out.println(file.getName());
+
+				FileOriginDto fileOriginDto = fileOriginService.add(file);
+				return WebResultUtil.success(fileOriginDto);
+
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				return WebResultUtil.fail("上传失败," + e.getMessage());
+
+			} catch (IOException e) {
+				e.printStackTrace();
+				return WebResultUtil.fail("上传失败," + e.getMessage());
+			}
+
+		} else {
+			return WebResultUtil.fail("上传失败，因为文件是空的");
+		}
+
 	}
 
 	/**

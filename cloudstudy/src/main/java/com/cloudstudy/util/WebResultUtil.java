@@ -32,6 +32,10 @@ public class WebResultUtil {
 		return fail(null);
 	}
 
+	public static <T> WebResult<T> fail(String msg) {
+		return fail(null, msg);
+	}
+
 	public static <T> WebResult<T> fail(T t) {
 		return fail(t, failMsg);
 	}
