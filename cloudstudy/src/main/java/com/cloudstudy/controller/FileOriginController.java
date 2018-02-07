@@ -21,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.cloudstudy.dto.FileOriginDto;
 import com.cloudstudy.dto.FileOriginQueryDto;
+import com.cloudstudy.dto.FileOriginQueryParamDto;
+import com.cloudstudy.dto.PageResultDto;
 import com.cloudstudy.dto.WebResult;
 import com.cloudstudy.service.FileOriginService;
 import com.cloudstudy.util.WebResultUtil;
@@ -64,12 +66,14 @@ public class FileOriginController {
 	 * @return
 	 */
 	@ApiOperation(value = "获取文件资源管理列表", notes = "获取文件资源管理列表")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "fileOriginQueryParamDto", value = "文件查询数据", paramType = "body", dataType = "FileOriginQueryParamDto") }) // 注意：paramType需要指定为body
 	@RequestMapping(value = "/list", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
 	// @RequiresPermissions("File:del") // 权限管理;
-	public @ResponseBody WebResult<List<FileOriginDto>> find(
-			@RequestParam(value = "fileQueryDto", required = true) FileOriginQueryDto fileQueryDto) {
-		List<FileOriginDto> fileDtoList = fileOriginService.find(fileQueryDto);
+	public @ResponseBody WebResult<PageResultDto<List<FileOriginQueryDto>>> find(
+			@ApiParam(value = "系统文件查询数据") @RequestBody FileOriginQueryParamDto fileOriginQueryParamDto) {
+		PageResultDto<List<FileOriginQueryDto>> fileDtoList = fileOriginService.find(fileOriginQueryParamDto);
 		return WebResultUtil.success(fileDtoList);
 	}
 

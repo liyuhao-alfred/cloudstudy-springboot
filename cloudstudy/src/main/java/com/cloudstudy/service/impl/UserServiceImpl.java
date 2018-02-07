@@ -206,10 +206,10 @@ public class UserServiceImpl implements UserService {
 					.andPhoneLike("%" + keyword + "%");//
 		}
 
-		ArrayList<String> daterangementList = userQueryDto.getDaterangement();
-		if (daterangementList != null && daterangementList.size() == 2) {
-			criteria.andRegistTimeBetween(DateUtil.stringToDateSpecial(daterangementList.get(0)),
-					DateUtil.stringToDateSpecial(daterangementList.get(1)));
+		ArrayList<String> dateRangementList = userQueryDto.getDateRangement();
+		if (dateRangementList != null && dateRangementList.size() == 2) {
+			criteria.andRegistTimeBetween(DateUtil.stringToDateSpecial(dateRangementList.get(0)),
+					DateUtil.stringToDateSpecial(dateRangementList.get(1)));
 		}
 
 		String status = userQueryDto.getStatus();
@@ -429,7 +429,7 @@ public class UserServiceImpl implements UserService {
 		return primaryKeyList;
 	}
 
-	private List<UserDto> generateDto(List<User> userList) {
+	public List<UserDto> generateDto(List<User> userList) {
 		if (userList == null || userList.isEmpty()) {
 			return new ArrayList<UserDto>();
 		}

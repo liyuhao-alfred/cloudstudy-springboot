@@ -3,83 +3,83 @@ package com.cloudstudy.bo;
 import java.util.Date;
 
 public class FileOrigin {
-    private Integer id;
+	private Integer id;
 
-    private String name;
+	private String name;
 
-    private String path;
+	private String path;
 
-    private String type;
+	private String type;
 
-    private Integer size;
+	private Integer size;
 
-    private String memo;
+	private String memo;
 
-    private Date createTime;
+	private Date createTime;
 
-    private Date lastModifyTime;
+	private Date lastModifyTime;
 
-    public Integer getId() {
-        return id;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
+	public void setName(String name) {
+		this.name = name == null ? null : name.trim();
+	}
 
-    public String getPath() {
-        return path;
-    }
+	public String getPath() {
+		return path;
+	}
 
-    public void setPath(String path) {
-        this.path = path == null ? null : path.trim();
-    }
+	public void setPath(String path) {
+		this.path = path == null ? null : path.trim();
+	}
 
-    public String getType() {
-        return type;
-    }
+	public String getType() {
+		return type;
+	}
 
-    public void setType(String type) {
-        this.type = type == null ? null : type.trim();
-    }
+	public void setType(String type) {
+		this.type = type == null ? null : type.trim();
+	}
 
-    public Integer getSize() {
-        return size;
-    }
+	public Integer getSize() {
+		return size;
+	}
 
-    public void setSize(Integer size) {
-        this.size = size;
-    }
+	public void setSize(Integer size) {
+		this.size = size;
+	}
 
-    public String getMemo() {
-        return memo;
-    }
+	public String getMemo() {
+		return memo;
+	}
 
-    public void setMemo(String memo) {
-        this.memo = memo == null ? null : memo.trim();
-    }
+	public void setMemo(String memo) {
+		this.memo = memo == null ? null : memo.trim();
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public Date getCreateTime() {
+		return createTime;
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
 
-    public Date getLastModifyTime() {
-        return lastModifyTime;
-    }
+	public Date getLastModifyTime() {
+		return lastModifyTime;
+	}
 
-    public void setLastModifyTime(Date lastModifyTime) {
-        this.lastModifyTime = lastModifyTime;
-    }
+	public void setLastModifyTime(Date lastModifyTime) {
+		this.lastModifyTime = lastModifyTime;
+	}
 }

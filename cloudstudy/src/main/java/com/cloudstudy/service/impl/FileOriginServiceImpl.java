@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.cloudstudy.bo.Grade;
 import com.cloudstudy.bo.Course;
+import com.cloudstudy.bo.CourseExample;
 import com.cloudstudy.bo.Job;
+import com.cloudstudy.bo.JobExample;
 import com.cloudstudy.bo.FileOrigin;
 import com.cloudstudy.bo.FileToCourse;
 import com.cloudstudy.bo.FileToCourseExample;
@@ -27,11 +28,18 @@ import com.cloudstudy.bo.FileToJobExample;
 import com.cloudstudy.bo.FileToTask;
 import com.cloudstudy.bo.FileToTaskExample;
 import com.cloudstudy.bo.Task;
+import com.cloudstudy.bo.TaskExample;
+import com.cloudstudy.bo.User;
+import com.cloudstudy.bo.UserExample;
 import com.cloudstudy.bo.FileOriginExample;
+import com.cloudstudy.bo.FileOriginExample.Criteria;
+import com.cloudstudy.constant.SearchType;
 import com.cloudstudy.dto.JobDto;
+import com.cloudstudy.dto.PageResultDto;
 import com.cloudstudy.dto.CourseDto;
 import com.cloudstudy.dto.FileOriginDto;
 import com.cloudstudy.dto.FileOriginQueryDto;
+import com.cloudstudy.dto.FileOriginQueryParamDto;
 import com.cloudstudy.dto.TaskDto;
 import com.cloudstudy.dto.UserDto;
 import com.cloudstudy.exception.CloudStudyException;
@@ -43,11 +51,13 @@ import com.cloudstudy.mapper.FileToJobMapper;
 import com.cloudstudy.mapper.FileToTaskMapper;
 import com.cloudstudy.mapper.JobMapper;
 import com.cloudstudy.mapper.TaskMapper;
+import com.cloudstudy.mapper.UserMapper;
 import com.cloudstudy.service.JobService;
 import com.cloudstudy.service.CourseService;
 import com.cloudstudy.service.FileOriginService;
 import com.cloudstudy.service.TaskService;
 import com.cloudstudy.service.UserService;
+import com.cloudstudy.util.DateUtil;
 import com.cloudstudy.util.FileUtil;
 import com.github.pagehelper.PageHelper;
 
@@ -60,6 +70,8 @@ public class FileOriginServiceImpl implements FileOriginService {
 	private TaskMapper taskMapper;
 	@Autowired
 	private JobMapper jobMapper;
+	@Autowired
+	private UserMapper userMapper;
 	@Autowired
 	private CourseMapper courseMapper;
 	@Autowired
@@ -230,37 +242,70 @@ public class FileOriginServiceImpl implements FileOriginService {
 	}
 
 	@Override
-	public List<FileOriginDto> find(FileOriginQueryDto fileQueryDto) {
-		FileOriginExample FileOriginExample = new FileOriginExample();
-		com.cloudstudy.bo.FileOriginExample.Criteria criteria = FileOriginExample.createCriteria();
-		String keyword = fileQueryDto.getKeyword();
+	public PageResultDto<List<FileOriginQueryDto>> find(FileOriginQueryParamDto fileOriginQueryDto) {
+
+		FileOriginExample fileOriginExample = new FileOriginExample();
+		Criteria criteria = fileOriginExample.createCriteria();
+
+		String keyword = fileOriginQueryDto.getKeyword();
 		if (!StringUtils.isEmpty(keyword)) {
-			criteria.andMemoLike("%" + keyword + "%");
+			fileOriginExample.or()//
+					.andNameLike("%" + keyword + "%")//
+					.andMemoLike("%" + keyword + "%");//
 		}
 
-		if (fileQueryDto.getFromFileSize() != null) {
-			criteria.andSizeGreaterThanOrEqualTo(fileQueryDto.getFromFileSize());
+		ArrayList<String> dateRangementList = fileOriginQueryDto.getDateRangement();
+		if (dateRangementList != null && dateRangementList.size() == 2) {
+			criteria.andCreateTimeBetween(DateUtil.stringToDateSpecial(dateRangementList.get(0)),
+					DateUtil.stringToDateSpecial(dateRangementList.get(1)));
 		}
 
-		if (fileQueryDto.getToFileSize() != null) {
-			criteria.andSizeLessThanOrEqualTo(fileQueryDto.getToFileSize());
+		ArrayList<String> fileSizeRangementList = fileOriginQueryDto.getFileSizeRangement();
+		if (dateRangementList != null && dateRangementList.size() == 2) {
+			criteria.andSizeBetween(Integer.valueOf(fileSizeRangementList.get(0)),
+					Integer.valueOf(fileSizeRangementList.get(1)));
 		}
 
-		if (fileQueryDto.getFileType() != null) {
-			criteria.andTypeEqualTo(fileQueryDto.getFileType());
-		}
+		long total = fileOriginMapper.countByExample(fileOriginExample);
 
-		Integer page = fileQueryDto.getPageDto().getCurrent();
-		Integer rows = fileQueryDto.getPageDto().getSize();
+		Integer page = fileOriginQueryDto.getPageDto().getCurrent();
+		Integer rows = fileOriginQueryDto.getPageDto().getSize();
 		PageHelper.startPage(page, rows);
+		List<FileOrigin> fileOriginList = fileOriginMapper.selectByExample(fileOriginExample);
 
-		List<FileOrigin> fileOriginList = fileOriginMapper.selectByExample(FileOriginExample);
+		List<FileOriginQueryDto> fileOriginQueryDtoList = new ArrayList<FileOriginQueryDto>();
 		if (fileOriginList == null || fileOriginList.isEmpty()) {
-			return null;
+			return new PageResultDto<List<FileOriginQueryDto>>(total, fileOriginQueryDtoList);
 		}
 
-		List<FileOriginDto> fileDtoList = generateDto(fileOriginList);
-		return fileDtoList;
+		for (FileOrigin fileOrigin : fileOriginList) {
+			FileOriginQueryDto fileOriginDto = generateQueryDto(fileOrigin);
+			fileOriginQueryDtoList.add(fileOriginDto);
+		}
+
+		return new PageResultDto<List<FileOriginQueryDto>>(total, fileOriginQueryDtoList);
+	}
+
+	private FileOriginQueryDto generateQueryDto(FileOrigin fileOrigin) {
+		if (fileOrigin == null) {
+			throw new CloudStudyException();
+		}
+		FileOriginQueryDto fileOriginQueryDto = new FileOriginQueryDto();
+		BeanUtils.copyProperties(fileOrigin, fileOriginQueryDto);
+
+		fileOriginQueryDto.setCourseDto(courseService.findByFileOriginId(fileOriginQueryDto.getId()));
+		fileOriginQueryDto.setTaskDto(taskService.findByFileOriginId(fileOriginQueryDto.getId()));
+		fileOriginQueryDto.setJobDto(jobService.findByFileOriginId(fileOriginQueryDto.getId()));
+		if (fileOriginQueryDto.getCourseDto() != null) {
+			fileOriginQueryDto.setUserDto(userService.findTeacherByCourseId(fileOriginQueryDto.getCourseDto().getId()));
+		} else if (fileOriginQueryDto.getTaskDto() != null) {
+			fileOriginQueryDto.setUserDto(userService.findTeacherByTaskId(fileOriginQueryDto.getTaskDto().getId()));
+		} else if (fileOriginQueryDto.getJobDto() != null) {
+			fileOriginQueryDto.setUserDto(userService.findStudentByJobId(fileOriginQueryDto.getJobDto().getId()));
+		}
+
+		fileOriginQueryDto.setSrc("https://localhost:9680/" + fileOriginQueryDto.getPath());
+		return fileOriginQueryDto;
 	}
 
 	private void addFileToOther(FileOriginDto fileOriginDto) throws IOException {

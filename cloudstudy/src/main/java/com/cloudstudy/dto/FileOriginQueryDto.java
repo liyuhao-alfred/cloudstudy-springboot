@@ -1,105 +1,157 @@
 package com.cloudstudy.dto;
 
-import java.util.HashSet;
+import java.io.File;
+import java.util.Date;
 
-import com.cloudstudy.constant.SearchType;
-
-@SuppressWarnings("unused")
 public class FileOriginQueryDto {
-	private HashSet<SearchType> searchTypeSet = new HashSet<SearchType>() {
-		private static final long serialVersionUID = 1L;
-		{
-			searchTypeSet.add(SearchType.all);
-			searchTypeSet.add(SearchType.adminName);
-			searchTypeSet.add(SearchType.teacherName);
-			searchTypeSet.add(SearchType.studentName);
-			searchTypeSet.add(SearchType.courseName);
-			searchTypeSet.add(SearchType.homeworkName);
-			searchTypeSet.add(SearchType.no);
-			searchTypeSet.add(SearchType.account);
-			searchTypeSet.add(SearchType.phone);
-			searchTypeSet.add(SearchType.email);
-			searchTypeSet.add(SearchType.fileName);
 
-		}
-	};
-	private Integer searchType;
+	private Integer id;
 
-	/**
-	 * 文件大小
-	 */
-	private Integer fromFileSize;
-	/**
-	 * 文件大小
-	 */
-	private Integer toFileSize;
+	private CourseDto courseDto = new CourseDto();
 
-	/**
-	 * 文件格式类型
-	 */
-	private String fileType;
+	private TaskDto taskDto = new TaskDto();
 
-	/**
-	 * 关键字
-	 */
-	private String keyword;
+	private JobDto jobDto = new JobDto();
 
-	private PageDto pageDto;
+	private UserDto userDto = new UserDto();
 
-	public HashSet<SearchType> getSearchTypeSet() {
-		return searchTypeSet;
+	private String name;
+
+	private String path;
+
+	private String src;
+
+	private String type;
+
+	private Integer size;
+
+	private Date createTime;
+
+	private Date lastModifyTime;
+
+	private String memo;
+
+	private File file;
+
+	public FileOriginQueryDto() {
+		super();
 	}
 
-	public void setSearchTypeSet(HashSet<SearchType> searchTypeSet) {
-		this.searchTypeSet = searchTypeSet;
+	public FileOriginQueryDto(File file) {
+		super();
+		this.file = file;
 	}
 
-	public Integer getSearchType() {
-		return searchType;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setSearchType(Integer searchType) {
-		this.searchType = searchType;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
-	public Integer getFromFileSize() {
-		return fromFileSize;
+	public String getName() {
+		return name;
 	}
 
-	public void setFromFileSize(Integer fromFileSize) {
-		this.fromFileSize = fromFileSize;
+	public void setName(String name) {
+		this.name = name == null ? null : name.trim();
 	}
 
-	public Integer getToFileSize() {
-		return toFileSize;
+	public String getPath() {
+		return path;
 	}
 
-	public void setToFileSize(Integer toFileSize) {
-		this.toFileSize = toFileSize;
+	public void setPath(String path) {
+		this.path = path == null ? null : path.trim();
 	}
 
-	public String getFileType() {
-		return fileType;
+	public String getType() {
+		return type;
 	}
 
-	public void setFileType(String fileType) {
-		this.fileType = fileType;
+	public void setType(String type) {
+		this.type = type == null ? null : type.trim();
 	}
 
-	public String getKeyword() {
-		return keyword;
+	public Integer getSize() {
+		return size;
 	}
 
-	public void setKeyword(String keyword) {
-		this.keyword = keyword;
+	public void setSize(Integer size) {
+		this.size = size;
 	}
 
-	public PageDto getPageDto() {
-		return pageDto;
+	public Date getCreateTime() {
+		return createTime;
 	}
 
-	public void setPageDto(PageDto pageDto) {
-		this.pageDto = pageDto;
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public Date getLastModifyTime() {
+		return lastModifyTime;
+	}
+
+	public void setLastModifyTime(Date lastModifyTime) {
+		this.lastModifyTime = lastModifyTime;
+	}
+
+	public String getMemo() {
+		return memo;
+	}
+
+	public void setMemo(String memo) {
+		this.memo = memo == null ? null : memo.trim();
+	}
+
+	public CourseDto getCourseDto() {
+		return courseDto;
+	}
+
+	public void setCourseDto(CourseDto courseDto) {
+		this.courseDto = courseDto;
+	}
+
+	public TaskDto getTaskDto() {
+		return taskDto;
+	}
+
+	public void setTaskDto(TaskDto taskDto) {
+		this.taskDto = taskDto;
+	}
+
+	public JobDto getJobDto() {
+		return jobDto;
+	}
+
+	public void setJobDto(JobDto jobDto) {
+		this.jobDto = jobDto;
+	}
+
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
+	}
+
+	public UserDto getUserDto() {
+		return userDto;
+	}
+
+	public void setUserDto(UserDto userDto) {
+		this.userDto = userDto;
+	}
+
+	public String getSrc() {
+		return src;
+	}
+
+	public void setSrc(String src) {
+		this.src = src;
 	}
 
 }

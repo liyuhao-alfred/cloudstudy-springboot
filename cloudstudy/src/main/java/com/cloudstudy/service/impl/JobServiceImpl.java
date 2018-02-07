@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cloudstudy.bo.FileOrigin;
+import com.cloudstudy.bo.FileToJob;
+import com.cloudstudy.bo.FileToJobExample;
 import com.cloudstudy.bo.Job;
 import com.cloudstudy.bo.JobExample;
 import com.cloudstudy.bo.Job;
@@ -50,7 +52,7 @@ public class JobServiceImpl implements JobService {
 	@Autowired
 	private FileOriginMapper fileOriginMapper;
 	@Autowired
-	private FileToJobMapper fileOriginToJobMapper;
+	private FileToJobMapper fileToJobMapper;
 
 	@Override
 	public JobDto add(JobDto jobDto) {
@@ -181,7 +183,7 @@ public class JobServiceImpl implements JobService {
 		return primaryKeyList;
 	}
 
-	private List<JobDto> generateDto(List<Job> jobList) {
+	public List<JobDto> generateDto(List<Job> jobList) {
 		if (jobList == null || jobList.isEmpty()) {
 			return new ArrayList<JobDto>();
 		}
@@ -221,6 +223,27 @@ public class JobServiceImpl implements JobService {
 		Job job = new Job();
 		BeanUtils.copyProperties(jobDto, job);
 		return job;
+	}
+
+	@Override
+	public JobDto findByFileOriginId(Integer fileOriginId) {
+		FileToJobExample fileToJobExample = new FileToJobExample();// 设置作业信息
+		FileToJobExample.Criteria fileToJobCriteria = fileToJobExample.createCriteria();
+		fileToJobCriteria.andFileIdEqualTo(fileOriginId);
+		List<FileToJob> fileToJobList = fileToJobMapper.selectByExample(fileToJobExample);
+		if (fileToJobList != null && !fileToJobList.isEmpty()) {
+			ArrayList<Integer> idList = new ArrayList<Integer>();
+			for (FileToJob fileToJob : fileToJobList) {
+				idList.add(fileToJob.getJobId());
+			}
+
+			JobExample jobExample = new JobExample();
+			JobExample.Criteria criteria = jobExample.createCriteria();
+			criteria.andIdIn(idList);
+			List<Job> jobList = jobMapper.selectByExample(jobExample);
+			return generateDto(jobList).get(0);
+		}
+		return null;
 	}
 
 }

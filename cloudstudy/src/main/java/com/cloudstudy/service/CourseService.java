@@ -1,8 +1,10 @@
 package com.cloudstudy.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.cloudstudy.bo.Course;
 import com.cloudstudy.dto.CourseDto;
 import com.cloudstudy.dto.CourseQueryParamDto;
 
@@ -26,9 +28,13 @@ public interface CourseService {
 
 	CourseDto findByJobId(Integer jobId);
 
+	CourseDto findByFileOriginId(Integer fileOriginId);
+
 	List<CourseDto> findByStudentNo(String studentNo);
 
 	List<CourseDto> findByTeacherNo(String teacherNo);
 
 	List<CourseDto> find(CourseQueryParamDto courseQueryDto);
+
+	List<CourseDto> generateDto(List<Course> courseList);
 }

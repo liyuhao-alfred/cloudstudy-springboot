@@ -7,6 +7,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.cloudstudy.dto.FileOriginDto;
 import com.cloudstudy.dto.FileOriginQueryDto;
+import com.cloudstudy.dto.FileOriginQueryParamDto;
+import com.cloudstudy.dto.PageResultDto;
 
 public interface FileOriginService {
 
@@ -20,8 +22,6 @@ public interface FileOriginService {
 
 	FileOriginDto findById(Integer fileOriginId);
 
-	List<FileOriginDto> findByIdList(List<Integer> fileOriginIdList);
-
 	List<FileOriginDto> findByJobId(Integer jobId, boolean isUpRecursion);
 
 	List<FileOriginDto> findByTaskId(Integer taskId, boolean isUpRecursion, boolean isDownRecursion);
@@ -30,8 +30,10 @@ public interface FileOriginService {
 
 	List<FileOriginDto> findByCourseId(Integer courseId, boolean isDownRecursion);
 
-	List<FileOriginDto> find(FileOriginQueryDto fileQueryDto);
+	PageResultDto<List<FileOriginQueryDto>> find(FileOriginQueryParamDto fileOriginQueryDto);
 
 	void deleteByUserNo(String userNo) throws IOException;
+
+	List<FileOriginDto> findByIdList(List<Integer> primaryKeyList);
 
 }

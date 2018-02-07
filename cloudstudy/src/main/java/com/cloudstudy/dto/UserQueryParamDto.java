@@ -15,7 +15,7 @@ public class UserQueryParamDto {
 	/**
 	 * 时间范围
 	 */
-	private ArrayList<String> daterangement;
+	private ArrayList<String> dateRangement;
 
 	/**
 	 * 关键字
@@ -58,16 +58,8 @@ public class UserQueryParamDto {
 		this.role = role;
 	}
 
-	public void setDaterangement(ArrayList<String> daterangement) {
-		this.daterangement = daterangement;
-	}
-
 	public void setStatus(String status) {
 		this.status = status;
-	}
-
-	public ArrayList<String> getDaterangement() {
-		return daterangement;
 	}
 
 	public String getStatus() {
@@ -80,6 +72,14 @@ public class UserQueryParamDto {
 
 	public void setOrderBy(String orderBy) {
 		this.orderBy = orderBy;
+	}
+
+	public ArrayList<String> getDateRangement() {
+		return dateRangement;
+	}
+
+	public void setDateRangement(ArrayList<String> dateRangement) {
+		this.dateRangement = dateRangement;
 	}
 
 }

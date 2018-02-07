@@ -16,6 +16,8 @@ import com.cloudstudy.bo.GradeExample;
 import com.cloudstudy.bo.Job;
 import com.cloudstudy.bo.CourseExample;
 import com.cloudstudy.bo.FileOrigin;
+import com.cloudstudy.bo.FileToTask;
+import com.cloudstudy.bo.FileToTaskExample;
 import com.cloudstudy.bo.JobExample;
 import com.cloudstudy.bo.RoleToPermission;
 import com.cloudstudy.bo.TaskExample;
@@ -26,6 +28,7 @@ import com.cloudstudy.dto.GradeDto;
 import com.cloudstudy.dto.CourseDto;
 import com.cloudstudy.dto.FileOriginDto;
 import com.cloudstudy.dto.TaskQueryDto;
+import com.cloudstudy.dto.UserDto;
 import com.cloudstudy.dto.TaskDto;
 import com.cloudstudy.dto.TaskQueryDto;
 import com.cloudstudy.exception.CloudStudyException;
@@ -60,13 +63,13 @@ public class TaskServiceImpl implements TaskService {
 	@Autowired
 	private FileOriginMapper fileOriginMapper;
 	@Autowired
-	private FileToTaskMapper fileOriginToTaskMapper;
-	@Autowired
 	private FileToJobMapper fileOriginToJobMapper;
 	@Autowired
 	private CourseService courseService;
 	@Autowired
 	private GradeService gradeService;
+	@Autowired
+	private FileToTaskMapper fileToTaskMapper;
 
 	@Override
 	public TaskDto add(TaskDto taskDto) {
@@ -234,7 +237,7 @@ public class TaskServiceImpl implements TaskService {
 		return primaryKeyList;
 	}
 
-	private List<TaskDto> generateDto(List<Task> taskList) {
+	public List<TaskDto> generateDto(List<Task> taskList) {
 		if (taskList == null || taskList.isEmpty()) {
 			return new ArrayList<TaskDto>();
 		}
@@ -274,6 +277,28 @@ public class TaskServiceImpl implements TaskService {
 		Task task = new Task();
 		BeanUtils.copyProperties(taskDto, task);
 		return task;
+	}
+
+	@Override
+	public TaskDto findByFileOriginId(Integer fileOriginId) {
+
+		FileToTaskExample fileToTaskExample = new FileToTaskExample();// 设置任务信息
+		FileToTaskExample.Criteria fileToTaskCriteria = fileToTaskExample.createCriteria();
+		fileToTaskCriteria.andFileIdEqualTo(fileOriginId);
+		List<FileToTask> fileToTaskList = fileToTaskMapper.selectByExample(fileToTaskExample);
+		if (fileToTaskList != null && !fileToTaskList.isEmpty()) {
+			ArrayList<Integer> idList = new ArrayList<Integer>();
+			for (FileToTask fileToTask : fileToTaskList) {
+				idList.add(fileToTask.getTaskId());
+			}
+
+			TaskExample taskExample = new TaskExample();
+			TaskExample.Criteria criteria = taskExample.createCriteria();
+			criteria.andIdIn(idList);
+			List<Task> taskList = taskMapper.selectByExample(taskExample);
+			return generateDto(taskList).get(0);
+		}
+		return null;
 	}
 
 }

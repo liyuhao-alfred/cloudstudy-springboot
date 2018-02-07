@@ -21,6 +21,8 @@ import com.cloudstudy.bo.Course;
 import com.cloudstudy.bo.Task;
 import com.cloudstudy.bo.CourseExample;
 import com.cloudstudy.bo.FileOrigin;
+import com.cloudstudy.bo.FileToCourse;
+import com.cloudstudy.bo.FileToCourseExample;
 import com.cloudstudy.bo.Grade;
 import com.cloudstudy.bo.UserExample;
 import com.cloudstudy.bo.UserExample.Criteria;
@@ -28,6 +30,7 @@ import com.cloudstudy.constant.SearchType;
 import com.cloudstudy.dto.CourseDto;
 import com.cloudstudy.dto.CourseQueryParamDto;
 import com.cloudstudy.dto.FileOriginDto;
+import com.cloudstudy.dto.UserDto;
 import com.cloudstudy.exception.CloudStudyException;
 import com.cloudstudy.mapper.GradeMapper;
 import com.cloudstudy.mapper.JobMapper;
@@ -276,7 +279,7 @@ public class CourseServiceImpl implements CourseService {
 		return primaryKeyList;
 	}
 
-	private List<CourseDto> generateDto(List<Course> courseList) {
+	public List<CourseDto> generateDto(List<Course> courseList) {
 		if (courseList == null || courseList.isEmpty()) {
 			return new ArrayList<CourseDto>();
 		}
@@ -318,4 +321,25 @@ public class CourseServiceImpl implements CourseService {
 		return course;
 	}
 
+	@Override
+	public CourseDto findByFileOriginId(Integer fileOriginId) {
+
+		FileToCourseExample fileToCourseExample = new FileToCourseExample();// 设置课程信息
+		FileToCourseExample.Criteria fileToCourseCriteria = fileToCourseExample.createCriteria();
+		fileToCourseCriteria.andFileIdEqualTo(fileOriginId);
+		List<FileToCourse> fileToCourseList = fileToCourseMapper.selectByExample(fileToCourseExample);
+		if (fileToCourseList != null && !fileToCourseList.isEmpty()) {
+			ArrayList<Integer> idList = new ArrayList<Integer>();
+			for (FileToCourse fileToCourse : fileToCourseList) {
+				idList.add(fileToCourse.getCourseId());
+			}
+
+			CourseExample courseExample = new CourseExample();
+			CourseExample.Criteria criteria = courseExample.createCriteria();
+			criteria.andIdIn(idList);
+			List<Course> courseList = courseMapper.selectByExample(courseExample);
+			return generateDto(courseList).get(0);
+		}
+		return null;
+	}
 }

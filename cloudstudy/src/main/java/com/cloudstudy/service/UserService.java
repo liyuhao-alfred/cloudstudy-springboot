@@ -1,8 +1,11 @@
 package com.cloudstudy.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.cloudstudy.bo.User;
+import com.cloudstudy.dto.CourseDto;
 import com.cloudstudy.dto.PageResultDto;
 import com.cloudstudy.dto.UserDto;
 import com.cloudstudy.dto.UserQueryDto;
@@ -43,4 +46,6 @@ public interface UserService {
 	PageResultDto<List<UserQueryDto>> find(UserQueryParamDto userQueryDto);
 
 	UserDto login(String account, String password);
+
+	List<UserDto> generateDto(List<User> userList);
 }
