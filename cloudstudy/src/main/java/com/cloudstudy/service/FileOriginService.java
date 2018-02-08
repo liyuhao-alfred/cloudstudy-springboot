@@ -20,7 +20,7 @@ public interface FileOriginService {
 
 	void deleteByIdList(List<Integer> fileOriginIdList) throws IOException;
 
-	FileOriginDto findById(Integer fileOriginId);
+	FileOriginQueryDto findById(Integer fileOriginId);
 
 	List<FileOriginDto> findByJobId(Integer jobId, boolean isUpRecursion);
 

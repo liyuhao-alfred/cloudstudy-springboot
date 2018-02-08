@@ -33,6 +33,7 @@ import com.cloudstudy.bo.User;
 import com.cloudstudy.bo.UserExample;
 import com.cloudstudy.bo.FileOriginExample;
 import com.cloudstudy.bo.FileOriginExample.Criteria;
+import com.cloudstudy.constant.FileOriginConstant;
 import com.cloudstudy.constant.SearchType;
 import com.cloudstudy.dto.JobDto;
 import com.cloudstudy.dto.PageResultDto;
@@ -100,7 +101,7 @@ public class FileOriginServiceImpl implements FileOriginService {
 		if (multipartFile != null && multipartFile.getSize() > 0) {// 上传文件步骤一
 			FileOriginDto fileOriginDto = new FileOriginDto();
 
-			fileName = System.currentTimeMillis() + "_" + multipartFile.getOriginalFilename();
+			fileName = System.currentTimeMillis() + "_" + multipartFile.getOriginalFilename().replaceAll(" ", "");
 			fileOriginDto.setName(fileName);
 
 			String fileExtension = FileUtil.getExtensionName(fileName);// 没有点的
@@ -184,7 +185,9 @@ public class FileOriginServiceImpl implements FileOriginService {
 		} else if (fileOriginDto.getId() != null) {// 上传文件步骤2
 			addFileToOther(fileOriginDto);
 
-			return findById(fileOriginDto.getId());
+			FileOrigin fileOrigin = fileOriginMapper.selectByPrimaryKey(fileOriginDto.getId());
+			return generateDto(fileOrigin);
+
 		} else {
 			throw new CloudStudyException();
 		}
@@ -226,10 +229,10 @@ public class FileOriginServiceImpl implements FileOriginService {
 	}
 
 	@Override
-	public FileOriginDto findById(Integer primaryKey) {
+	public FileOriginQueryDto findById(Integer primaryKey) {
 		FileOrigin fileOrigin = fileOriginMapper.selectByPrimaryKey(primaryKey);
-		FileOriginDto fileOriginDto = generateDto(fileOrigin);
-		return fileOriginDto;
+		FileOriginQueryDto fileOriginQueryDto = generateQueryDto(fileOrigin);
+		return fileOriginQueryDto;
 	}
 
 	@Override
@@ -305,6 +308,19 @@ public class FileOriginServiceImpl implements FileOriginService {
 		}
 
 		fileOriginQueryDto.setSrc("https://localhost:9680/" + fileOriginQueryDto.getPath());
+
+		String fileNametype = fileOrigin.getType();
+		if (fileNametype != null && !fileNametype.isEmpty()) {
+			fileNametype = fileNametype.replaceAll("\\.", "").toLowerCase();
+
+			if (FileOriginConstant.imgList.contains(fileNametype)) {
+				fileOriginQueryDto.setFileTypeName(1);
+			} else if (FileOriginConstant.docList.contains(fileNametype)) {
+				fileOriginQueryDto.setFileTypeName(2);
+			} else if (FileOriginConstant.videoList.contains(fileNametype)) {
+				fileOriginQueryDto.setFileTypeName(3);
+			}
+		}
 		return fileOriginQueryDto;
 	}
 

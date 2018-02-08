@@ -53,9 +53,9 @@ public class FileOriginController {
 	@RequestMapping(value = "/single/{primaryKey}", produces = { "application/json; charset=UTF-8" }, method = {
 			RequestMethod.POST, RequestMethod.GET })
 	// @RequiresPermissions("File:view") // 权限管理;
-	public @ResponseBody WebResult<FileOriginDto> find(@PathVariable("primaryKey") Integer primaryKey) {
-		FileOriginDto fileOriginDto = fileOriginService.findById(primaryKey);
-		return WebResultUtil.success(fileOriginDto);
+	public @ResponseBody WebResult<FileOriginQueryDto> find(@PathVariable("primaryKey") Integer primaryKey) {
+		FileOriginQueryDto fileOriginQueryDto = fileOriginService.findById(primaryKey);
+		return WebResultUtil.success(fileOriginQueryDto);
 	}
 
 	/**
@@ -148,11 +148,11 @@ public class FileOriginController {
 	@RequestMapping(value = "/delete", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
 	// @RequiresPermissions("File:delete") // 权限管理;
-	public @ResponseBody WebResult<FileOriginDto> delete(
+	public @ResponseBody WebResult<FileOriginQueryDto> delete(
 			@RequestParam(value = "primaryKey", required = true) Integer primaryKey) throws IOException {
-		FileOriginDto fileOriginDto = fileOriginService.findById(primaryKey);
+		FileOriginQueryDto fileOriginQueryDto = fileOriginService.findById(primaryKey);
 		fileOriginService.deleteById(primaryKey);
-		return WebResultUtil.success(fileOriginDto);
+		return WebResultUtil.success(fileOriginQueryDto);
 	}
 
 }

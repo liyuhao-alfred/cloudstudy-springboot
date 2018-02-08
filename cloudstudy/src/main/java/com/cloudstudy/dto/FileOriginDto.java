@@ -17,6 +17,8 @@ public class FileOriginDto {
 
 	private String path;
 
+	private String src;
+
 	private String type;
 
 	private Integer size;
@@ -141,5 +143,13 @@ public class FileOriginDto {
 
 	public void setFile(File file) {
 		this.file = file;
+	}
+
+	public String getSrc() {
+		return src;
+	}
+
+	public void setSrc(String src) {
+		this.src = src;
 	}
 }

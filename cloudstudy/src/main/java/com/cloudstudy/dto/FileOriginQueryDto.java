@@ -21,6 +21,11 @@ public class FileOriginQueryDto {
 
 	private String src;
 
+	/**
+	 * 1图片，2文档，3视频
+	 */
+	private Integer fileTypeName;
+
 	private String type;
 
 	private Integer size;
@@ -152,6 +157,14 @@ public class FileOriginQueryDto {
 
 	public void setSrc(String src) {
 		this.src = src;
+	}
+
+	public Integer getFileTypeName() {
+		return fileTypeName;
+	}
+
+	public void setFileTypeName(Integer fileTypeName) {
+		this.fileTypeName = fileTypeName;
 	}
 
 }
