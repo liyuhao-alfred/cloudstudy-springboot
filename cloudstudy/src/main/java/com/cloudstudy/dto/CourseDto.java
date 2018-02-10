@@ -1,6 +1,6 @@
 package com.cloudstudy.dto;
 
-import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class CourseDto {
@@ -10,13 +10,11 @@ public class CourseDto {
 
 	private String name;
 
-	private Date createTime;
+	private String createTime;
 
-	private Date lastModifyTime;
+	private String lastModifyTime;
 
-	private Date beginTime;
-
-	private Date endTime;
+	private ArrayList<String> dateRangement;
 
 	private Integer declareNum;
 
@@ -24,11 +22,11 @@ public class CourseDto {
 
 	private Integer count;
 
-	private Integer status;
+	private Boolean status;
 
 	private String description;
 
-	private File studyFile;
+	private ArrayList<String> studyFileList;
 
 	public Integer getId() {
 		return id;
@@ -52,38 +50,6 @@ public class CourseDto {
 
 	public void setName(String name) {
 		this.name = name == null ? null : name.trim();
-	}
-
-	public Date getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
-
-	public Date getLastModifyTime() {
-		return lastModifyTime;
-	}
-
-	public void setLastModifyTime(Date lastModifyTime) {
-		this.lastModifyTime = lastModifyTime;
-	}
-
-	public Date getBeginTime() {
-		return beginTime;
-	}
-
-	public void setBeginTime(Date beginTime) {
-		this.beginTime = beginTime;
-	}
-
-	public Date getEndTime() {
-		return endTime;
-	}
-
-	public void setEndTime(Date endTime) {
-		this.endTime = endTime;
 	}
 
 	public Integer getDeclareNum() {
@@ -110,11 +76,11 @@ public class CourseDto {
 		this.count = count;
 	}
 
-	public Integer getStatus() {
+	public Boolean getStatus() {
 		return status;
 	}
 
-	public void setStatus(Integer status) {
+	public void setStatus(Boolean status) {
 		this.status = status;
 	}
 
@@ -126,11 +92,35 @@ public class CourseDto {
 		this.description = description == null ? null : description.trim();
 	}
 
-	public File getFileOrigin() {
-		return studyFile;
+	public String getCreateTime() {
+		return createTime;
 	}
 
-	public void setFileOrigin(File studyFile) {
-		this.studyFile = studyFile;
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public String getLastModifyTime() {
+		return lastModifyTime;
+	}
+
+	public void setLastModifyTime(String lastModifyTime) {
+		this.lastModifyTime = lastModifyTime;
+	}
+
+	public ArrayList<String> getDateRangement() {
+		return dateRangement;
+	}
+
+	public void setDateRangement(ArrayList<String> dateRangement) {
+		this.dateRangement = dateRangement;
+	}
+
+	public ArrayList<String> getStudyFileList() {
+		return studyFileList;
+	}
+
+	public void setStudyFileList(ArrayList<String> studyFileList) {
+		this.studyFileList = studyFileList;
 	}
 }

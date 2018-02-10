@@ -102,12 +102,12 @@ public class ControllerAop {
 		}
 
 		// UserDto userDto = userService.findByAccount(loginAccount);
-		// if (userDto != null) {
+		// if (userDto != null && !FileOriginDtoList.isEmpty()) {
 		// operateLogDto.setOperatorNo(userDto.getNo());
 		// operateLogDto.setOperatorName(userDto.getName());
 		// }
 		// UserDto userDto = userService.findByAccount(loginAccount);
-		// if (userDto != null) {
+		// if (userDto != null && !FileOriginDtoList.isEmpty()) {
 		// operateLogDto.setOperatorNo(userDto.getNo());
 		// operateLogDto.setOperatorName(userDto.getName());
 		// }

@@ -3,7 +3,6 @@ package com.cloudstudy.controller;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,7 +44,7 @@ public class CourseController {
 	@ApiImplicitParam(name = "primaryKey", value = "课程工号或者学号", required = true, paramType = "path", dataType = "Integer") // 注意：paramType需要指定为path,不然不能正常获取
 	@RequestMapping(value = "/single/{primaryKey}", produces = { "application/json; charset=UTF-8" }, method = {
 			RequestMethod.POST, RequestMethod.GET })
-	//@RequiresPermissions("Course:view") // 权限管理;
+	// @RequiresPermissions("Course:view") // 权限管理;
 	public @ResponseBody WebResult<CourseDto> find(@PathVariable("primaryKey") Integer primaryKey) {
 		CourseDto courseDto = courseService.findById(primaryKey);
 		return WebResultUtil.success(courseDto);
@@ -61,8 +60,8 @@ public class CourseController {
 	@ApiOperation(value = "获取课程列表", notes = "获取课程列表")
 	@RequestMapping(value = "/list", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
-	//@RequiresPermissions("Course:del") // 权限管理;
-	public @ResponseBody WebResult<List<CourseDto>> find(
+	// @RequiresPermissions("Course:del") // 权限管理;
+	public @ResponseBody WebResult<List<CourseDto>> list(
 			@RequestParam(value = "courseQueryDto", required = true) CourseQueryParamDto courseQueryDto) {
 		List<CourseDto> courseDtoList = courseService.find(courseQueryDto);
 		return WebResultUtil.success(courseDtoList);
@@ -78,12 +77,12 @@ public class CourseController {
 	@ApiOperation(value = "新建课程", notes = "新建一个课程")
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "courseDto", value = "课程数据", required = true, paramType = "body", dataType = "CourseDto") }) // 注意：paramType需要指定为body
-	@RequestMapping(value = "/add", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
+	@RequestMapping(value = "/declare", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
-	//@RequiresPermissions("Course:add") // 权限管理;
-	public @ResponseBody WebResult<CourseDto> add(
+	// @RequiresPermissions("Course:add") // 权限管理;
+	public @ResponseBody WebResult<CourseDto> declare(
 			@ApiParam(value = "课程数据", required = true) @RequestBody CourseDto courseDto) throws IOException {
-		courseDto = courseService.add(courseDto);
+		courseDto = courseService.declare(courseDto);
 		return WebResultUtil.success(courseDto);
 	}
 
@@ -98,7 +97,7 @@ public class CourseController {
 	@ApiImplicitParam(name = "course", value = "课程数据", required = true, paramType = "body", dataType = "Course")
 	@RequestMapping(value = "/update", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
-	//@RequiresPermissions("Course:update") // 权限管理;
+	// @RequiresPermissions("Course:update") // 权限管理;
 	public @ResponseBody WebResult<CourseDto> update(
 			@ApiParam(value = "课程数据", required = true) @RequestBody CourseDto courseDto) throws IOException {
 		courseDto = courseService.update(courseDto);
@@ -116,9 +115,9 @@ public class CourseController {
 	@ApiImplicitParam(name = "primaryKey", value = "课程工号或者学号", required = true, paramType = "body", dataType = "String")
 	@RequestMapping(value = "/delete", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
-	//@RequiresPermissions("Course:delete") // 权限管理;
-	public @ResponseBody WebResult<CourseDto> delete(@RequestParam(value = "primaryKey", required = true) Integer primaryKey)
-			throws IOException {
+	// @RequiresPermissions("Course:delete") // 权限管理;
+	public @ResponseBody WebResult<CourseDto> delete(
+			@RequestParam(value = "primaryKey", required = true) Integer primaryKey) throws IOException {
 		CourseDto courseDto = courseService.findById(primaryKey);
 		courseService.delete(primaryKey);
 		return WebResultUtil.success(courseDto);

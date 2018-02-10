@@ -61,7 +61,7 @@ public class GradeController {
 	@RequestMapping(value = "/list", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
 	//@RequiresPermissions("Course:del") // 权限管理;
-	public @ResponseBody WebResult<List<GradeDto>> find(
+	public @ResponseBody WebResult<List<GradeDto>> list(
 			@RequestParam(value = "courseQueryDto", required = true) GradeQueryParamDto gradeQueryDto) {
 		List<GradeDto> courseDtoList = gradeService.find(gradeQueryDto);
 		return WebResultUtil.success(courseDtoList);

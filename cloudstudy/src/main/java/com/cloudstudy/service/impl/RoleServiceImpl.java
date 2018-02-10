@@ -53,6 +53,28 @@ public class RoleServiceImpl implements RoleService {
 		return generateDto(roleList);
 	}
 
+	@Override
+	public ArrayList<String> findRoleStringByUserNo(String userNo) {
+		ArrayList<String> roleCodeList = new ArrayList<String>();
+		List<RoleDto> RoleDtoList = findRoleByUserNo(userNo);
+		if (RoleDtoList != null && !RoleDtoList.isEmpty()) {
+			for (RoleDto roleDto : RoleDtoList) {
+				roleCodeList.add(roleDto.getCode());
+			}
+		}
+		return roleCodeList;
+	}
+
+	@Override
+	public void deleteRoleByUserNo(String userNo) {
+		RoleToUserExample roleToUserExample = new RoleToUserExample();
+
+		Criteria criteria = roleToUserExample.createCriteria();
+		criteria.andUserNoEqualTo(userNo);
+
+		roleToUserMapper.deleteByExample(roleToUserExample);
+	}
+
 	private List<Integer> getPrimaryKeyList(List<RoleToUser> roleToUserList) {
 		if (roleToUserList == null || roleToUserList.isEmpty()) {
 			return new ArrayList<Integer>();

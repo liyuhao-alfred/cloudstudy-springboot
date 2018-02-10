@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cloudstudy.bo.FileToCourse;
 import com.cloudstudy.dto.FileOriginDto;
 import com.cloudstudy.dto.FileOriginQueryDto;
 import com.cloudstudy.dto.FileOriginQueryParamDto;
@@ -35,5 +36,7 @@ public interface FileOriginService {
 	void deleteByUserNo(String userNo) throws IOException;
 
 	List<FileOriginDto> findByIdList(List<Integer> primaryKeyList);
+
+	FileOriginQueryDto add(FileToCourse fileToCourse) throws IOException;
 
 }

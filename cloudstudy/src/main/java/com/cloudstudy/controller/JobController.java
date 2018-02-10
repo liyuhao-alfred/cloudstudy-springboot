@@ -61,7 +61,7 @@ public class JobController {
 	@RequestMapping(value = "/list", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
 	//@RequiresPermissions("Job:del") // 权限管理;
-	public @ResponseBody WebResult<List<JobDto>> find(
+	public @ResponseBody WebResult<List<JobDto>> list(
 			@RequestParam(value = "jobQueryDto", required = true) JobQueryDto jobQueryDto) {
 		List<JobDto> jobDtoList = jobService.find(jobQueryDto);
 		return WebResultUtil.success(jobDtoList);

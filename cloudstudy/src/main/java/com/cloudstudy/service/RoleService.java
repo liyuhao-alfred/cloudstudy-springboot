@@ -1,5 +1,6 @@
 package com.cloudstudy.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.cloudstudy.bo.RoleToUser;
@@ -31,5 +32,9 @@ public interface RoleService {
 	List<RoleToUser> findRoleByUserNoAndRoleCode(String roleCode, String userNo);
 
 	List<RoleDto> findAllRoleWithPermission();
+
+	ArrayList<String> findRoleStringByUserNo(String userNo);
+
+	void deleteRoleByUserNo(String userNo);
 
 }

@@ -81,7 +81,7 @@ public class LogController {
 	@RequestMapping(value = "/list/systemlog", produces = { "application/json; charset=UTF-8" }, method = {
 			RequestMethod.POST, RequestMethod.GET })
 	// //@RequiresPermissions("SystemLog:query")
-	public @ResponseBody WebResult<List<SystemLogDto>> findSystemLog(
+	public @ResponseBody WebResult<List<SystemLogDto>> listSystemLog(
 			@RequestParam(value = "systemlogQueryDto", required = true) SystemLogQueryDto systemlogQueryDto) {
 		List<SystemLogDto> systemlogDtoList = systemlogService.find(systemlogQueryDto);
 		return WebResultUtil.success(systemlogDtoList);
@@ -114,7 +114,7 @@ public class LogController {
 	@RequestMapping(value = "/list/operateLog", produces = { "application/json; charset=UTF-8" }, method = {
 			RequestMethod.POST, RequestMethod.GET })
 	// //@RequiresPermissions("OperateLog:query")
-	public @ResponseBody WebResult<List<OperateLogDto>> findOperateLog(
+	public @ResponseBody WebResult<List<OperateLogDto>> listOperateLog(
 			@RequestParam(value = "operateLogQueryDto", required = true) OperateLogQueryDto operateLogQueryDto) {
 		List<OperateLogDto> operateLogDtoList = operateLogService.find(operateLogQueryDto);
 		return WebResultUtil.success(operateLogDtoList);

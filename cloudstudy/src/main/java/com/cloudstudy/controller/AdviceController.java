@@ -1,5 +1,6 @@
 package com.cloudstudy.controller;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -8,6 +9,7 @@ import com.cloudstudy.dto.WebResult;
 import com.cloudstudy.exception.CloudStudyException;
 import com.cloudstudy.util.WebResultUtil;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,12 +53,17 @@ public class AdviceController {
 	public WebResult<?> errorHandler(Exception ex) {
 		ex.printStackTrace();
 		String errorMsg = "";
-		if (CloudStudyException.class.isInstance(ex)) {
+		try {
+			throw ex;
+		} catch (CloudStudyException e) {
 			CloudStudyException cloudStudyException = (CloudStudyException) ex;
 			errorMsg = cloudStudyException.getErrorMsg();
-		} else {
-			errorMsg = ex.getMessage();
+		} catch (DuplicateKeyException e) {
+			errorMsg = "数据库操作错误";
+		} catch (Exception e) {
+			errorMsg = e.getMessage();
 		}
+
 		return WebResultUtil.error(errorMsg);
 	}
 

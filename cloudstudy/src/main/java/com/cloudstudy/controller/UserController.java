@@ -64,8 +64,8 @@ public class UserController {
 	@RequestMapping(value = "/list", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
 	// @RequiresPermissions("User:del") // 权限管理;
-	public @ResponseBody WebResult<PageResultDto<List<UserQueryDto>>> find(
-			@ApiParam(value = "系统用户查询条件", required = true) @RequestBody UserQueryParamDto userQueryDto) {
+	public @ResponseBody WebResult<PageResultDto<List<UserQueryDto>>> list(
+			@ApiParam(value = "系统用户查询条件") @RequestBody UserQueryParamDto userQueryDto) {
 		PageResultDto<List<UserQueryDto>> userDtoList = userService.find(userQueryDto);
 		return WebResultUtil.success(userDtoList);
 
@@ -98,7 +98,7 @@ public class UserController {
 	 * @return
 	 */
 	@ApiOperation(value = "更新系统用户", notes = "更新已存在系统用户")
-	@ApiImplicitParam(name = "user", value = "系统用户数据", required = true, paramType = "body", dataType = "User")
+	@ApiImplicitParam(name = "user", value = "系统用户数据", required = true, paramType = "body", dataType = "UserDto")
 	@RequestMapping(value = "/api/update", produces = { "application/json; charset=UTF-8" }, method = {
 			RequestMethod.POST, RequestMethod.GET })
 	// @RequiresPermissions("User:update") // 权限管理;

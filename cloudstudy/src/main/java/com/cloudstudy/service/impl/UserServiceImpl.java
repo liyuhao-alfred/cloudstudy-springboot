@@ -114,7 +114,7 @@ public class UserServiceImpl implements UserService {
 		userMapper.insert(user);
 
 		ArrayList<String> roleList = userDto.getRole();
-		if (roleList != null) {
+		if (roleList != null && !roleList.isEmpty()) {
 			for (String roleCode : roleList) {
 				roleService.saveRoleByUserNoAndRoleCode(roleCode, user.getNo());
 			}
@@ -133,9 +133,24 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@LogPointcut(description = "更新用户", code = "update")
 	public UserDto update(UserDto userDto) {
-		User user = generate(userDto);
-		userMapper.updateByPrimaryKeyWithBLOBs(user);
-		return generateDto(user);
+		User user = userMapper.selectByPrimaryKey(userDto.getNo());
+		if (user == null) {
+			return save(userDto);
+		} else {
+			user = generate(userDto);
+			userMapper.updateByPrimaryKeyWithBLOBs(user);
+
+			roleService.deleteRoleByUserNo(user.getNo());
+			ArrayList<String> roleList = userDto.getRole();
+			if (roleList != null && !roleList.isEmpty()) {
+				for (String roleCode : roleList) {
+					roleService.saveRoleByUserNoAndRoleCode(roleCode, user.getNo());
+				}
+			}
+
+			return generateDto(user);
+		}
+
 	}
 
 	@Override
@@ -143,18 +158,6 @@ public class UserServiceImpl implements UserService {
 	public UserDto findUserByNo(String no) {
 		User user = userMapper.selectByPrimaryKey(no);
 		UserDto userDto = generateDto(user);
-
-		RoleToUserExample roleToUserExample = new RoleToUserExample();
-		com.cloudstudy.bo.RoleToUserExample.Criteria criteria = roleToUserExample.createCriteria();
-		criteria.andUserNoEqualTo(no);
-		List<RoleToUser> roleToUserList = roleToUserMapper.selectByExample(roleToUserExample);
-		HashSet<String> roleTypeSet = new HashSet<String>();
-		if (roleToUserList != null && !roleToUserList.isEmpty()) {
-			for (RoleToUser roleToUser : roleToUserList) {
-				// roleTypeSet.add(roleToUser.getRoleId());TODO
-			}
-		}
-		userDto.setRoleByList(new ArrayList<String>(roleTypeSet));
 
 		return userDto;
 	}
@@ -465,16 +468,19 @@ public class UserServiceImpl implements UserService {
 			userDto.setStatus(false);
 		}
 
-		if (userDto.getRole() == null || userDto.getRole().size() == 0) {
-			ArrayList<String> roleType = new ArrayList<String>();
-			List<RoleDto> roleDtoList = roleService.findRoleByUserNo(userDto.getNo());
-			for (RoleDto roleDto : roleDtoList) {
-				roleType.add(roleDto.getCode());
-			}
-			userDto.setRoleByList(roleType);
-		}
+		userDto.setRole(roleService.findRoleStringByUserNo(user.getNo()));
 
 		userDto.setToken(userDto.getRole().get(0));
+		userDto.setCreateTime(DateUtil.dateToString(user.getCreateTime()));
+		userDto.setLastModifyTime(DateUtil.dateToString(user.getLastModifyTime()));
+		userDto.setRegistTime(DateUtil.dateToString(user.getRegistTime()));
+		userDto.setBirthday(DateUtil.dateToString(user.getBirthday()));
+
+		if (user.getSex() == 0) {
+			userDto.setSex("male");
+		} else {
+			userDto.setSex("female");
+		}
 
 		return userDto;
 	}
@@ -516,7 +522,7 @@ public class UserServiceImpl implements UserService {
 			userDto.setStatusMemo(statusMeno);
 
 			List<CourseDto> courseDtoList = courseService.findByTeacherNo(userDto.getNo());
-			if (courseDtoList != null) {
+			if (courseDtoList != null && !courseDtoList.isEmpty()) {
 				for (CourseDto courseDto : courseDtoList) {
 					CourseQueryDto courseQueryDto = new CourseQueryDto();
 					BeanUtils.copyProperties(courseDto, courseQueryDto);
@@ -529,7 +535,7 @@ public class UserServiceImpl implements UserService {
 			userDto.setStatusMemo(statusMeno);
 
 			List<GradeDto> gradeDtoList = gradeService.findByStudentNo(userDto.getNo());
-			if (gradeDtoList != null) {
+			if (gradeDtoList != null && !gradeDtoList.isEmpty()) {
 				for (GradeDto gradeDto : gradeDtoList) {
 					GradeQueryDto gradeQueryDto = new GradeQueryDto();
 					BeanUtils.copyProperties(gradeDto, gradeQueryDto);
@@ -588,59 +594,113 @@ public class UserServiceImpl implements UserService {
 		if (userDto == null) {
 			throw new CloudStudyException();
 		}
-		User user = new User();
-		BeanUtils.copyProperties(userDto, user);
 
-		if (userDto.getStatus()) {// 状态
-			user.setStatus(0);
-		} else {
-			user.setStatus(1);
-		}
+		boolean isExist = false;
+		User user = userMapper.selectByPrimaryKey(userDto.getNo());
+		if (user != null) {
+			BeanUtils.copyProperties(userDto, user);
+			if (userDto.getStatus()) {// 状态
+				user.setStatus(0);
+			} else {
+				user.setStatus(1);
+			}
 
-		if (userDto.getSex().equalsIgnoreCase("male")) {// 性别
-			user.setSex(0);
-		} else {
-			user.setSex(1);
-		}
+			if (userDto.getSex().equalsIgnoreCase("male")) {// 性别
+				user.setSex(0);
+			} else {
+				user.setSex(1);
+			}
 
-		try {
-			user.setBirthday(DateUtil.stringToDateSpecial(userDto.getBirthday()));
-			System.out.println(user.getBirthday());
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
+			try {
+				user.setBirthday(DateUtil.stringToDateSpecial(userDto.getBirthday()));
+				System.out.println(user.getBirthday());
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 
-		try {
-			user.setRegistTime(DateUtil.stringToDateSpecial(userDto.getRegistTime()));
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
+			try {
+				user.setRegistTime(DateUtil.stringToDateSpecial(userDto.getRegistTime()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 
-		int age;
-		try {
-			age = DateUtil.yearsBetween(DateUtil.dateToString((user.getBirthday())), DateUtil.dateToString(new Date()));
-		} catch (ParseException e) {
-			age = 0;
-			e.printStackTrace();
-		}
-		user.setAge(age);
+			int age;
+			try {
+				age = DateUtil.yearsBetween(DateUtil.dateToString((user.getBirthday())),
+						DateUtil.dateToString(new Date()));
+			} catch (ParseException e) {
+				age = 0;
+				e.printStackTrace();
+			}
+			user.setAge(age);
 
-		if (user.getPassword() == null || user.getPassword().isEmpty()) {
-			user.setPassword(user.getAccount());
-		}
+			if (user.getPassword() == null || user.getPassword().isEmpty()) {
+				user.setPassword(user.getAccount());
+			}
 
-		if (user.getCreateTime() == null) {
-			user.setCreateTime(new Date());
-		}
-
-		if (user.getLastModifyTime() == null) {
 			user.setLastModifyTime(new Date());
+
+			if (user.getSalt() == null || user.getSalt().isEmpty()) {
+				user.setSalt(Util.generateSerialNo());
+			}
+
+			return user;
+
+		} else {
+			user = new User();
+			BeanUtils.copyProperties(userDto, user);
+
+			if (userDto.getStatus()) {// 状态
+				user.setStatus(0);
+			} else {
+				user.setStatus(1);
+			}
+
+			if (userDto.getSex().equalsIgnoreCase("male")) {// 性别
+				user.setSex(0);
+			} else {
+				user.setSex(1);
+			}
+
+			try {
+				user.setBirthday(DateUtil.stringToDateSpecial(userDto.getBirthday()));
+				System.out.println(user.getBirthday());
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+
+			try {
+				user.setRegistTime(DateUtil.stringToDateSpecial(userDto.getRegistTime()));
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+
+			int age;
+			try {
+				age = DateUtil.yearsBetween(DateUtil.dateToString((user.getBirthday())),
+						DateUtil.dateToString(new Date()));
+			} catch (ParseException e) {
+				age = 0;
+				e.printStackTrace();
+			}
+			user.setAge(age);
+
+			if (user.getPassword() == null || user.getPassword().isEmpty()) {
+				user.setPassword(user.getAccount());
+			}
+
+			if (user.getCreateTime() == null) {
+				user.setCreateTime(new Date());
+			}
+
+			user.setLastModifyTime(new Date());
+
+			if (user.getSalt() == null || user.getSalt().isEmpty()) {
+				user.setSalt(Util.generateSerialNo());
+			}
+
+			return user;
 		}
 
-		if (user.getSalt() == null || user.getSalt().isEmpty()) {
-			user.setSalt(Util.generateSerialNo());
-		}
-
-		return user;
 	}
 }

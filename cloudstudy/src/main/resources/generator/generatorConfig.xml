@@ -54,7 +54,13 @@
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
 
-
+		<table tableName="tbfile" domainObjectName="FileOrigin"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<property name="useActualColumnNames" value="false" />
+			<generatedKey column="id" sqlStatement="MySql" identity="true" />
+		</table>
 
 		<!-- <table tableName="tbuser" domainObjectName="User"
 			enableCountByExample="true" enableUpdateByExample="true"
@@ -72,13 +78,7 @@
 		</table>
 
 
-		<table tableName="tbfile" domainObjectName="FileOrigin"
-			enableCountByExample="true" enableUpdateByExample="true"
-			enableDeleteByExample="true" enableSelectByExample="true"
-			selectByExampleQueryId="true">
-			<property name="useActualColumnNames" value="false" />
-			<generatedKey column="id" sqlStatement="MySql" identity="true" />
-		</table>
+		
 
 
 
@@ -178,12 +178,12 @@
 			<property name="useActualColumnNames" value="false" />
 		</table> -->
 
-		<table tableName="tbrolereluser" domainObjectName="RoleToUser"
+		<!-- <table tableName="tbrolereluser" domainObjectName="RoleToUser"
 			enableCountByExample="true" enableUpdateByExample="true"
 			enableDeleteByExample="true" enableSelectByExample="true"
 			selectByExampleQueryId="true">
 			<property name="useActualColumnNames" value="false" />
-		</table>
+		</table> -->
 
 
 

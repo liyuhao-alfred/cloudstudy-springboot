@@ -44,7 +44,7 @@ public class TaskController {
 	@ApiImplicitParam(name = "primaryKey", value = "教师发布的作业工号或者学号", required = true, paramType = "path", dataType = "Integer") // 注意：paramType需要指定为path,不然不能正常获取
 	@RequestMapping(value = "/single/{primaryKey}", produces = { "application/json; charset=UTF-8" }, method = {
 			RequestMethod.POST, RequestMethod.GET })
-	//@RequiresPermissions("Task:view") // 权限管理;
+	// @RequiresPermissions("Task:view") // 权限管理;
 	public @ResponseBody WebResult<TaskDto> find(@PathVariable("primaryKey") Integer primaryKey) {
 		TaskDto taskDto = taskService.findById(primaryKey);
 		return WebResultUtil.success(taskDto);
@@ -60,8 +60,8 @@ public class TaskController {
 	@ApiOperation(value = "获取教师发布的作业列表", notes = "获取教师发布的作业列表")
 	@RequestMapping(value = "/list", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
-	//@RequiresPermissions("Task:del") // 权限管理;
-	public @ResponseBody WebResult<List<TaskDto>> find(
+	// @RequiresPermissions("Task:del") // 权限管理;
+	public @ResponseBody WebResult<List<TaskDto>> list(
 			@RequestParam(value = "taskQueryDto", required = true) TaskQueryDto taskQueryDto) {
 		List<TaskDto> taskDtoList = taskService.find(taskQueryDto);
 		return WebResultUtil.success(taskDtoList);
@@ -78,7 +78,7 @@ public class TaskController {
 			@ApiImplicitParam(name = "taskDto", value = "教师发布的作业数据", required = true, paramType = "body", dataType = "TaskDto") }) // 注意：paramType需要指定为body
 	@RequestMapping(value = "/add", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
-	//@RequiresPermissions("Task:add") // 权限管理;
+	// @RequiresPermissions("Task:add") // 权限管理;
 	public @ResponseBody WebResult<TaskDto> add(
 			@ApiParam(value = "教师发布的作业数据", required = true) @RequestBody TaskDto taskDto) {
 		taskDto = taskService.add(taskDto);
@@ -95,7 +95,7 @@ public class TaskController {
 	@ApiImplicitParam(name = "task", value = "教师发布的作业数据", required = true, paramType = "body", dataType = "Task")
 	@RequestMapping(value = "/update", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
-	//@RequiresPermissions("Task:update") // 权限管理;
+	// @RequiresPermissions("Task:update") // 权限管理;
 	public @ResponseBody WebResult<TaskDto> update(
 			@ApiParam(value = "教师发布的作业数据", required = true) @RequestBody TaskDto taskDto) {
 		taskDto = taskService.update(taskDto);
@@ -112,7 +112,7 @@ public class TaskController {
 	@ApiImplicitParam(name = "primaryKey", value = "教师发布的作业工号或者学号", required = true, paramType = "body", dataType = "String")
 	@RequestMapping(value = "/delete", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
-	//@RequiresPermissions("Task:delete") // 权限管理;
+	// @RequiresPermissions("Task:delete") // 权限管理;
 	public @ResponseBody WebResult<TaskDto> delete(
 			@RequestParam(value = "primaryKey", required = true) Integer primaryKey) {
 		TaskDto taskDto = taskService.findById(primaryKey);

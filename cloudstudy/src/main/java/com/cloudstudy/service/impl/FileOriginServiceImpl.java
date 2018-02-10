@@ -136,6 +136,19 @@ public class FileOriginServiceImpl implements FileOriginService {
 	}
 
 	@Override
+	public FileOriginQueryDto add(FileToCourse fileToCourse) throws IOException {
+		FileToCourseExample FileToCourseExample = new FileToCourseExample();
+		com.cloudstudy.bo.FileToCourseExample.Criteria criteria = FileToCourseExample.createCriteria();
+		criteria.andCourseIdEqualTo(fileToCourse.getCourseId());
+		criteria.andFileIdEqualTo(fileToCourse.getFileId());
+		List<FileToCourse> fileToCourseList = fileToCourseMapper.selectByExample(FileToCourseExample);
+		if (fileToCourseList == null || fileToCourseList.isEmpty()) {
+			fileToCourseMapper.insert(fileToCourse);
+		}
+		return findById(fileToCourse.getFileId());
+	}
+
+	@Override
 	public FileOriginDto add(FileOriginDto fileOriginDto) throws IOException {
 		File recFile = fileOriginDto.getFile();
 		Integer fileDtoType_course = fileOriginDto.getCourseId();
@@ -204,7 +217,7 @@ public class FileOriginServiceImpl implements FileOriginService {
 	@Override
 	public void deleteByUserNo(String userNo) throws IOException {
 		List<FileOriginDto> FileOriginDtoList = findByUserNo(userNo, true);
-		if (FileOriginDtoList != null) {
+		if (FileOriginDtoList != null && !FileOriginDtoList.isEmpty()) {
 			List<Integer> primaryKeyList = new ArrayList<Integer>();
 			for (FileOriginDto fileOriginDto : FileOriginDtoList) {
 				primaryKeyList.add(fileOriginDto.getId());
@@ -219,7 +232,7 @@ public class FileOriginServiceImpl implements FileOriginService {
 		com.cloudstudy.bo.FileOriginExample.Criteria criteria3 = fileOriginExample.createCriteria();
 		criteria3.andIdIn(fileOriginIdList);
 		List<FileOrigin> FileOriginList = fileOriginMapper.selectByExample(fileOriginExample);
-		if (FileOriginList != null) {
+		if (FileOriginList != null && !FileOriginList.isEmpty()) {
 			for (FileOrigin fileOrigin : FileOriginList) {
 				String absolutePath = filePath + fileOrigin.getPath();
 				FileUtil.deleteFile(absolutePath);
@@ -477,7 +490,7 @@ public class FileOriginServiceImpl implements FileOriginService {
 				com.cloudstudy.bo.FileToTaskExample.Criteria criteria2 = FileToTaskExample.createCriteria();
 				criteria2.andTaskIdIn(taskIdList);
 				List<FileToTask> FileToTaskList = fileToTaskMapper.selectByExample(FileToTaskExample);
-				if (FileToTaskList != null) {
+				if (FileToTaskList != null && !FileToTaskList.isEmpty()) {
 					for (FileToTask fileToTask : FileToTaskList) {
 						FileOriginIdSet.add(fileToTask.getFileId());
 					}
@@ -487,7 +500,7 @@ public class FileOriginServiceImpl implements FileOriginService {
 				com.cloudstudy.bo.FileToCourseExample.Criteria criteria3 = FileToCourseExample.createCriteria();
 				criteria3.andCourseIdIn(courseIdList);
 				List<FileToCourse> FileToCourseList = fileToCourseMapper.selectByExample(FileToCourseExample);
-				if (FileToCourseList != null) {
+				if (FileToCourseList != null && !FileToCourseList.isEmpty()) {
 					for (FileToCourse fileToCourse : FileToCourseList) {
 						FileOriginIdSet.add(fileToCourse.getFileId());
 					}
@@ -512,7 +525,7 @@ public class FileOriginServiceImpl implements FileOriginService {
 		com.cloudstudy.bo.FileToTaskExample.Criteria criteria1 = FileToTaskExample.createCriteria();
 		criteria1.andTaskIdEqualTo(taskId);
 		List<FileToTask> FileToTaskList = fileToTaskMapper.selectByExample(FileToTaskExample);
-		if (FileToTaskList != null) {
+		if (FileToTaskList != null && !FileToTaskList.isEmpty()) {
 			for (FileToTask fileToTask : FileToTaskList) {
 				FileOriginIdSet.add(fileToTask.getFileId());
 			}
@@ -529,7 +542,7 @@ public class FileOriginServiceImpl implements FileOriginService {
 				com.cloudstudy.bo.FileToCourseExample.Criteria criteria3 = FileToCourseExample.createCriteria();
 				criteria3.andCourseIdIn(courseIdList);
 				List<FileToCourse> FileToCourseList = fileToCourseMapper.selectByExample(FileToCourseExample);
-				if (FileToCourseList != null) {
+				if (FileToCourseList != null && !FileToCourseList.isEmpty()) {
 					for (FileToCourse fileToCourse : FileToCourseList) {
 						FileOriginIdSet.add(fileToCourse.getFileId());
 					}
@@ -540,7 +553,7 @@ public class FileOriginServiceImpl implements FileOriginService {
 		if (isDownRecursion) {
 			List<JobDto> jobDtoList = jobService.findByTaskId(taskId);
 
-			if (jobDtoList != null) {
+			if (jobDtoList != null && !jobDtoList.isEmpty()) {
 				List<Integer> jobIdList = new ArrayList<Integer>();
 				for (JobDto jobDto : jobDtoList) {
 					jobIdList.add(jobDto.getId());
@@ -550,7 +563,7 @@ public class FileOriginServiceImpl implements FileOriginService {
 				com.cloudstudy.bo.FileToJobExample.Criteria criteria3 = FileToJobExample.createCriteria();
 				criteria3.andJobIdIn(jobIdList);
 				List<FileToJob> FileToJobList = fileToJobMapper.selectByExample(FileToJobExample);
-				if (FileToJobList != null) {
+				if (FileToJobList != null && !FileToJobList.isEmpty()) {
 					for (FileToJob fileToJob : FileToJobList) {
 						FileOriginIdSet.add(fileToJob.getFileId());
 					}
@@ -576,7 +589,7 @@ public class FileOriginServiceImpl implements FileOriginService {
 		com.cloudstudy.bo.CourseExample.Criteria criteria1 = CourseExample.createCriteria();
 		criteria1.andTeacherNoEqualTo(userNo);
 		List<Course> CourseList = courseMapper.selectByExample(CourseExample);
-		if (CourseList != null) {
+		if (CourseList != null && !CourseList.isEmpty()) {
 			for (Course course : CourseList) {
 				CourseSet.add(course.getId());
 			}
@@ -586,16 +599,16 @@ public class FileOriginServiceImpl implements FileOriginService {
 		com.cloudstudy.bo.GradeExample.Criteria criteria2 = GradeExample.createCriteria();
 		criteria2.andStudentNoEqualTo(userNo);
 		List<Grade> GradeList = gradeMapper.selectByExample(GradeExample);
-		if (GradeList != null) {
+		if (GradeList != null && !GradeList.isEmpty()) {
 			for (Grade grade : GradeList) {
 				CourseSet.add(grade.getCourseId());
 			}
 		}
 
-		if (CourseSet != null) {
+		if (CourseSet != null && !CourseSet.isEmpty()) {
 			for (Integer courseId : CourseSet) {
 				List<FileOriginDto> FileOriginDtoList = findByCourseId(courseId, isDownRecursion);
-				if (FileOriginDtoList != null) {
+				if (FileOriginDtoList != null && !FileOriginDtoList.isEmpty()) {
 					for (FileOriginDto fileOriginDto : FileOriginDtoList) {
 						FileOriginDtoSet.add(fileOriginDto);
 					}
@@ -613,7 +626,7 @@ public class FileOriginServiceImpl implements FileOriginService {
 		com.cloudstudy.bo.FileToCourseExample.Criteria criteria1 = FileToCourseExample.createCriteria();
 		criteria1.andCourseIdEqualTo(courseId);
 		List<FileToCourse> FileToCourseList = fileToCourseMapper.selectByExample(FileToCourseExample);
-		if (FileToCourseList != null) {
+		if (FileToCourseList != null && !FileToCourseList.isEmpty()) {
 			for (FileToCourse fileToCourse : FileToCourseList) {
 				FileOriginIdSet.add(fileToCourse.getFileId());
 			}
@@ -621,7 +634,7 @@ public class FileOriginServiceImpl implements FileOriginService {
 
 		if (isDownRecursion) {
 			List<TaskDto> taskDtoList = taskService.findByCourseId(courseId);
-			if (taskDtoList != null) {
+			if (taskDtoList != null && !taskDtoList.isEmpty()) {
 				List<Integer> taskIdList = new ArrayList<Integer>();
 				for (TaskDto taskDto : taskDtoList) {
 					taskIdList.add(taskDto.getId());
@@ -631,7 +644,7 @@ public class FileOriginServiceImpl implements FileOriginService {
 				com.cloudstudy.bo.FileToTaskExample.Criteria criteria3 = FileToTaskExample.createCriteria();
 				criteria3.andTaskIdIn(taskIdList);
 				List<FileToTask> FileToTaskList = fileToTaskMapper.selectByExample(FileToTaskExample);
-				if (FileToTaskList != null) {
+				if (FileToTaskList != null && !FileToTaskList.isEmpty()) {
 					for (FileToTask fileToTask : FileToTaskList) {
 						FileOriginIdSet.add(fileToTask.getFileId());
 					}
@@ -639,7 +652,7 @@ public class FileOriginServiceImpl implements FileOriginService {
 			}
 
 			List<JobDto> jobDtoList = jobService.findByCourseId(courseId);
-			if (jobDtoList != null) {
+			if (jobDtoList != null && !jobDtoList.isEmpty()) {
 				List<Integer> jobIdList = new ArrayList<Integer>();
 				for (JobDto jobDto : jobDtoList) {
 					jobIdList.add(jobDto.getId());
@@ -649,7 +662,7 @@ public class FileOriginServiceImpl implements FileOriginService {
 				com.cloudstudy.bo.FileToJobExample.Criteria criteria3 = FileToJobExample.createCriteria();
 				criteria3.andJobIdIn(jobIdList);
 				List<FileToJob> FileToJobList = fileToJobMapper.selectByExample(FileToJobExample);
-				if (FileToJobList != null) {
+				if (FileToJobList != null && !FileToJobList.isEmpty()) {
 					for (FileToJob fileToJob : FileToJobList) {
 						FileOriginIdSet.add(fileToJob.getFileId());
 					}

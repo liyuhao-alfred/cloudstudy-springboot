@@ -2,7 +2,9 @@ package com.cloudstudy.service.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -47,6 +49,7 @@ import com.cloudstudy.service.JobService;
 import com.cloudstudy.service.TaskService;
 import com.cloudstudy.service.UserService;
 import com.cloudstudy.util.DateUtil;
+import com.cloudstudy.util.Util;
 import com.github.pagehelper.PageHelper;
 
 @Service
@@ -63,7 +66,6 @@ public class CourseServiceImpl implements CourseService {
 	private UserService userService;
 	@Autowired
 	private FileOriginService fileOriginService;
-
 	@Autowired
 	private TaskMapper taskMapper;
 	@Autowired
@@ -85,16 +87,19 @@ public class CourseServiceImpl implements CourseService {
 	private String filePath;
 
 	@Override
-	public CourseDto add(CourseDto courseDto) throws IOException {
+	public CourseDto declare(CourseDto courseDto) throws IOException {
 
-		Course course = new Course();
-		BeanUtils.copyProperties(courseDto, course);
+		Course course = generate(courseDto);
 		courseMapper.insert(course);
 
-		File studyFile = courseDto.getFileOrigin();
-		if (studyFile != null && studyFile.length() > 0) {
-			FileOriginDto fileOriginDto = new FileOriginDto(studyFile, course.getId(), null, null);
-			fileOriginService.add(fileOriginDto);
+		ArrayList<String> studyFileList = courseDto.getStudyFileList();
+		if (studyFileList != null && !studyFileList.isEmpty()) {
+			for (String fileId : studyFileList) {
+				FileToCourse fileToCourse = new FileToCourse();
+				fileToCourse.setCourseId(course.getId());
+				fileToCourse.setFileId(Integer.valueOf(fileId));
+				fileOriginService.add(fileToCourse);
+			}
 		}
 		return courseDto;
 	}
@@ -110,7 +115,7 @@ public class CourseServiceImpl implements CourseService {
 		List<FileOriginDto> FileOriginDtoList = fileOriginService.findByCourseId(courseId, true);
 
 		List<Integer> primaryKeyList = new ArrayList<Integer>();
-		if (FileOriginDtoList != null) {
+		if (FileOriginDtoList != null && !FileOriginDtoList.isEmpty()) {
 			for (FileOriginDto fileOriginDto : FileOriginDtoList) {
 				primaryKeyList.add(fileOriginDto.getId());
 			}
@@ -123,11 +128,10 @@ public class CourseServiceImpl implements CourseService {
 
 	@Override
 	public CourseDto update(CourseDto courseDto) throws IOException {
-		File studyFile = courseDto.getFileOrigin();
-		if (studyFile != null && studyFile.length() > 0) {
-
+		ArrayList<String> studyFileList = courseDto.getStudyFileList();
+		if (studyFileList != null && !studyFileList.isEmpty()) {
 			List<FileOriginDto> fileOriginDtoList = fileOriginService.findByCourseId(courseDto.getId(), false);
-			if (fileOriginDtoList != null) {
+			if (fileOriginDtoList != null && !fileOriginDtoList.isEmpty()) {
 				List<Integer> primaryKeyList = new ArrayList<Integer>();
 				for (FileOriginDto fileOriginDto : fileOriginDtoList) {
 					primaryKeyList.add(fileOriginDto.getId());
@@ -135,13 +139,16 @@ public class CourseServiceImpl implements CourseService {
 				fileOriginService.deleteByIdList(primaryKeyList);
 			}
 
-			FileOriginDto fileOriginDto = new FileOriginDto(studyFile, courseDto.getId(), null, null);
-			fileOriginService.add(fileOriginDto);
+			for (String fileId : studyFileList) {
+				FileToCourse fileToCourse = new FileToCourse();
+				fileToCourse.setCourseId(courseDto.getId());
+				fileToCourse.setFileId(Integer.valueOf(fileId));
+				fileOriginService.add(fileToCourse);
+			}
 		}
 
 		userService.findTeacherByNo(courseDto.getTeacherNo());
-		Course course = new Course();
-		BeanUtils.copyProperties(courseDto, course);
+		Course course = generate(courseDto);
 		courseMapper.updateByPrimaryKeyWithBLOBs(course);
 
 		return courseDto;
@@ -316,9 +323,43 @@ public class CourseServiceImpl implements CourseService {
 		if (courseDto == null) {
 			throw new CloudStudyException();
 		}
+
+		Course dbCourse = null;
 		Course course = new Course();
+		boolean isExist = false;
+		if (courseDto.getId() != null) {
+			dbCourse = courseMapper.selectByPrimaryKey(courseDto.getId());
+			if (dbCourse != null) {
+				isExist = true;
+			}
+		}
+
 		BeanUtils.copyProperties(courseDto, course);
-		return course;
+
+		if (courseDto.getStatus()) {// 状态
+			course.setStatus(0);
+		} else {
+			course.setStatus(1);
+		}
+
+		course.setLastModifyTime(new Date());
+
+		if (courseDto.getDateRangement() != null && courseDto.getDateRangement().size() == 2) {
+			course.setBeginTime(DateUtil.stringToDateSpecial(courseDto.getDateRangement().get(0)));
+			course.setEndTime(DateUtil.stringToDateSpecial(courseDto.getDateRangement().get(1)));
+		} else {
+			course.setBeginTime(new Date());
+			course.setEndTime(DateUtil.dateAddMonth(new Date(), 3));
+		}
+
+		if (isExist) {
+			return course;
+		} else {
+			course.setCreateTime(new Date());
+			course.setAcceptNum(0);
+
+			return course;
+		}
 	}
 
 	@Override

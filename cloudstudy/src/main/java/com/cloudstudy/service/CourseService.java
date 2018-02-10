@@ -16,7 +16,7 @@ public interface CourseService {
 	 * @param courseDto
 	 * @return
 	 */
-	CourseDto add(CourseDto courseDto) throws IOException;
+	CourseDto declare(CourseDto courseDto) throws IOException;
 
 	void delete(Integer courseId) throws IOException;
 

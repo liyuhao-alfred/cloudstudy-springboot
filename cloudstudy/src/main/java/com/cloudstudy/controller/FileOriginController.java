@@ -71,7 +71,7 @@ public class FileOriginController {
 	@RequestMapping(value = "/list", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
 	// @RequiresPermissions("File:del") // 权限管理;
-	public @ResponseBody WebResult<PageResultDto<List<FileOriginQueryDto>>> find(
+	public @ResponseBody WebResult<PageResultDto<List<FileOriginQueryDto>>> list(
 			@ApiParam(value = "系统文件查询数据") @RequestBody FileOriginQueryParamDto fileOriginQueryParamDto) {
 		PageResultDto<List<FileOriginQueryDto>> fileDtoList = fileOriginService.find(fileOriginQueryParamDto);
 		return WebResultUtil.success(fileDtoList);

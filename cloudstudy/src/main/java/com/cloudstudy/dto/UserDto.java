@@ -233,12 +233,6 @@ public class UserDto {
 		this.registTime = registTime;
 	}
 
-	public void setRoleByList(ArrayList<String> roleDtoList) {
-		String[] array = new String[roleDtoList.size()];
-		array = roleDtoList.toArray(array);
-		this.role = roleDtoList;
-	}
-
 	public void setRole(ArrayList<String> role) {
 		this.role = role;
 	}
