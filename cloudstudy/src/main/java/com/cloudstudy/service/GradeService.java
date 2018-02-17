@@ -2,25 +2,24 @@ package com.cloudstudy.service;
 
 import java.util.List;
 
+import com.cloudstudy.dto.CalResultDto;
 import com.cloudstudy.dto.GradeDto;
+import com.cloudstudy.dto.GradeQueryDto;
 import com.cloudstudy.dto.GradeQueryParamDto;
+import com.cloudstudy.dto.PageResultDto;
 
 public interface GradeService {
 
-	GradeDto addGradeByTeacher(GradeDto gradeDto);
+	GradeDto changeCommit(String studentNo, Integer courseId);
 
-	GradeDto editGradeByTeacher(GradeDto gradeDto);
-
-	void deleteGradeByTeacher(Integer courseId);
+	GradeDto changeGrade(Integer gradePoint, Integer gradeId);
 
 	GradeDto findById(Integer primaryKey);
 
-	List<GradeDto> findByStudentNo(String studentNo);
+	PageResultDto<List<GradeQueryDto>> find(GradeQueryParamDto GradeQueryParamDto);
 
-	List<GradeDto> findByTeacherNo(String teacherNo);
+	CalResultDto calByStudent(String studentNo);
 
-	List<GradeDto> findByCourseId(Integer courseId);
-
-	List<GradeDto> find(GradeQueryParamDto gradeQueryDto);
+	CalResultDto calByCourse(Integer courseId);
 
 }

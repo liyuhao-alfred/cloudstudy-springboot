@@ -34,9 +34,6 @@ import com.cloudstudy.util.FileUtil;
 
 import java.io.File;
 
-/**
- * Created by 钟述林 393156105@qq.com on 2016/10/24 0:44.
- */
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class FileTest {

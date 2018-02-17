@@ -13,7 +13,6 @@ import com.cloudstudy.bo.PermissionExample;
 import com.cloudstudy.bo.RoleToPermission;
 import com.cloudstudy.bo.RoleToPermissionExample;
 import com.cloudstudy.bo.RoleToPermissionExample.Criteria;
-import com.cloudstudy.dto.FileOriginDto;
 import com.cloudstudy.dto.PermissionDto;
 import com.cloudstudy.exception.CloudStudyException;
 import com.cloudstudy.mapper.PermissionMapper;
@@ -30,7 +29,6 @@ public class PermissionServiceImpl implements PermissionService {
 
 	@Override
 	public List<PermissionDto> findByRoleId(int roleId) {
-
 		RoleToPermissionExample roleToPermissionExample = new RoleToPermissionExample();
 		Criteria criteria = roleToPermissionExample.createCriteria();
 		criteria.andRoleIdEqualTo(roleId);
@@ -72,18 +70,6 @@ public class PermissionServiceImpl implements PermissionService {
 		return PermissionDtoList;
 	}
 
-	private List<Permission> generate(List<PermissionDto> permissionDtoList) {
-		if (permissionDtoList == null || permissionDtoList.isEmpty()) {
-			return new ArrayList<Permission>();
-		}
-		List<Permission> PermissionList = new ArrayList<Permission>();
-		for (PermissionDto permissionDto : permissionDtoList) {
-			Permission permission = generate(permissionDto);
-			PermissionList.add(permission);
-		}
-		return PermissionList;
-	}
-
 	private PermissionDto generateDto(Permission permission) {
 		if (permission == null) {
 			throw new CloudStudyException();
@@ -93,12 +79,4 @@ public class PermissionServiceImpl implements PermissionService {
 		return permissionDto;
 	}
 
-	private Permission generate(PermissionDto permissionDto) {
-		if (permissionDto == null) {
-			throw new CloudStudyException();
-		}
-		Permission permission = new Permission();
-		BeanUtils.copyProperties(permissionDto, permission);
-		return permission;
-	}
 }

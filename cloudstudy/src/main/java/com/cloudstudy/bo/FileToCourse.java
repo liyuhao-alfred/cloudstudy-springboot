@@ -5,6 +5,8 @@ public class FileToCourse {
 
     private Integer courseId;
 
+    private String uploaderno;
+
     public Integer getFileId() {
         return fileId;
     }
@@ -19,5 +21,13 @@ public class FileToCourse {
 
     public void setCourseId(Integer courseId) {
         this.courseId = courseId;
+    }
+
+    public String getUploaderno() {
+        return uploaderno;
+    }
+
+    public void setUploaderno(String uploaderno) {
+        this.uploaderno = uploaderno == null ? null : uploaderno.trim();
     }
 }

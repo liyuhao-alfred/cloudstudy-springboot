@@ -6,8 +6,12 @@ import java.util.List;
 
 import com.cloudstudy.bo.Course;
 import com.cloudstudy.dto.CourseDto;
+import com.cloudstudy.dto.CourseQueryDto;
 import com.cloudstudy.dto.CourseQueryParamDto;
+import com.cloudstudy.dto.CourseStudentDto;
+import com.cloudstudy.dto.PageResultDto;
 
+@SuppressWarnings("unused")
 public interface CourseService {
 
 	/**
@@ -24,17 +28,8 @@ public interface CourseService {
 
 	CourseDto findById(Integer primaryKey);
 
-	CourseDto findByTaskId(Integer taskId);
+	PageResultDto<List<CourseQueryDto>> find(CourseQueryParamDto courseQueryDto);
 
-	CourseDto findByJobId(Integer jobId);
+	PageResultDto<List<CourseStudentDto>> findForStudent(CourseQueryParamDto courseQueryDto);
 
-	CourseDto findByFileOriginId(Integer fileOriginId);
-
-	List<CourseDto> findByStudentNo(String studentNo);
-
-	List<CourseDto> findByTeacherNo(String teacherNo);
-
-	List<CourseDto> find(CourseQueryParamDto courseQueryDto);
-
-	List<CourseDto> generateDto(List<Course> courseList);
 }

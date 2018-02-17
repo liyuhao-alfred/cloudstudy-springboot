@@ -1,8 +1,9 @@
 package com.cloudstudy.controller;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,8 +14,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cloudstudy.dto.CalResultDto;
+import com.cloudstudy.dto.CourseQueryDto;
+import com.cloudstudy.dto.CourseQueryParamDto;
+import com.cloudstudy.dto.FileOriginQueryDto;
 import com.cloudstudy.dto.GradeDto;
+import com.cloudstudy.dto.GradeQueryDto;
 import com.cloudstudy.dto.GradeQueryParamDto;
+import com.cloudstudy.dto.PageResultDto;
+import com.cloudstudy.dto.UserQueryDto;
+import com.cloudstudy.dto.UserQueryParamDto;
 import com.cloudstudy.dto.WebResult;
 import com.cloudstudy.service.GradeService;
 import com.cloudstudy.util.WebResultUtil;
@@ -25,82 +34,73 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
-@Api(value = "课程模块")
+@Api(value = "学生课程模块")
 @RestController
 @RequestMapping("/cloudstudy/student/course")
 @CrossOrigin
+@SuppressWarnings("unused")
 public class GradeController {
 
 	@Autowired
-	private GradeService gradeService;
+	private GradeService GradeService;
 
-	/**
-	 * 获取单个课程
-	 * 
-	 * @param primaryKey
-	 * @return
-	 */
-	@ApiOperation(value = "获取单个课程", notes = "传入工号或者学号获取单个课程")
-	@ApiImplicitParam(name = "primaryKey", value = "课程工号或者学号", required = true, paramType = "path", dataType = "Integer") // 注意：paramType需要指定为path,不然不能正常获取
+	@ApiOperation(value = "获取单个学生课程", notes = "传入学生课程编号获取单个学生课程")
+	@ApiImplicitParam(name = "primaryKey", value = "学生课程编号", required = true, paramType = "path", dataType = "Integer") // 注意：paramType需要指定为path,不然不能正常获取
 	@RequestMapping(value = "/single/{primaryKey}", produces = { "application/json; charset=UTF-8" }, method = {
 			RequestMethod.POST, RequestMethod.GET })
-	//@RequiresPermissions("Course:view") // 权限管理;
+	// @RequiresPermissions("Grade:view") // 权限管理;
 	public @ResponseBody WebResult<GradeDto> find(@PathVariable("primaryKey") Integer primaryKey) {
-		GradeDto courseDto = gradeService.findById(primaryKey);
-		return WebResultUtil.success(courseDto);
+		GradeDto GradeDto = GradeService.findById(primaryKey);
+		return WebResultUtil.success(GradeDto);
 	}
 
-	/**
-	 * 获取课程列表
-	 * 
-	 * @param course
-	 * @param keyword
-	 * @return
-	 */
-	@ApiOperation(value = "获取课程列表", notes = "获取课程列表")
+	@ApiOperation(value = "获取学生课程列表", notes = "获取学生课程列表")
 	@RequestMapping(value = "/list", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
-	//@RequiresPermissions("Course:del") // 权限管理;
-	public @ResponseBody WebResult<List<GradeDto>> list(
-			@RequestParam(value = "courseQueryDto", required = true) GradeQueryParamDto gradeQueryDto) {
-		List<GradeDto> courseDtoList = gradeService.find(gradeQueryDto);
-		return WebResultUtil.success(courseDtoList);
+	// @RequiresPermissions("Grade:del") // 权限管理;
+	public @ResponseBody WebResult<PageResultDto<List<GradeQueryDto>>> list(
+			@ApiParam(value = "系统用户查询条件") @RequestBody GradeQueryParamDto GradeQueryParamDto) {
+		PageResultDto<List<GradeQueryDto>> GradeDtoList = GradeService.find(GradeQueryParamDto);
+		if (GradeDtoList == null || GradeDtoList.getTotal() == null || GradeDtoList.getContent() == null
+				|| GradeDtoList.getContent().isEmpty()) {
+			GradeDtoList = new PageResultDto<List<GradeQueryDto>>((long) 0, new ArrayList<GradeQueryDto>());
+		}
+		return WebResultUtil.success(GradeDtoList);
 	}
 
-	/**
-	 * 新建课程
-	 * 
-	 * @param courseDto
-	 * @return
-	 */
-	@ApiOperation(value = "新建课程", notes = "新建一个课程")
+	@ApiOperation(value = "新建学生课程", notes = "新建一个学生课程")
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "courseDto", value = "课程数据", required = true, paramType = "body", dataType = "GradeDto") }) // 注意：paramType需要指定为body
-	@RequestMapping(value = "/add", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
-			RequestMethod.GET })
-	//@RequiresPermissions("Course:add") // 权限管理;
-	public @ResponseBody WebResult<GradeDto> add(
-			@ApiParam(value = "课程数据", required = true) @RequestBody GradeDto courseDto) {
-		courseDto = gradeService.addGradeByTeacher(courseDto);
-		return WebResultUtil.success(courseDto);
+			@ApiImplicitParam(name = "studentNo", dataType = "String", value = "学生编号", required = true, paramType = "body"),
+			@ApiImplicitParam(name = "courseId", dataType = "Integer", value = "课程编号", required = true, paramType = "body") }) // 注意：paramType需要指定为body
+	@RequestMapping(value = "/changeCommit", produces = { "application/json; charset=UTF-8" }, method = {
+			RequestMethod.POST, RequestMethod.GET })
+	// @RequiresPermissions("Grade:add") // 权限管理;
+	public @ResponseBody WebResult<GradeDto> changeCommit(
+			@RequestParam(value = "studentNo", required = true) String studentNo,
+			@RequestParam(value = "courseId", required = true) Integer courseId) throws IOException {
+		GradeDto GradeDto = GradeService.changeCommit(studentNo, courseId);
+		return WebResultUtil.success(GradeDto);
 	}
 
-	/**
-	 * 删除课程
-	 *
-	 * @param primaryKey
-	 * @return
-	 */
-	@ApiOperation(value = "删除课程", notes = "通过课程工号或者学号删除课程")
-	@ApiImplicitParam(name = "primaryKey", value = "课程工号或者学号", required = true, paramType = "body", dataType = "String")
-	@RequestMapping(value = "/delete", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
-			RequestMethod.GET })
-	//@RequiresPermissions("Course:delete") // 权限管理;
-	public @ResponseBody WebResult<GradeDto> delete(
-			@RequestParam(value = "primaryKey", required = true) Integer primaryKey) {
-		GradeDto courseDto = gradeService.findById(primaryKey);
-		gradeService.deleteGradeByTeacher(primaryKey);
-		return WebResultUtil.success(courseDto);
+	@ApiOperation(value = "计算学生成绩", notes = "计算学生成绩")
+	@ApiImplicitParam(name = "studentNo", dataType = "Integer", value = "学生学号", required = true, paramType = "body")
+	@RequestMapping(value = "/calByStudent", produces = { "application/json; charset=UTF-8" }, method = {
+			RequestMethod.POST, RequestMethod.GET })
+	// @RequiresPermissions("Grade:del") // 权限管理;
+	public @ResponseBody WebResult<CalResultDto> calByStudent(
+			@RequestParam(value = "studentNo", required = true) String studentNo) {
+		CalResultDto CalResultDto = GradeService.calByStudent(studentNo);
+		return WebResultUtil.success(CalResultDto);
 	}
 
+	@ApiOperation(value = "计算课程成绩", notes = "计算课程成绩")
+	@ApiImplicitParam(name = "courseId", dataType = "Integer", value = "课程编号", required = true, paramType = "body")
+	@RequestMapping(value = "/calByCourse", produces = { "application/json; charset=UTF-8" }, method = {
+			RequestMethod.POST, RequestMethod.GET })
+	// @RequiresPermissions("Grade:del") // 权限管理;
+	public @ResponseBody WebResult<CalResultDto> calByCourse(
+			@RequestParam(value = "courseId", required = true) Integer courseId) {
+		CalResultDto CalResultDto = GradeService.calByCourse(courseId);
+		return WebResultUtil.success(CalResultDto);
+	}
 }

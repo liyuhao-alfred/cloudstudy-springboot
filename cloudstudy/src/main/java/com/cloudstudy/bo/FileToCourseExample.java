@@ -223,6 +223,76 @@ public class FileToCourseExample {
             addCriterion("course_id not between", value1, value2, "courseId");
             return (Criteria) this;
         }
+
+        public Criteria andUploadernoIsNull() {
+            addCriterion("uploaderNo is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUploadernoIsNotNull() {
+            addCriterion("uploaderNo is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUploadernoEqualTo(String value) {
+            addCriterion("uploaderNo =", value, "uploaderno");
+            return (Criteria) this;
+        }
+
+        public Criteria andUploadernoNotEqualTo(String value) {
+            addCriterion("uploaderNo <>", value, "uploaderno");
+            return (Criteria) this;
+        }
+
+        public Criteria andUploadernoGreaterThan(String value) {
+            addCriterion("uploaderNo >", value, "uploaderno");
+            return (Criteria) this;
+        }
+
+        public Criteria andUploadernoGreaterThanOrEqualTo(String value) {
+            addCriterion("uploaderNo >=", value, "uploaderno");
+            return (Criteria) this;
+        }
+
+        public Criteria andUploadernoLessThan(String value) {
+            addCriterion("uploaderNo <", value, "uploaderno");
+            return (Criteria) this;
+        }
+
+        public Criteria andUploadernoLessThanOrEqualTo(String value) {
+            addCriterion("uploaderNo <=", value, "uploaderno");
+            return (Criteria) this;
+        }
+
+        public Criteria andUploadernoLike(String value) {
+            addCriterion("uploaderNo like", value, "uploaderno");
+            return (Criteria) this;
+        }
+
+        public Criteria andUploadernoNotLike(String value) {
+            addCriterion("uploaderNo not like", value, "uploaderno");
+            return (Criteria) this;
+        }
+
+        public Criteria andUploadernoIn(List<String> values) {
+            addCriterion("uploaderNo in", values, "uploaderno");
+            return (Criteria) this;
+        }
+
+        public Criteria andUploadernoNotIn(List<String> values) {
+            addCriterion("uploaderNo not in", values, "uploaderno");
+            return (Criteria) this;
+        }
+
+        public Criteria andUploadernoBetween(String value1, String value2) {
+            addCriterion("uploaderNo between", value1, value2, "uploaderno");
+            return (Criteria) this;
+        }
+
+        public Criteria andUploadernoNotBetween(String value1, String value2) {
+            addCriterion("uploaderNo not between", value1, value2, "uploaderno");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

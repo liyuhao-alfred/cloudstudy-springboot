@@ -11,9 +11,9 @@ public class Grade {
 
     private Integer grade;
 
-    private Integer taskDeclareNum;
+    private Integer homeworkDeclareNum;
 
-    private Integer taskAcceptNum;
+    private Integer homeworkAcceptNum;
 
     private Date createTime;
 
@@ -53,20 +53,20 @@ public class Grade {
         this.grade = grade;
     }
 
-    public Integer getTaskDeclareNum() {
-        return taskDeclareNum;
+    public Integer getHomeworkDeclareNum() {
+        return homeworkDeclareNum;
     }
 
-    public void setTaskDeclareNum(Integer taskDeclareNum) {
-        this.taskDeclareNum = taskDeclareNum;
+    public void setHomeworkDeclareNum(Integer homeworkDeclareNum) {
+        this.homeworkDeclareNum = homeworkDeclareNum;
     }
 
-    public Integer getTaskAcceptNum() {
-        return taskAcceptNum;
+    public Integer getHomeworkAcceptNum() {
+        return homeworkAcceptNum;
     }
 
-    public void setTaskAcceptNum(Integer taskAcceptNum) {
-        this.taskAcceptNum = taskAcceptNum;
+    public void setHomeworkAcceptNum(Integer homeworkAcceptNum) {
+        this.homeworkAcceptNum = homeworkAcceptNum;
     }
 
     public Date getCreateTime() {

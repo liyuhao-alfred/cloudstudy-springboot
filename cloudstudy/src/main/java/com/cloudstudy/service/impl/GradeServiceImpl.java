@@ -1,6 +1,7 @@
 package com.cloudstudy.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -9,31 +10,37 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cloudstudy.bo.Course;
 import com.cloudstudy.bo.FileOrigin;
 import com.cloudstudy.bo.Grade;
 import com.cloudstudy.bo.User;
 import com.cloudstudy.bo.GradeExample;
 import com.cloudstudy.bo.Grade;
-import com.cloudstudy.bo.Task;
+import com.cloudstudy.bo.Homework;
+import com.cloudstudy.bo.HomeworkExample;
 import com.cloudstudy.bo.UserExample;
 import com.cloudstudy.bo.UserExample.Criteria;
-import com.cloudstudy.constant.SearchType;
+import com.cloudstudy.dto.CalResultDto;
 import com.cloudstudy.dto.CourseDto;
 import com.cloudstudy.dto.CourseQueryParamDto;
-import com.cloudstudy.dto.FileOriginDto;
+import com.cloudstudy.dto.EveryCourseGradeObject;
+import com.cloudstudy.dto.ExpextAndRealityGradeObject;
+import com.cloudstudy.dto.FileOriginQueryDto;
 import com.cloudstudy.dto.GradeDto;
+import com.cloudstudy.dto.GradeQueryDto;
 import com.cloudstudy.dto.GradeQueryParamDto;
+import com.cloudstudy.dto.PageResultDto;
 import com.cloudstudy.dto.UserDto;
 import com.cloudstudy.exception.CloudStudyException;
 import com.cloudstudy.mapper.GradeMapper;
-import com.cloudstudy.mapper.JobMapper;
-import com.cloudstudy.mapper.TaskMapper;
+import com.cloudstudy.mapper.HomeworkMapper;
 import com.cloudstudy.mapper.CourseMapper;
 import com.cloudstudy.mapper.UserMapper;
 import com.cloudstudy.service.CourseService;
 import com.cloudstudy.service.GradeService;
 import com.cloudstudy.service.UserService;
 import com.cloudstudy.util.DateUtil;
+import com.fasterxml.classmate.members.RawMethod;
 import com.github.pagehelper.PageHelper;
 
 @Service
@@ -51,41 +58,7 @@ public class GradeServiceImpl implements GradeService {
 	@Autowired
 	private CourseService courseService;
 	@Autowired
-	private TaskMapper taskMapper;
-	@Autowired
-	private JobMapper jobMapper;
-
-	@Override
-	public GradeDto addGradeByTeacher(GradeDto gradeDto) {
-		userService.findTeacherByNo(gradeDto.getStudentNo());
-
-		Grade grade = new Grade();
-		BeanUtils.copyProperties(gradeDto, grade);
-		gradeMapper.insert(grade);
-
-		return gradeDto;
-	}
-
-	@Override
-	public GradeDto editGradeByTeacher(GradeDto gradeDto) {
-		userService.findTeacherByNo(gradeDto.getStudentNo());
-
-		Grade grade = new Grade();
-		BeanUtils.copyProperties(gradeDto, grade);
-		gradeMapper.insert(grade);
-
-		return gradeDto;
-	}
-
-	@Override
-	public void deleteGradeByTeacher(Integer courseId) {
-
-		Grade grade = gradeMapper.selectByPrimaryKey(courseId);
-		if (grade == null) {
-			return;
-		}
-		gradeMapper.deleteByPrimaryKey(courseId);
-	}
+	private HomeworkMapper homeworkMapper;
 
 	@Override
 	public GradeDto findById(Integer primaryKey) {
@@ -98,160 +71,226 @@ public class GradeServiceImpl implements GradeService {
 		return gradeDto;
 	}
 
-	@Override
-	public List<GradeDto> find(GradeQueryParamDto gradeQueryDto) {
-
-		GradeExample gradeExample = new GradeExample();
-		com.cloudstudy.bo.GradeExample.Criteria criteria = gradeExample.createCriteria();
-
-		String keyword = gradeQueryDto.getKeyword();
-		Integer searchType = gradeQueryDto.getSearchType();
-		if (!StringUtils.isEmpty(keyword)) {
-			if (searchType == SearchType.studentName.getCode()) {
-
-				UserExample userExample = new UserExample();
-				Criteria criteria1 = userExample.createCriteria();
-				criteria1.andNoEqualTo(keyword);
-
-				Integer page = gradeQueryDto.getPageDto().getCurrent();
-				Integer rows = gradeQueryDto.getPageDto().getSize();
-				PageHelper.startPage(page, rows);
-
-				List<User> userList = userMapper.selectByExample(userExample);
-				if (userList == null || userList.isEmpty()) {
-					return null;
-				}
-
-				HashSet<String> valuesSet = new HashSet<String>();
-				for (User user : userList) {
-					valuesSet.add(user.getNo());
-				}
-				criteria.andStudentNoIn(new ArrayList<String>(valuesSet));
-			}
+	private GradeQueryDto generateGradeQueryDto(Grade Grade) {
+		if (Grade == null) {
+			throw new CloudStudyException();
 		}
+		GradeQueryDto GradeQueryDto = new GradeQueryDto();
+		BeanUtils.copyProperties(Grade, GradeQueryDto);
 
-		if (!StringUtils.isEmpty(gradeQueryDto.getFromTime()) && !StringUtils.isEmpty(gradeQueryDto.getToTime())) {
-			criteria.andLastModifyTimeBetween(DateUtil.stringToDate(gradeQueryDto.getFromTime()),
-					DateUtil.stringToDate(gradeQueryDto.getToTime()));
-
+		String createTime;
+		try {
+			createTime = DateUtil.dateToString(Grade.getCreateTime());
+		} catch (Exception e) {
+			createTime = DateUtil.getNowDateAsString();
 		}
+		GradeQueryDto.setCreateTime(createTime);
 
-		if (gradeQueryDto.getFromGrade() != null) {
-			criteria.andGradeGreaterThanOrEqualTo(gradeQueryDto.getFromGrade());
+		String lastModifyTime;
+		try {
+			lastModifyTime = DateUtil.dateToString(Grade.getLastModifyTime());
+		} catch (Exception e) {
+			lastModifyTime = DateUtil.getNowDateAsString();
 		}
-		if (gradeQueryDto.getToGrade() != null) {
-			criteria.andGradeLessThanOrEqualTo(gradeQueryDto.getToGrade());
-		}
+		GradeQueryDto.setLastModifyTime(lastModifyTime);
 
-		Integer page = gradeQueryDto.getPageDto().getCurrent();
-		Integer rows = gradeQueryDto.getPageDto().getSize();
-		PageHelper.startPage(page, rows);
+		Course Course = courseMapper.selectByPrimaryKey(GradeQueryDto.getCourseId());
+		GradeQueryDto.setCourseName(Course.getName());
 
-		List<Grade> gradeList = gradeMapper.selectByExample(gradeExample);
-		if (gradeList == null || gradeList.isEmpty()) {
-			return null;
-		}
+		User teacher = userMapper.selectByPrimaryKey(Course.getTeacherNo());
+		GradeQueryDto.setTeacherName(teacher.getName());
+		GradeQueryDto.setTeacherNo(teacher.getNo());
 
-		List<GradeDto> gradeDtoList = new ArrayList<GradeDto>();
-		for (Grade grade : gradeList) {
-			GradeDto gradeDto = new GradeDto();
-			BeanUtils.copyProperties(grade, gradeDto);
-			gradeDtoList.add(gradeDto);
+		User student = userMapper.selectByPrimaryKey(GradeQueryDto.getStudentNo());
+		GradeQueryDto.setStudentName(student.getName());
+
+		return GradeQueryDto;
+	}
+
+	private GradeDto generateDto(Grade Grade) {
+		if (Grade == null) {
+			throw new CloudStudyException();
 		}
-		return gradeDtoList;
+		GradeDto GradeDto = new GradeDto();
+		BeanUtils.copyProperties(Grade, GradeDto);
+
+		String createTime;
+		try {
+			createTime = DateUtil.dateToString(Grade.getCreateTime());
+		} catch (Exception e) {
+			createTime = DateUtil.getNowDateAsString();
+		}
+		GradeDto.setCreateTime(createTime);
+
+		String lastModifyTime;
+		try {
+			lastModifyTime = DateUtil.dateToString(Grade.getLastModifyTime());
+		} catch (Exception e) {
+			lastModifyTime = DateUtil.getNowDateAsString();
+		}
+		GradeDto.setLastModifyTime(lastModifyTime);
+		return GradeDto;
 	}
 
 	@Override
-	public List<GradeDto> findByStudentNo(String studentNo) {
-
+	public GradeDto changeCommit(String studentNo, Integer courseId) {
 		GradeExample gradeExample = new GradeExample();
 		com.cloudstudy.bo.GradeExample.Criteria criteria = gradeExample.createCriteria();
 		criteria.andStudentNoEqualTo(studentNo);
-		List<Grade> gradeList = gradeMapper.selectByExample(gradeExample);
+		criteria.andCourseIdEqualTo(courseId);
 
-		return generateDto(gradeList);
+		List<Grade> GradeList = gradeMapper.selectByExample(gradeExample);
+		if (GradeList != null && GradeList.size() > 0) {
+			gradeMapper.deleteByExample(gradeExample);
+			return generateDto(GradeList.get(0));
+		} else {
+
+			HomeworkExample HomeworkExample = new HomeworkExample();
+			com.cloudstudy.bo.HomeworkExample.Criteria HomeworkExamplecriteria = HomeworkExample.createCriteria();
+			HomeworkExamplecriteria.andCourseIdEqualTo(courseId);
+			long count = homeworkMapper.countByExample(HomeworkExample);
+
+			Grade Grade = new Grade();
+			Grade.setCourseId(courseId);
+			Grade.setCreateTime(new Date());
+			Grade.setGrade(0);
+			Grade.setId(null);
+			Grade.setLastModifyTime(new Date());
+			Grade.setStatus(0);
+			Grade.setStudentNo(studentNo);
+			Grade.setHomeworkAcceptNum(0);
+			Grade.setHomeworkDeclareNum((int) count);
+			gradeMapper.insert(Grade);
+
+			return generateDto(Grade);
+
+		}
 	}
 
 	@Override
-	public List<GradeDto> findByTeacherNo(String teacherNo) {
-
-		List<CourseDto> CourseDtoList = courseService.findByTeacherNo(teacherNo);
-		if (CourseDtoList == null || CourseDtoList.isEmpty()) {
-			return null;
+	public GradeDto changeGrade(Integer gradePoint, Integer gradeId) {
+		Grade Grade = gradeMapper.selectByPrimaryKey(gradeId);
+		if (Grade == null) {
+			throw new CloudStudyException();
 		}
 
-		List<Integer> integerList = new ArrayList<Integer>();
-		for (CourseDto courseDto : CourseDtoList) {
-			integerList.add(courseDto.getId());
-		}
+		Grade.setGrade(gradePoint);
+		Grade.setLastModifyTime(new Date());
+		gradeMapper.updateByPrimaryKeySelective(Grade);
 
+		return generateDto(Grade);
+	}
+
+	@Override
+	public CalResultDto calByStudent(String studentNo) {
 		GradeExample gradeExample = new GradeExample();
 		com.cloudstudy.bo.GradeExample.Criteria criteria = gradeExample.createCriteria();
-		criteria.andCourseIdIn(integerList);
+		criteria.andStudentNoEqualTo(studentNo);
+
 		List<Grade> gradeList = gradeMapper.selectByExample(gradeExample);
-		return generateDto(gradeList);
+		if (gradeList == null || gradeList.isEmpty()) {
+			return null;
+		} else {
+			CalResultDto CalResultDto = new CalResultDto();
+
+			ArrayList<EveryCourseGradeObject> everyCourseGradeArray = new ArrayList<EveryCourseGradeObject>();
+			ArrayList<Integer> realityValueList = new ArrayList<Integer>();
+			ArrayList<Integer> expectValueList = new ArrayList<Integer>();
+
+			List<GradeQueryDto> GradeQueryDtoList = new ArrayList<GradeQueryDto>();
+			for (Grade grade : gradeList) {
+				GradeQueryDto GradeQueryDto = generateGradeQueryDto(grade);
+
+				EveryCourseGradeObject EveryCourseGradeObject = new EveryCourseGradeObject();
+				EveryCourseGradeObject.setMax(GradeQueryDto.getGrade());
+				EveryCourseGradeObject.setName(GradeQueryDto.getCourseName());
+				everyCourseGradeArray.add(EveryCourseGradeObject);
+
+				realityValueList.add(GradeQueryDto.getGrade());
+				expectValueList.add((int) (GradeQueryDto.getGrade() * Math.random()));
+			}
+
+			CalResultDto.setEveryCourseGradeArray(everyCourseGradeArray);
+
+			ExpextAndRealityGradeObject ExpextAndRealityGradeObject1 = new ExpextAndRealityGradeObject(realityValueList,
+					"实际成绩");
+			ExpextAndRealityGradeObject ExpextAndRealityGradeObject2 = new ExpextAndRealityGradeObject(expectValueList,
+					"预期成绩");
+			ArrayList<ExpextAndRealityGradeObject> expextAndRealityGradeArray = new ArrayList<ExpextAndRealityGradeObject>();
+			expextAndRealityGradeArray.add(ExpextAndRealityGradeObject1);
+			expextAndRealityGradeArray.add(ExpextAndRealityGradeObject2);
+			CalResultDto.setExpextAndRealityGradeArray(expextAndRealityGradeArray);
+
+			return CalResultDto;
+		}
+
 	}
 
 	@Override
-	public List<GradeDto> findByCourseId(Integer courseId) {
+	public CalResultDto calByCourse(Integer courseId) {
 		GradeExample gradeExample = new GradeExample();
 		com.cloudstudy.bo.GradeExample.Criteria criteria = gradeExample.createCriteria();
 		criteria.andCourseIdEqualTo(courseId);
+
 		List<Grade> gradeList = gradeMapper.selectByExample(gradeExample);
-		return generateDto(gradeList);
-	}
-
-	private List<Integer> getPrimaryKeyList(List<Grade> gradeList) {
 		if (gradeList == null || gradeList.isEmpty()) {
-			return new ArrayList<Integer>();
+			return null;
+		} else {
+
+			ArrayList<String> studentNameArray = new ArrayList<String>();
+			ArrayList<Double> gradeArray = new ArrayList<Double>();
+			ArrayList<Double> averageArray = new ArrayList<Double>();
+
+			List<GradeQueryDto> GradeQueryDtoList = new ArrayList<GradeQueryDto>();
+			for (Grade grade : gradeList) {
+				GradeQueryDto GradeQueryDto = generateGradeQueryDto(grade);
+				studentNameArray.add(GradeQueryDto.getStudentName());
+				gradeArray.add(Double.valueOf(GradeQueryDto.getGrade()));
+				averageArray.add(Double.valueOf(GradeQueryDto.getGrade()));
+			}
+
+			CalResultDto CalResultDto = new CalResultDto();
+			CalResultDto.setAverageArray(averageArray);
+			CalResultDto.setGradeArray(gradeArray);
+			CalResultDto.setStudentNameArray(studentNameArray);
+
+			return CalResultDto;
 		}
-		List<Integer> primaryKeyList = new ArrayList<Integer>();
-		for (Grade grade : gradeList) {
-			primaryKeyList.add(grade.getId());
-		}
-		return primaryKeyList;
 	}
 
-	private List<GradeDto> generateDto(List<Grade> gradeList) {
+	@Override
+	public PageResultDto<List<GradeQueryDto>> find(GradeQueryParamDto GradeQueryParamDto) {
+		GradeExample gradeExample = new GradeExample();
+		com.cloudstudy.bo.GradeExample.Criteria criteria = gradeExample.createCriteria();
+
+		ArrayList<String> studentNoList = GradeQueryParamDto.getStudentNo();
+		if (studentNoList != null && !studentNoList.isEmpty()) {
+			criteria.andStudentNoIn(studentNoList);
+		}
+
+		ArrayList<Integer> courseIdList = GradeQueryParamDto.getCourseId();
+		if (courseIdList != null && !courseIdList.isEmpty()) {
+			criteria.andCourseIdIn(courseIdList);
+		}
+
+		long count = gradeMapper.countByExample(gradeExample);
+
+		if (GradeQueryParamDto.getPageDto() != null) {
+			Integer page = GradeQueryParamDto.getPageDto().getCurrent();
+			Integer rows = GradeQueryParamDto.getPageDto().getSize();
+			PageHelper.startPage(page, rows);
+		}
+
+		List<Grade> gradeList = gradeMapper.selectByExample(gradeExample);
 		if (gradeList == null || gradeList.isEmpty()) {
-			return new ArrayList<GradeDto>();
+			return null;
 		}
-		List<GradeDto> GradeDtoList = new ArrayList<GradeDto>();
+
+		List<GradeQueryDto> GradeQueryDtoList = new ArrayList<GradeQueryDto>();
 		for (Grade grade : gradeList) {
-			GradeDto gradeDto = generateDto(grade);
-			GradeDtoList.add(gradeDto);
+			GradeQueryDtoList.add(generateGradeQueryDto(grade));
 		}
-		return GradeDtoList;
-	}
 
-	private List<Grade> generate(List<GradeDto> gradeDtoList) {
-		if (gradeDtoList == null || gradeDtoList.isEmpty()) {
-			return new ArrayList<Grade>();
-		}
-		List<Grade> GradeList = new ArrayList<Grade>();
-		for (GradeDto gradeDto : gradeDtoList) {
-			Grade grade = generate(gradeDto);
-			GradeList.add(grade);
-		}
-		return GradeList;
+		return new PageResultDto<List<GradeQueryDto>>(count, GradeQueryDtoList);
 	}
-
-	private GradeDto generateDto(Grade grade) {
-		if (grade == null) {
-			throw new CloudStudyException();
-		}
-		GradeDto gradeDto = new GradeDto();
-		BeanUtils.copyProperties(grade, gradeDto);
-		return gradeDto;
-	}
-
-	private Grade generate(GradeDto gradeDto) {
-		if (gradeDto == null) {
-			throw new CloudStudyException();
-		}
-		Grade grade = new Grade();
-		BeanUtils.copyProperties(gradeDto, grade);
-		return grade;
-	}
-
 }

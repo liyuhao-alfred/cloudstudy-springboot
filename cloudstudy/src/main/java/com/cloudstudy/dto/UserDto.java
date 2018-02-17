@@ -3,6 +3,7 @@ package com.cloudstudy.dto;
 import java.util.ArrayList;
 import java.util.Date;
 
+@SuppressWarnings("unused")
 public class UserDto {
 	private String no;
 

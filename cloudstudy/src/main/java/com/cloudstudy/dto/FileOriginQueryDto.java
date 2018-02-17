@@ -1,19 +1,28 @@
 package com.cloudstudy.dto;
 
-import java.io.File;
-import java.util.Date;
-
 public class FileOriginQueryDto {
 
 	private Integer id;
 
-	private CourseDto courseDto = new CourseDto();
+	private Integer courseId;
 
-	private TaskDto taskDto = new TaskDto();
+	private String courseName;
 
-	private JobDto jobDto = new JobDto();
+	private String teacherNo;
 
-	private UserDto userDto = new UserDto();
+	private String teacherName;
+
+	private Integer homeworkId;
+
+	private String homeworkTitle;
+
+	private String homeworkContent;
+
+	private String homeworkDeadline;
+
+	private String uploaderno;
+
+	private String uploaderName;
 
 	private String name;
 
@@ -21,31 +30,20 @@ public class FileOriginQueryDto {
 
 	private String src;
 
+	private String type;
+
 	/**
 	 * 1图片，2文档，3视频
 	 */
 	private Integer fileTypeName;
 
-	private String type;
-
 	private Integer size;
 
-	private Date createTime;
+	private String createTime;
 
-	private Date lastModifyTime;
+	private String lastModifyTime;
 
 	private String memo;
-
-	private File file;
-
-	public FileOriginQueryDto() {
-		super();
-	}
-
-	public FileOriginQueryDto(File file) {
-		super();
-		this.file = file;
-	}
 
 	public Integer getId() {
 		return id;
@@ -55,12 +53,92 @@ public class FileOriginQueryDto {
 		this.id = id;
 	}
 
+	public Integer getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(Integer courseId) {
+		this.courseId = courseId;
+	}
+
+	public String getCourseName() {
+		return courseName;
+	}
+
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
+	}
+
+	public String getTeacherNo() {
+		return teacherNo;
+	}
+
+	public void setTeacherNo(String teacherNo) {
+		this.teacherNo = teacherNo;
+	}
+
+	public String getTeacherName() {
+		return teacherName;
+	}
+
+	public void setTeacherName(String teacherName) {
+		this.teacherName = teacherName;
+	}
+
+	public Integer getHomeworkId() {
+		return homeworkId;
+	}
+
+	public void setHomeworkId(Integer homeworkId) {
+		this.homeworkId = homeworkId;
+	}
+
+	public String getHomeworkTitle() {
+		return homeworkTitle;
+	}
+
+	public void setHomeworkTitle(String homeworkTitle) {
+		this.homeworkTitle = homeworkTitle;
+	}
+
+	public String getHomeworkContent() {
+		return homeworkContent;
+	}
+
+	public void setHomeworkContent(String homeworkContent) {
+		this.homeworkContent = homeworkContent;
+	}
+
+	public String getHomeworkDeadline() {
+		return homeworkDeadline;
+	}
+
+	public void setHomeworkDeadline(String homeworkDeadline) {
+		this.homeworkDeadline = homeworkDeadline;
+	}
+
+	public String getUploaderno() {
+		return uploaderno;
+	}
+
+	public void setUploaderno(String uploaderno) {
+		this.uploaderno = uploaderno;
+	}
+
+	public String getUploaderName() {
+		return uploaderName;
+	}
+
+	public void setUploaderName(String uploaderName) {
+		this.uploaderName = uploaderName;
+	}
+
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
-		this.name = name == null ? null : name.trim();
+		this.name = name;
 	}
 
 	public String getPath() {
@@ -68,7 +146,15 @@ public class FileOriginQueryDto {
 	}
 
 	public void setPath(String path) {
-		this.path = path == null ? null : path.trim();
+		this.path = path;
+	}
+
+	public String getSrc() {
+		return src;
+	}
+
+	public void setSrc(String src) {
+		this.src = src;
 	}
 
 	public String getType() {
@@ -76,7 +162,7 @@ public class FileOriginQueryDto {
 	}
 
 	public void setType(String type) {
-		this.type = type == null ? null : type.trim();
+		this.type = type;
 	}
 
 	public Integer getSize() {
@@ -87,19 +173,19 @@ public class FileOriginQueryDto {
 		this.size = size;
 	}
 
-	public Date getCreateTime() {
+	public String getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(Date createTime) {
+	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
 	}
 
-	public Date getLastModifyTime() {
+	public String getLastModifyTime() {
 		return lastModifyTime;
 	}
 
-	public void setLastModifyTime(Date lastModifyTime) {
+	public void setLastModifyTime(String lastModifyTime) {
 		this.lastModifyTime = lastModifyTime;
 	}
 
@@ -108,55 +194,7 @@ public class FileOriginQueryDto {
 	}
 
 	public void setMemo(String memo) {
-		this.memo = memo == null ? null : memo.trim();
-	}
-
-	public CourseDto getCourseDto() {
-		return courseDto;
-	}
-
-	public void setCourseDto(CourseDto courseDto) {
-		this.courseDto = courseDto;
-	}
-
-	public TaskDto getTaskDto() {
-		return taskDto;
-	}
-
-	public void setTaskDto(TaskDto taskDto) {
-		this.taskDto = taskDto;
-	}
-
-	public JobDto getJobDto() {
-		return jobDto;
-	}
-
-	public void setJobDto(JobDto jobDto) {
-		this.jobDto = jobDto;
-	}
-
-	public File getFile() {
-		return file;
-	}
-
-	public void setFile(File file) {
-		this.file = file;
-	}
-
-	public UserDto getUserDto() {
-		return userDto;
-	}
-
-	public void setUserDto(UserDto userDto) {
-		this.userDto = userDto;
-	}
-
-	public String getSrc() {
-		return src;
-	}
-
-	public void setSrc(String src) {
-		this.src = src;
+		this.memo = memo;
 	}
 
 	public Integer getFileTypeName() {

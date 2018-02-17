@@ -14,7 +14,7 @@ import com.cloudstudy.constant.RoleConstant;
 import com.cloudstudy.bo.FileOrigin;
 import com.cloudstudy.bo.Role;
 import com.cloudstudy.bo.RoleExample;
-import com.cloudstudy.dto.FileOriginDto;
+import com.cloudstudy.dto.FileOriginQueryDto;
 import com.cloudstudy.dto.PermissionDto;
 import com.cloudstudy.dto.RoleDto;
 import com.cloudstudy.exception.CloudStudyException;
@@ -98,18 +98,6 @@ public class RoleServiceImpl implements RoleService {
 		return RoleDtoList;
 	}
 
-	private List<Role> generate(List<RoleDto> roleDtoList) {
-		if (roleDtoList == null || roleDtoList.isEmpty()) {
-			return new ArrayList<Role>();
-		}
-		List<Role> RoleList = new ArrayList<Role>();
-		for (RoleDto roleDto : roleDtoList) {
-			Role role = generate(roleDto);
-			RoleList.add(role);
-		}
-		return RoleList;
-	}
-
 	private RoleDto generateDto(Role role) {
 		if (role == null) {
 			throw new CloudStudyException();
@@ -117,15 +105,6 @@ public class RoleServiceImpl implements RoleService {
 		RoleDto roleDto = new RoleDto();
 		BeanUtils.copyProperties(role, roleDto);
 		return roleDto;
-	}
-
-	private Role generate(RoleDto roleDto) {
-		if (roleDto == null) {
-			throw new CloudStudyException();
-		}
-		Role role = new Role();
-		BeanUtils.copyProperties(roleDto, role);
-		return role;
 	}
 
 	@Override

@@ -17,20 +17,22 @@ import org.springframework.stereotype.Service;
 
 import com.cloudstudy.aop.annotation.LogPointcut;
 import com.cloudstudy.bo.Course;
+import com.cloudstudy.bo.Grade;
+import com.cloudstudy.bo.GradeExample;
 import com.cloudstudy.bo.User;
 import com.cloudstudy.bo.RoleToPermission;
 import com.cloudstudy.bo.RoleToUser;
 import com.cloudstudy.bo.RoleToUserExample;
-import com.cloudstudy.bo.Task;
+import com.cloudstudy.bo.Homework;
 import com.cloudstudy.bo.User;
 import com.cloudstudy.bo.UserExample;
 import com.cloudstudy.bo.UserExample.Criteria;
 import com.cloudstudy.constant.RoleConstant;
 import com.cloudstudy.constant.RoleTypeConstant;
-import com.cloudstudy.constant.SearchType;
 import com.cloudstudy.dto.CourseDto;
 import com.cloudstudy.dto.CourseQueryDto;
-import com.cloudstudy.dto.FileOriginDto;
+import com.cloudstudy.dto.FileOriginQueryDto;
+import com.cloudstudy.dto.FileOriginQueryParamDto;
 import com.cloudstudy.dto.UserDto;
 import com.cloudstudy.dto.UserQueryDto;
 import com.cloudstudy.dto.GradeDto;
@@ -44,21 +46,18 @@ import com.cloudstudy.mapper.CourseMapper;
 import com.cloudstudy.mapper.FileOriginMapper;
 import com.cloudstudy.mapper.UserMapper;
 import com.cloudstudy.mapper.FileToCourseMapper;
-import com.cloudstudy.mapper.FileToJobMapper;
-import com.cloudstudy.mapper.FileToTaskMapper;
+import com.cloudstudy.mapper.FileToHomeworkMapper;
 import com.cloudstudy.mapper.GradeMapper;
-import com.cloudstudy.mapper.JobMapper;
 import com.cloudstudy.mapper.RoleMapper;
 import com.cloudstudy.mapper.RoleToUserMapper;
-import com.cloudstudy.mapper.TaskMapper;
+import com.cloudstudy.mapper.HomeworkMapper;
 import com.cloudstudy.mapper.UserMapper;
 import com.cloudstudy.service.CourseService;
 import com.cloudstudy.service.FileOriginService;
 import com.cloudstudy.service.UserService;
 import com.cloudstudy.service.GradeService;
-import com.cloudstudy.service.JobService;
 import com.cloudstudy.service.RoleService;
-import com.cloudstudy.service.TaskService;
+import com.cloudstudy.service.HomeworkService;
 import com.cloudstudy.service.UserService;
 import com.cloudstudy.util.DateUtil;
 import com.cloudstudy.util.Util;
@@ -81,21 +80,15 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private CourseMapper courseMapper;
 	@Autowired
-	private TaskMapper taskMapper;
-	@Autowired
-	private JobMapper jobMapper;
+	private HomeworkMapper homeworkMapper;
 	@Autowired
 	private GradeMapper gradeMapper;
 	@Autowired
 	private FileToCourseMapper fileToCourseMapper;
 	@Autowired
-	private FileToTaskMapper fileToTaskMapper;
+	private FileToHomeworkMapper fileToHomeworkMapper;
 	@Autowired
-	private FileToJobMapper fileToJobMapper;
-	@Autowired
-	private TaskService taskService;
-	@Autowired
-	private JobService jobService;
+	private HomeworkService HomeworkService;
 	@Autowired
 	private FileOriginService fileOriginService;
 	@Autowired
@@ -123,11 +116,29 @@ public class UserServiceImpl implements UserService {
 		return generateDto(user);
 	}
 
+	private void deleteFileByUser(String userNo) throws IOException {
+		ArrayList<String> userNoList = new ArrayList<String>();
+		userNoList.add(userNo);
+
+		FileOriginQueryParamDto FileOriginQueryParamDto = new FileOriginQueryParamDto();
+		FileOriginQueryParamDto.setPageDto(null);
+		FileOriginQueryParamDto.setUserNo(userNoList);
+
+		PageResultDto<List<FileOriginQueryDto>> FileOriginQueryPageResultDto = fileOriginService
+				.find(FileOriginQueryParamDto);
+		List<FileOriginQueryDto> content = FileOriginQueryPageResultDto.getContent();
+		if (content != null && !content.isEmpty()) {
+			for (FileOriginQueryDto fileOriginQueryDto : content) {
+				fileOriginService.deleteById(fileOriginQueryDto.getId());
+			}
+		}
+	}
+
 	@Override
 	@LogPointcut(description = "删除用户", code = "deleteByNo")
-	public void deleteByNo(String no) throws IOException {
-		fileOriginService.deleteByUserNo(no);
-		userMapper.deleteByPrimaryKey(no);
+	public void deleteByNo(String userNo) throws IOException {
+		deleteFileByUser(userNo);
+		userMapper.deleteByPrimaryKey(userNo);
 	}
 
 	@Override
@@ -201,12 +212,26 @@ public class UserServiceImpl implements UserService {
 
 		String keyword = userQueryDto.getKeyword();
 		if (!StringUtils.isEmpty(keyword)) {
-			userExample.or()//
-					.andAccountLike("%" + keyword + "%")//
+			criteria.andAccountLike("%" + keyword + "%")//
 					.andEmailLike("%" + keyword + "%")//
 					.andNameLike("%" + keyword + "%")//
 					.andNoLike("%" + keyword + "%")//
 					.andPhoneLike("%" + keyword + "%");//
+		}
+		ArrayList<Integer> courseIdList = userQueryDto.getCourseId();
+		if (courseIdList != null && !courseIdList.isEmpty()) {
+			GradeExample GradeExample = new GradeExample();
+			GradeExample.Criteria GradeExamplecriteria = GradeExample.createCriteria();
+			GradeExamplecriteria.andCourseIdIn(courseIdList);
+			List<Grade> GradeList = gradeMapper.selectByExample(GradeExample);
+			if (GradeList != null && !GradeList.isEmpty()) {
+				ArrayList<String> studentNoList = new ArrayList<String>();
+				for (Grade grade : GradeList) {
+					studentNoList.add(grade.getStudentNo());
+				}
+
+				criteria.andNoIn(studentNoList);
+			}
 		}
 
 		ArrayList<String> dateRangementList = userQueryDto.getDateRangement();
@@ -234,9 +259,12 @@ public class UserServiceImpl implements UserService {
 
 		long total = userMapper.countByExample(userExample);
 
-		Integer page = userQueryDto.getPageDto().getCurrent();
-		Integer rows = userQueryDto.getPageDto().getSize();
-		PageHelper.startPage(page, rows);
+		if (userQueryDto.getPageDto() != null) {
+			Integer page = userQueryDto.getPageDto().getCurrent();
+			Integer rows = userQueryDto.getPageDto().getSize();
+			PageHelper.startPage(page, rows);
+		}
+
 		List<User> userList = userMapper.selectByExample(userExample);
 
 		List<UserQueryDto> userQueryDtoList = new ArrayList<UserQueryDto>();
@@ -307,155 +335,6 @@ public class UserServiceImpl implements UserService {
 		return generateDto(user);
 	}
 
-	@Override
-	public UserDto findAdminByNo(String no) {
-		UserDto userDto = findUserByNo(no);
-		List<String> roleTypeSet = userDto.getRole();
-		if (roleTypeSet.contains(RoleTypeConstant.adminType)) {
-			return userDto;
-		} else {
-			return null;
-		}
-	}
-
-	@Override
-	public UserDto findTeacherByNo(String no) {
-		UserDto userDto = findUserByNo(no);
-		List<String> roleTypeSet = userDto.getRole();
-		if (roleTypeSet.contains(RoleTypeConstant.teacherType)) {
-			return userDto;
-		} else {
-			return null;
-		}
-	}
-
-	@Override
-	public UserDto findStudentByNo(String no) {
-		UserDto userDto = findUserByNo(no);
-		List<String> roleTypeSet = userDto.getRole();
-		if (roleTypeSet.contains(RoleTypeConstant.studentType)) {
-			return userDto;
-		} else {
-			return null;
-		}
-	}
-
-	@Override
-	public UserDto findAdminByAccount(String account) {
-		UserDto userDto = findUserByAccount(account);
-		List<String> roleTypeSet = userDto.getRole();
-		if (roleTypeSet.contains(RoleTypeConstant.adminType)) {
-			return userDto;
-		} else {
-			return null;
-		}
-	}
-
-	@Override
-	public UserDto findTeacherByAccount(String account) {
-		UserDto userDto = findUserByAccount(account);
-		List<String> roleTypeSet = userDto.getRole();
-		if (roleTypeSet.contains(RoleTypeConstant.teacherType)) {
-			return userDto;
-		} else {
-			return null;
-		}
-	}
-
-	@Override
-	public UserDto findStudentByAccount(String account) {
-		UserDto userDto = findUserByAccount(account);
-		List<String> roleTypeSet = userDto.getRole();
-		;
-		if (roleTypeSet.contains(RoleTypeConstant.studentType)) {
-			return userDto;
-		} else {
-			return null;
-		}
-	}
-
-	@Override
-	public UserDto findTeacherByCourseId(Integer courseId) {
-		Course course = courseMapper.selectByPrimaryKey(courseId);
-		if (course == null) {
-			return null;
-		}
-		User user = userMapper.selectByPrimaryKey(course.getTeacherNo());
-		return generateDto(user);
-	}
-
-	@Override
-	public List<UserDto> findStudentByCourseId(Integer courseId) {
-		Course course = courseMapper.selectByPrimaryKey(courseId);
-		if (course == null) {
-			return null;
-		}
-
-		List<GradeDto> gradeDtoList = gradeService.findByCourseId(courseId);
-		if (gradeDtoList == null || gradeDtoList.isEmpty()) {
-			return null;
-		}
-		List<String> primaryKeyList = new ArrayList<String>();
-		for (GradeDto gradeDto : gradeDtoList) {
-			primaryKeyList.add(gradeDto.getStudentNo());
-		}
-
-		UserExample userExample = new UserExample();
-		Criteria criteria = userExample.createCriteria();
-		criteria.andNoIn(primaryKeyList);
-
-		List<User> userList = userMapper.selectByExample(userExample);
-
-		return generateDto(userList);
-	}
-
-	@Override
-	public UserDto findTeacherByTaskId(Integer taskId) {
-		CourseDto courseDto = courseService.findByTaskId(taskId);
-		return findTeacherByCourseId(courseDto.getId());
-	}
-
-	@Override
-	public UserDto findStudentByJobId(Integer jobId) {
-		CourseDto courseDto = courseService.findByJobId(jobId);
-		return findTeacherByCourseId(courseDto.getId());
-	}
-
-	private List<String> getPrimaryKeyList(List<User> userList) {
-		if (userList == null || userList.isEmpty()) {
-			return new ArrayList<String>();
-		}
-		List<String> primaryKeyList = new ArrayList<String>();
-		for (User user : userList) {
-			primaryKeyList.add(user.getNo());
-		}
-		return primaryKeyList;
-	}
-
-	public List<UserDto> generateDto(List<User> userList) {
-		if (userList == null || userList.isEmpty()) {
-			return new ArrayList<UserDto>();
-		}
-		List<UserDto> UserDtoList = new ArrayList<UserDto>();
-		for (User user : userList) {
-			UserDto userDto = generateDto(user);
-			UserDtoList.add(userDto);
-		}
-		return UserDtoList;
-	}
-
-	private List<User> generate(List<UserDto> userDtoList) {
-		if (userDtoList == null || userDtoList.isEmpty()) {
-			return new ArrayList<User>();
-		}
-		List<User> UserList = new ArrayList<User>();
-		for (UserDto userDto : userDtoList) {
-			User user = generate(userDto);
-			UserList.add(user);
-		}
-		return UserList;
-	}
-
 	private UserDto generateDto(User user) {
 		if (user == null) {
 			throw new CloudStudyException();
@@ -521,11 +400,14 @@ public class UserServiceImpl implements UserService {
 			String statusMeno = userDto.getStatus() ? "在职" : "离职";
 			userDto.setStatusMemo(statusMeno);
 
-			List<CourseDto> courseDtoList = courseService.findByTeacherNo(userDto.getNo());
-			if (courseDtoList != null && !courseDtoList.isEmpty()) {
-				for (CourseDto courseDto : courseDtoList) {
+			com.cloudstudy.bo.CourseExample CourseExample = new com.cloudstudy.bo.CourseExample();
+			com.cloudstudy.bo.CourseExample.Criteria criteria3 = CourseExample.createCriteria();
+			criteria3.andTeacherNoEqualTo(userDto.getNo());
+			List<Course> CourseList = courseMapper.selectByExample(CourseExample);
+			if (CourseList != null && !CourseList.isEmpty()) {
+				for (Course course : CourseList) {
 					CourseQueryDto courseQueryDto = new CourseQueryDto();
-					BeanUtils.copyProperties(courseDto, courseQueryDto);
+					BeanUtils.copyProperties(course, courseQueryDto);
 					userDto.getTeachCourse().add(courseQueryDto);
 				}
 			}
@@ -534,11 +416,14 @@ public class UserServiceImpl implements UserService {
 			String statusMeno = userDto.getStatus() ? "在读" : "肄业";
 			userDto.setStatusMemo(statusMeno);
 
-			List<GradeDto> gradeDtoList = gradeService.findByStudentNo(userDto.getNo());
-			if (gradeDtoList != null && !gradeDtoList.isEmpty()) {
-				for (GradeDto gradeDto : gradeDtoList) {
+			GradeExample gradeExample = new GradeExample();
+			com.cloudstudy.bo.GradeExample.Criteria criteria = gradeExample.createCriteria();
+			criteria.andStudentNoEqualTo(userDto.getNo());
+			List<Grade> gradeList = gradeMapper.selectByExample(gradeExample);
+			if (gradeList != null && !gradeList.isEmpty()) {
+				for (Grade grade : gradeList) {
 					GradeQueryDto gradeQueryDto = new GradeQueryDto();
-					BeanUtils.copyProperties(gradeDto, gradeQueryDto);
+					BeanUtils.copyProperties(grade, gradeQueryDto);
 					userDto.getStudyCourse().add(gradeQueryDto);
 				}
 			}
@@ -702,5 +587,22 @@ public class UserServiceImpl implements UserService {
 			return user;
 		}
 
+	}
+
+	@Override
+	public UserDto changePassword(String account, String password) {
+
+		UserExample userExample = new UserExample();
+		Criteria criteria = userExample.createCriteria();
+		criteria.andAccountEqualTo(account);
+		List<User> userList = userMapper.selectByExample(userExample);
+		if (userList == null || userList.isEmpty()) {
+			return null;
+		}
+
+		User user = userList.get(0);
+		user.setPassword(password);
+		userMapper.updateByPrimaryKeySelective(user);
+		return generateDto(user);
 	}
 }

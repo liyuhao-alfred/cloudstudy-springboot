@@ -7,32 +7,20 @@ import java.util.Set;
 
 import org.springframework.data.annotation.Transient;
 
-import com.cloudstudy.constant.SearchType;
-
 @SuppressWarnings("unused")
 public class UserQueryParamDto {
 
-	/**
-	 * 时间范围
-	 */
 	private ArrayList<String> dateRangement;
 
-	/**
-	 * 关键字
-	 */
 	private String keyword;
 
 	private String status;
 
 	private ArrayList<String> role;
 
-	/**
-	 * 排序
-	 */
-	@Transient
-	private String orderBy;
+	private ArrayList<Integer> courseId;
 
-	private PageDto pageDto = new PageDto();
+	private PageDto pageDto;
 
 	public String getKeyword() {
 		return keyword;
@@ -66,20 +54,20 @@ public class UserQueryParamDto {
 		return status;
 	}
 
-	public String getOrderBy() {
-		return orderBy;
-	}
-
-	public void setOrderBy(String orderBy) {
-		this.orderBy = orderBy;
-	}
-
 	public ArrayList<String> getDateRangement() {
 		return dateRangement;
 	}
 
 	public void setDateRangement(ArrayList<String> dateRangement) {
 		this.dateRangement = dateRangement;
+	}
+
+	public ArrayList<Integer> getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(ArrayList<Integer> courseId) {
+		this.courseId = courseId;
 	}
 
 }

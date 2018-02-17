@@ -3,6 +3,7 @@ package com.cloudstudy.dto;
 import java.util.ArrayList;
 import java.util.Date;
 
+@SuppressWarnings("unused")
 public class CourseDto {
 	private Integer id;
 
@@ -25,8 +26,6 @@ public class CourseDto {
 	private Boolean status;
 
 	private String description;
-
-	private ArrayList<String> studyFileList;
 
 	public Integer getId() {
 		return id;
@@ -116,11 +115,4 @@ public class CourseDto {
 		this.dateRangement = dateRangement;
 	}
 
-	public ArrayList<String> getStudyFileList() {
-		return studyFileList;
-	}
-
-	public void setStudyFileList(ArrayList<String> studyFileList) {
-		this.studyFileList = studyFileList;
-	}
 }

@@ -355,123 +355,123 @@ public class GradeExample {
             return (Criteria) this;
         }
 
-        public Criteria andTaskDeclareNumIsNull() {
-            addCriterion("task_declare_num is null");
+        public Criteria andHomeworkDeclareNumIsNull() {
+            addCriterion("homework_declare_num is null");
             return (Criteria) this;
         }
 
-        public Criteria andTaskDeclareNumIsNotNull() {
-            addCriterion("task_declare_num is not null");
+        public Criteria andHomeworkDeclareNumIsNotNull() {
+            addCriterion("homework_declare_num is not null");
             return (Criteria) this;
         }
 
-        public Criteria andTaskDeclareNumEqualTo(Integer value) {
-            addCriterion("task_declare_num =", value, "taskDeclareNum");
+        public Criteria andHomeworkDeclareNumEqualTo(Integer value) {
+            addCriterion("homework_declare_num =", value, "homeworkDeclareNum");
             return (Criteria) this;
         }
 
-        public Criteria andTaskDeclareNumNotEqualTo(Integer value) {
-            addCriterion("task_declare_num <>", value, "taskDeclareNum");
+        public Criteria andHomeworkDeclareNumNotEqualTo(Integer value) {
+            addCriterion("homework_declare_num <>", value, "homeworkDeclareNum");
             return (Criteria) this;
         }
 
-        public Criteria andTaskDeclareNumGreaterThan(Integer value) {
-            addCriterion("task_declare_num >", value, "taskDeclareNum");
+        public Criteria andHomeworkDeclareNumGreaterThan(Integer value) {
+            addCriterion("homework_declare_num >", value, "homeworkDeclareNum");
             return (Criteria) this;
         }
 
-        public Criteria andTaskDeclareNumGreaterThanOrEqualTo(Integer value) {
-            addCriterion("task_declare_num >=", value, "taskDeclareNum");
+        public Criteria andHomeworkDeclareNumGreaterThanOrEqualTo(Integer value) {
+            addCriterion("homework_declare_num >=", value, "homeworkDeclareNum");
             return (Criteria) this;
         }
 
-        public Criteria andTaskDeclareNumLessThan(Integer value) {
-            addCriterion("task_declare_num <", value, "taskDeclareNum");
+        public Criteria andHomeworkDeclareNumLessThan(Integer value) {
+            addCriterion("homework_declare_num <", value, "homeworkDeclareNum");
             return (Criteria) this;
         }
 
-        public Criteria andTaskDeclareNumLessThanOrEqualTo(Integer value) {
-            addCriterion("task_declare_num <=", value, "taskDeclareNum");
+        public Criteria andHomeworkDeclareNumLessThanOrEqualTo(Integer value) {
+            addCriterion("homework_declare_num <=", value, "homeworkDeclareNum");
             return (Criteria) this;
         }
 
-        public Criteria andTaskDeclareNumIn(List<Integer> values) {
-            addCriterion("task_declare_num in", values, "taskDeclareNum");
+        public Criteria andHomeworkDeclareNumIn(List<Integer> values) {
+            addCriterion("homework_declare_num in", values, "homeworkDeclareNum");
             return (Criteria) this;
         }
 
-        public Criteria andTaskDeclareNumNotIn(List<Integer> values) {
-            addCriterion("task_declare_num not in", values, "taskDeclareNum");
+        public Criteria andHomeworkDeclareNumNotIn(List<Integer> values) {
+            addCriterion("homework_declare_num not in", values, "homeworkDeclareNum");
             return (Criteria) this;
         }
 
-        public Criteria andTaskDeclareNumBetween(Integer value1, Integer value2) {
-            addCriterion("task_declare_num between", value1, value2, "taskDeclareNum");
+        public Criteria andHomeworkDeclareNumBetween(Integer value1, Integer value2) {
+            addCriterion("homework_declare_num between", value1, value2, "homeworkDeclareNum");
             return (Criteria) this;
         }
 
-        public Criteria andTaskDeclareNumNotBetween(Integer value1, Integer value2) {
-            addCriterion("task_declare_num not between", value1, value2, "taskDeclareNum");
+        public Criteria andHomeworkDeclareNumNotBetween(Integer value1, Integer value2) {
+            addCriterion("homework_declare_num not between", value1, value2, "homeworkDeclareNum");
             return (Criteria) this;
         }
 
-        public Criteria andTaskAcceptNumIsNull() {
-            addCriterion("task_accept_num is null");
+        public Criteria andHomeworkAcceptNumIsNull() {
+            addCriterion("homework_accept_num is null");
             return (Criteria) this;
         }
 
-        public Criteria andTaskAcceptNumIsNotNull() {
-            addCriterion("task_accept_num is not null");
+        public Criteria andHomeworkAcceptNumIsNotNull() {
+            addCriterion("homework_accept_num is not null");
             return (Criteria) this;
         }
 
-        public Criteria andTaskAcceptNumEqualTo(Integer value) {
-            addCriterion("task_accept_num =", value, "taskAcceptNum");
+        public Criteria andHomeworkAcceptNumEqualTo(Integer value) {
+            addCriterion("homework_accept_num =", value, "homeworkAcceptNum");
             return (Criteria) this;
         }
 
-        public Criteria andTaskAcceptNumNotEqualTo(Integer value) {
-            addCriterion("task_accept_num <>", value, "taskAcceptNum");
+        public Criteria andHomeworkAcceptNumNotEqualTo(Integer value) {
+            addCriterion("homework_accept_num <>", value, "homeworkAcceptNum");
             return (Criteria) this;
         }
 
-        public Criteria andTaskAcceptNumGreaterThan(Integer value) {
-            addCriterion("task_accept_num >", value, "taskAcceptNum");
+        public Criteria andHomeworkAcceptNumGreaterThan(Integer value) {
+            addCriterion("homework_accept_num >", value, "homeworkAcceptNum");
             return (Criteria) this;
         }
 
-        public Criteria andTaskAcceptNumGreaterThanOrEqualTo(Integer value) {
-            addCriterion("task_accept_num >=", value, "taskAcceptNum");
+        public Criteria andHomeworkAcceptNumGreaterThanOrEqualTo(Integer value) {
+            addCriterion("homework_accept_num >=", value, "homeworkAcceptNum");
             return (Criteria) this;
         }
 
-        public Criteria andTaskAcceptNumLessThan(Integer value) {
-            addCriterion("task_accept_num <", value, "taskAcceptNum");
+        public Criteria andHomeworkAcceptNumLessThan(Integer value) {
+            addCriterion("homework_accept_num <", value, "homeworkAcceptNum");
             return (Criteria) this;
         }
 
-        public Criteria andTaskAcceptNumLessThanOrEqualTo(Integer value) {
-            addCriterion("task_accept_num <=", value, "taskAcceptNum");
+        public Criteria andHomeworkAcceptNumLessThanOrEqualTo(Integer value) {
+            addCriterion("homework_accept_num <=", value, "homeworkAcceptNum");
             return (Criteria) this;
         }
 
-        public Criteria andTaskAcceptNumIn(List<Integer> values) {
-            addCriterion("task_accept_num in", values, "taskAcceptNum");
+        public Criteria andHomeworkAcceptNumIn(List<Integer> values) {
+            addCriterion("homework_accept_num in", values, "homeworkAcceptNum");
             return (Criteria) this;
         }
 
-        public Criteria andTaskAcceptNumNotIn(List<Integer> values) {
-            addCriterion("task_accept_num not in", values, "taskAcceptNum");
+        public Criteria andHomeworkAcceptNumNotIn(List<Integer> values) {
+            addCriterion("homework_accept_num not in", values, "homeworkAcceptNum");
             return (Criteria) this;
         }
 
-        public Criteria andTaskAcceptNumBetween(Integer value1, Integer value2) {
-            addCriterion("task_accept_num between", value1, value2, "taskAcceptNum");
+        public Criteria andHomeworkAcceptNumBetween(Integer value1, Integer value2) {
+            addCriterion("homework_accept_num between", value1, value2, "homeworkAcceptNum");
             return (Criteria) this;
         }
 
-        public Criteria andTaskAcceptNumNotBetween(Integer value1, Integer value2) {
-            addCriterion("task_accept_num not between", value1, value2, "taskAcceptNum");
+        public Criteria andHomeworkAcceptNumNotBetween(Integer value1, Integer value2) {
+            addCriterion("homework_accept_num not between", value1, value2, "homeworkAcceptNum");
             return (Criteria) this;
         }
 

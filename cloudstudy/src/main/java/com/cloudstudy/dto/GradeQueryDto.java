@@ -2,6 +2,7 @@ package com.cloudstudy.dto;
 
 import java.util.Date;
 
+@SuppressWarnings("unused")
 public class GradeQueryDto {
 	private Integer id;
 
@@ -11,15 +12,21 @@ public class GradeQueryDto {
 
 	private String studentNo;
 
+	private String studentName;
+
 	private Integer grade;
 
-	private Integer taskDeclareNum;
+	private Integer homeworkDeclareNum;
 
-	private Integer taskAcceptNum;
+	private Integer homeworkAcceptNum;
 
-	private Date createTime;
+	private String teacherNo;
 
-	private Date lastModifyTime;
+	private String teacherName;
+
+	private String createTime;
+
+	private String lastModifyTime;
 
 	private Integer status;
 
@@ -55,35 +62,35 @@ public class GradeQueryDto {
 		this.grade = grade;
 	}
 
-	public Integer getTaskDeclareNum() {
-		return taskDeclareNum;
+	public Integer getHomeworkDeclareNum() {
+		return homeworkDeclareNum;
 	}
 
-	public void setTaskDeclareNum(Integer taskDeclareNum) {
-		this.taskDeclareNum = taskDeclareNum;
+	public void setHomeworkDeclareNum(Integer HomeworkDeclareNum) {
+		this.homeworkDeclareNum = HomeworkDeclareNum;
 	}
 
-	public Integer getTaskAcceptNum() {
-		return taskAcceptNum;
+	public Integer getHomeworkAcceptNum() {
+		return homeworkAcceptNum;
 	}
 
-	public void setTaskAcceptNum(Integer taskAcceptNum) {
-		this.taskAcceptNum = taskAcceptNum;
+	public void setHomeworkAcceptNum(Integer HomeworkAcceptNum) {
+		this.homeworkAcceptNum = HomeworkAcceptNum;
 	}
 
-	public Date getCreateTime() {
+	public String getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(Date createTime) {
+	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
 	}
 
-	public Date getLastModifyTime() {
+	public String getLastModifyTime() {
 		return lastModifyTime;
 	}
 
-	public void setLastModifyTime(Date lastModifyTime) {
+	public void setLastModifyTime(String lastModifyTime) {
 		this.lastModifyTime = lastModifyTime;
 	}
 
@@ -101,5 +108,29 @@ public class GradeQueryDto {
 
 	public void setCourseName(String courseName) {
 		this.courseName = courseName;
+	}
+
+	public String getStudentName() {
+		return studentName;
+	}
+
+	public void setStudentName(String studentName) {
+		this.studentName = studentName;
+	}
+
+	public String getTeacherNo() {
+		return teacherNo;
+	}
+
+	public void setTeacherNo(String teacherNo) {
+		this.teacherNo = teacherNo;
+	}
+
+	public String getTeacherName() {
+		return teacherName;
+	}
+
+	public void setTeacherName(String teacherName) {
+		this.teacherName = teacherName;
 	}
 }

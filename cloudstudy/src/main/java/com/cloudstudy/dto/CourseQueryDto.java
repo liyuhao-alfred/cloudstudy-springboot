@@ -1,8 +1,10 @@
 package com.cloudstudy.dto;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 
+@SuppressWarnings("unused")
 public class CourseQueryDto {
 	private Integer id;
 
@@ -10,13 +12,13 @@ public class CourseQueryDto {
 
 	private String name;
 
-	private Date createTime;
+	private String createTime;
 
-	private Date lastModifyTime;
+	private String lastModifyTime;
 
-	private Date beginTime;
+	private String beginTime;
 
-	private Date endTime;
+	private String endTime;
 
 	private Integer declareNum;
 
@@ -24,11 +26,13 @@ public class CourseQueryDto {
 
 	private Integer count;
 
-	private Integer status;
+	private Boolean status;
+
+	private String statusMemo;
 
 	private String description;
 
-	private File studyFile;
+	private UserDto teacher;
 
 	public Integer getId() {
 		return id;
@@ -43,7 +47,7 @@ public class CourseQueryDto {
 	}
 
 	public void setTeacherNo(String teacherNo) {
-		this.teacherNo = teacherNo == null ? null : teacherNo.trim();
+		this.teacherNo = teacherNo;
 	}
 
 	public String getName() {
@@ -51,38 +55,38 @@ public class CourseQueryDto {
 	}
 
 	public void setName(String name) {
-		this.name = name == null ? null : name.trim();
+		this.name = name;
 	}
 
-	public Date getCreateTime() {
+	public String getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(Date createTime) {
+	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
 	}
 
-	public Date getLastModifyTime() {
+	public String getLastModifyTime() {
 		return lastModifyTime;
 	}
 
-	public void setLastModifyTime(Date lastModifyTime) {
+	public void setLastModifyTime(String lastModifyTime) {
 		this.lastModifyTime = lastModifyTime;
 	}
 
-	public Date getBeginTime() {
+	public String getBeginTime() {
 		return beginTime;
 	}
 
-	public void setBeginTime(Date beginTime) {
+	public void setBeginTime(String beginTime) {
 		this.beginTime = beginTime;
 	}
 
-	public Date getEndTime() {
+	public String getEndTime() {
 		return endTime;
 	}
 
-	public void setEndTime(Date endTime) {
+	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
 
@@ -110,12 +114,20 @@ public class CourseQueryDto {
 		this.count = count;
 	}
 
-	public Integer getStatus() {
+	public Boolean getStatus() {
 		return status;
 	}
 
-	public void setStatus(Integer status) {
+	public void setStatus(Boolean status) {
 		this.status = status;
+	}
+
+	public String getStatusMemo() {
+		return statusMemo;
+	}
+
+	public void setStatusMemo(String statusMemo) {
+		this.statusMemo = statusMemo;
 	}
 
 	public String getDescription() {
@@ -123,14 +135,15 @@ public class CourseQueryDto {
 	}
 
 	public void setDescription(String description) {
-		this.description = description == null ? null : description.trim();
+		this.description = description;
 	}
 
-	public File getFileOrigin() {
-		return studyFile;
+	public UserDto getTeacher() {
+		return teacher;
 	}
 
-	public void setFileOrigin(File studyFile) {
-		this.studyFile = studyFile;
+	public void setTeacher(UserDto teacher) {
+		this.teacher = teacher;
 	}
+
 }

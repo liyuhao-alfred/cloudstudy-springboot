@@ -6,8 +6,8 @@
     <result column="course_id" jdbcType="INTEGER" property="courseId" />
     <result column="student_no" jdbcType="VARCHAR" property="studentNo" />
     <result column="grade" jdbcType="INTEGER" property="grade" />
-    <result column="task_declare_num" jdbcType="INTEGER" property="taskDeclareNum" />
-    <result column="task_accept_num" jdbcType="INTEGER" property="taskAcceptNum" />
+    <result column="homework_declare_num" jdbcType="INTEGER" property="homeworkDeclareNum" />
+    <result column="homework_accept_num" jdbcType="INTEGER" property="homeworkAcceptNum" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="last_modify_time" jdbcType="TIMESTAMP" property="lastModifyTime" />
     <result column="status" jdbcType="INTEGER" property="status" />
@@ -71,7 +71,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, course_id, student_no, grade, task_declare_num, task_accept_num, create_time, 
+    id, course_id, student_no, grade, homework_declare_num, homework_accept_num, create_time, 
     last_modify_time, status
   </sql>
   <select id="selectByExample" parameterType="com.cloudstudy.bo.GradeExample" resultMap="BaseResultMap">
@@ -110,11 +110,13 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into tbgrade (course_id, student_no, grade, 
-      task_declare_num, task_accept_num, create_time, 
-      last_modify_time, status)
+      homework_declare_num, homework_accept_num, 
+      create_time, last_modify_time, status
+      )
     values (#{courseId,jdbcType=INTEGER}, #{studentNo,jdbcType=VARCHAR}, #{grade,jdbcType=INTEGER}, 
-      #{taskDeclareNum,jdbcType=INTEGER}, #{taskAcceptNum,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{lastModifyTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER})
+      #{homeworkDeclareNum,jdbcType=INTEGER}, #{homeworkAcceptNum,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{lastModifyTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.cloudstudy.bo.Grade">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -131,11 +133,11 @@
       <if test="grade != null">
         grade,
       </if>
-      <if test="taskDeclareNum != null">
-        task_declare_num,
+      <if test="homeworkDeclareNum != null">
+        homework_declare_num,
       </if>
-      <if test="taskAcceptNum != null">
-        task_accept_num,
+      <if test="homeworkAcceptNum != null">
+        homework_accept_num,
       </if>
       <if test="createTime != null">
         create_time,
@@ -157,11 +159,11 @@
       <if test="grade != null">
         #{grade,jdbcType=INTEGER},
       </if>
-      <if test="taskDeclareNum != null">
-        #{taskDeclareNum,jdbcType=INTEGER},
+      <if test="homeworkDeclareNum != null">
+        #{homeworkDeclareNum,jdbcType=INTEGER},
       </if>
-      <if test="taskAcceptNum != null">
-        #{taskAcceptNum,jdbcType=INTEGER},
+      <if test="homeworkAcceptNum != null">
+        #{homeworkAcceptNum,jdbcType=INTEGER},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -195,11 +197,11 @@
       <if test="record.grade != null">
         grade = #{record.grade,jdbcType=INTEGER},
       </if>
-      <if test="record.taskDeclareNum != null">
-        task_declare_num = #{record.taskDeclareNum,jdbcType=INTEGER},
+      <if test="record.homeworkDeclareNum != null">
+        homework_declare_num = #{record.homeworkDeclareNum,jdbcType=INTEGER},
       </if>
-      <if test="record.taskAcceptNum != null">
-        task_accept_num = #{record.taskAcceptNum,jdbcType=INTEGER},
+      <if test="record.homeworkAcceptNum != null">
+        homework_accept_num = #{record.homeworkAcceptNum,jdbcType=INTEGER},
       </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -221,8 +223,8 @@
       course_id = #{record.courseId,jdbcType=INTEGER},
       student_no = #{record.studentNo,jdbcType=VARCHAR},
       grade = #{record.grade,jdbcType=INTEGER},
-      task_declare_num = #{record.taskDeclareNum,jdbcType=INTEGER},
-      task_accept_num = #{record.taskAcceptNum,jdbcType=INTEGER},
+      homework_declare_num = #{record.homeworkDeclareNum,jdbcType=INTEGER},
+      homework_accept_num = #{record.homeworkAcceptNum,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       last_modify_time = #{record.lastModifyTime,jdbcType=TIMESTAMP},
       status = #{record.status,jdbcType=INTEGER}
@@ -242,11 +244,11 @@
       <if test="grade != null">
         grade = #{grade,jdbcType=INTEGER},
       </if>
-      <if test="taskDeclareNum != null">
-        task_declare_num = #{taskDeclareNum,jdbcType=INTEGER},
+      <if test="homeworkDeclareNum != null">
+        homework_declare_num = #{homeworkDeclareNum,jdbcType=INTEGER},
       </if>
-      <if test="taskAcceptNum != null">
-        task_accept_num = #{taskAcceptNum,jdbcType=INTEGER},
+      <if test="homeworkAcceptNum != null">
+        homework_accept_num = #{homeworkAcceptNum,jdbcType=INTEGER},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -265,8 +267,8 @@
     set course_id = #{courseId,jdbcType=INTEGER},
       student_no = #{studentNo,jdbcType=VARCHAR},
       grade = #{grade,jdbcType=INTEGER},
-      task_declare_num = #{taskDeclareNum,jdbcType=INTEGER},
-      task_accept_num = #{taskAcceptNum,jdbcType=INTEGER},
+      homework_declare_num = #{homeworkDeclareNum,jdbcType=INTEGER},
+      homework_accept_num = #{homeworkAcceptNum,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       last_modify_time = #{lastModifyTime,jdbcType=TIMESTAMP},
       status = #{status,jdbcType=INTEGER}

@@ -34,12 +34,6 @@ public class RoleController {
 	@Autowired
 	private PermissionService permissionService;
 
-	/**
-	 * 获取单个系统权限
-	 * 
-	 * @param no
-	 * @return
-	 */
 	@ApiOperation(value = "获取单个系统权限", notes = "传入工号或者学号获取单个系统权限")
 	@ApiImplicitParam(name = "userNo", value = "系统权限工号或者学号", required = true, paramType = "path", dataType = "String") // 注意：paramType需要指定为path,不然不能正常获取
 	@RequestMapping(value = "/single/{userNo}", produces = { "application/json; charset=UTF-8" }, method = {
@@ -50,13 +44,6 @@ public class RoleController {
 		return WebResultUtil.success(roleDtoList);
 	}
 
-	/**
-	 * 获取系统权限列表
-	 * 
-	 * @param role
-	 * @param keyword
-	 * @return
-	 */
 	@ApiOperation(value = "获取系统权限列表", notes = "获取系统权限列表")
 	@RequestMapping(value = "/list", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })

@@ -35,12 +35,6 @@ public class LogController {
 	@Autowired
 	private SystemLogService systemlogService;
 
-	/**
-	 * 获取单个系统日志
-	 * 
-	 * @param no
-	 * @return
-	 */
 	@ApiOperation(value = "获取单个系统日志", notes = "传入日志编号获取单个系统日志")
 	@ApiImplicitParam(name = "id", value = "系统日志编号", required = true, paramType = "path", dataType = "int")
 	@RequestMapping(value = "/single/systemlog/{id}", produces = { "application/json; charset=UTF-8" }, method = {
@@ -51,13 +45,6 @@ public class LogController {
 		return WebResultUtil.success(systemlogDto);
 	}
 
-	/**
-	 * 获取日志列表
-	 * 
-	 * @param systemlog
-	 * @param keyword
-	 * @return
-	 */
 	@ApiOperation(value = "获取系统日志列表", notes = "获取系统日志列表")
 	@RequestMapping(value = "/list/systemlog/test", produces = { "application/json; charset=UTF-8" }, method = {
 			RequestMethod.POST, RequestMethod.GET })
@@ -70,13 +57,6 @@ public class LogController {
 		return WebResultUtil.success(systemlogDtoList);
 	}
 
-	/**
-	 * 获取日志列表
-	 * 
-	 * @param systemlog
-	 * @param keyword
-	 * @return
-	 */
 	@ApiOperation(value = "获取系统日志列表", notes = "获取系统日志列表")
 	@RequestMapping(value = "/list/systemlog", produces = { "application/json; charset=UTF-8" }, method = {
 			RequestMethod.POST, RequestMethod.GET })
@@ -87,12 +67,6 @@ public class LogController {
 		return WebResultUtil.success(systemlogDtoList);
 	}
 
-	/**
-	 * 获取单个日志
-	 * 
-	 * @param id
-	 * @return
-	 */
 	@ApiOperation(value = "获取单个操作员日志", notes = "传入日志编号获取单个操作员日志")
 	@ApiImplicitParam(name = "id", value = "操作员日志编号", required = true, paramType = "path", dataType = "int")
 	@RequestMapping(value = "/single/operateLog/{id}", produces = { "application/json; charset=UTF-8" }, method = {
@@ -103,13 +77,6 @@ public class LogController {
 		return WebResultUtil.success(operateLogDto);
 	}
 
-	/**
-	 * 获取日志列表
-	 * 
-	 * @param operateLog
-	 * @param keyword
-	 * @return
-	 */
 	@ApiOperation(value = "获取操作员日志列表", notes = "获取操作员日志列表")
 	@RequestMapping(value = "/list/operateLog", produces = { "application/json; charset=UTF-8" }, method = {
 			RequestMethod.POST, RequestMethod.GET })

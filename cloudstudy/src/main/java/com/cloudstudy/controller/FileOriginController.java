@@ -5,10 +5,16 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.tomcat.util.http.fileupload.FileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,12 +25,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.cloudstudy.dto.FileOriginDto;
+import com.cloudstudy.dto.CourseStudentDto;
 import com.cloudstudy.dto.FileOriginQueryDto;
 import com.cloudstudy.dto.FileOriginQueryParamDto;
 import com.cloudstudy.dto.PageResultDto;
 import com.cloudstudy.dto.WebResult;
 import com.cloudstudy.service.FileOriginService;
+import com.cloudstudy.util.FileDownloadUtil;
 import com.cloudstudy.util.WebResultUtil;
 
 import io.swagger.annotations.Api;
@@ -37,17 +44,12 @@ import io.swagger.annotations.ApiParam;
 @RestController
 @RequestMapping("/cloudstudy/file")
 @CrossOrigin
+@SuppressWarnings("unused")
 public class FileOriginController {
 
 	@Autowired
 	private FileOriginService fileOriginService;
 
-	/**
-	 * 获取单个文件资源管理
-	 * 
-	 * @param primaryKey
-	 * @return
-	 */
 	@ApiOperation(value = "获取单个文件资源管理", notes = "传入工号或者学号获取单个文件资源管理")
 	@ApiImplicitParam(name = "primaryKey", value = "文件资源管理工号或者学号", required = true, paramType = "path", dataType = "Integer") // 注意：paramType需要指定为path,不然不能正常获取
 	@RequestMapping(value = "/single/{primaryKey}", produces = { "application/json; charset=UTF-8" }, method = {
@@ -58,13 +60,6 @@ public class FileOriginController {
 		return WebResultUtil.success(fileOriginQueryDto);
 	}
 
-	/**
-	 * 获取文件资源管理列表
-	 * 
-	 * @param file
-	 * @param keyword
-	 * @return
-	 */
 	@ApiOperation(value = "获取文件资源管理列表", notes = "获取文件资源管理列表")
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "fileOriginQueryParamDto", value = "文件查询数据", paramType = "body", dataType = "FileOriginQueryParamDto") }) // 注意：paramType需要指定为body
@@ -74,38 +69,34 @@ public class FileOriginController {
 	public @ResponseBody WebResult<PageResultDto<List<FileOriginQueryDto>>> list(
 			@ApiParam(value = "系统文件查询数据") @RequestBody FileOriginQueryParamDto fileOriginQueryParamDto) {
 		PageResultDto<List<FileOriginQueryDto>> fileDtoList = fileOriginService.find(fileOriginQueryParamDto);
+		if (fileDtoList == null || fileDtoList.getTotal() == null || fileDtoList.getContent() == null
+				|| fileDtoList.getContent().isEmpty()) {
+			fileDtoList = new PageResultDto<List<FileOriginQueryDto>>((long) 0, new ArrayList<FileOriginQueryDto>());
+		}
 		return WebResultUtil.success(fileDtoList);
 	}
 
-	/**
-	 * 添加文件步骤1
-	 * 
-	 * @param file
-	 * @return
-	 * @throws IOException
-	 */
 	@ApiOperation(value = "添加文件步骤1", notes = "添加文件步骤1")
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "fileOriginDto", value = "文件数据", required = true, paramType = "body", dataType = "File") }) // 注意：paramType需要指定为body
-	@RequestMapping(value = "/addFileStep1", method = { RequestMethod.POST, RequestMethod.GET })
+			@ApiImplicitParam(name = "courseId", dataType = "Integer", value = "文件附加数据-课程编号", paramType = "body"),
+			@ApiImplicitParam(name = "homeworkId", dataType = "Integer", value = "文件附加数据-作业编号", paramType = "body"),
+			@ApiImplicitParam(name = "uploaderNo", dataType = "String", value = "文件附加数据-上传者编号", paramType = "body"),
+			@ApiImplicitParam(name = "FileOriginQueryDto", dataType = "File", value = "文件", required = true, paramType = "body") }) // 注意：paramType需要指定为body
+	@RequestMapping(value = "/upload", method = { RequestMethod.POST, RequestMethod.GET })
 	// @RequiresPermissions("File:add") // 权限管理;
-	public @ResponseBody WebResult<FileOriginDto> addFileStep1(
-			@ApiParam(value = "文件", required = true) @RequestParam("file") MultipartFile file) throws IOException {
+	public @ResponseBody WebResult<FileOriginQueryDto> upload(//
+			@RequestParam("courseId") Integer courseId, //
+			@RequestParam("homeworkId") Integer homeworkId, //
+			@RequestParam("uploaderNo") String uploaderNo, //
+			@RequestParam("file") MultipartFile file) throws IOException {
 		if (!file.isEmpty()) {
 			try {
-				/*
-				 * 这段代码执行完毕之后，图片上传到了工程的跟路径； 大家自己扩散下思维，如果我们想把图片上传到 d:/files大家是否能实现呢？ 等等;
-				 * 这里只是简单一个例子,请自行参考，融入到实际中可能需要大家自己做一些思考，比如： 1、文件路径； 2、文件名； 3、文件格式; 4、文件大小的限制;
-				 */
-				System.out.println(file.getName());
-
-				FileOriginDto fileOriginDto = fileOriginService.add(file);
-				return WebResultUtil.success(fileOriginDto);
+				FileOriginQueryDto FileOriginQueryDto = fileOriginService.add(file, courseId, homeworkId, uploaderNo);
+				return WebResultUtil.success(FileOriginQueryDto);
 
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 				return WebResultUtil.fail("上传失败," + e.getMessage());
-
 			} catch (IOException e) {
 				e.printStackTrace();
 				return WebResultUtil.fail("上传失败," + e.getMessage());
@@ -117,32 +108,6 @@ public class FileOriginController {
 
 	}
 
-	/**
-	 * 添加文件步骤2
-	 * 
-	 * @param fileOriginDto
-	 * @return
-	 * @throws IOException
-	 */
-	@ApiOperation(value = "添加文件步骤2", notes = "添加文件步骤2")
-	@ApiImplicitParams({
-			@ApiImplicitParam(name = "fileOriginDto", value = "文件描述数据", required = true, paramType = "body", dataType = "FileOriginDto") }) // 注意：paramType需要指定为body
-	@RequestMapping(value = "/addFileStep2", produces = { "application/json; charset=UTF-8" }, method = {
-			RequestMethod.POST, RequestMethod.GET })
-	// @RequiresPermissions("File:add") // 权限管理;
-	public @ResponseBody WebResult<FileOriginDto> addFileStep2(
-			@ApiParam(value = "文件描述内容", required = true) @RequestBody FileOriginDto fileOriginDto) throws IOException {
-		fileOriginDto = fileOriginService.add(fileOriginDto);
-		return WebResultUtil.success(fileOriginDto);
-	}
-
-	/**
-	 * 删除文件资源管理
-	 *
-	 * @param primaryKey
-	 * @return
-	 * @throws IOException
-	 */
 	@ApiOperation(value = "删除文件资源管理", notes = "通过文件资源管理工号或者学号删除文件资源管理")
 	@ApiImplicitParam(name = "primaryKey", value = "文件资源管理工号或者学号", required = true, paramType = "body", dataType = "String")
 	@RequestMapping(value = "/delete", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
@@ -152,6 +117,26 @@ public class FileOriginController {
 			@RequestParam(value = "primaryKey", required = true) Integer primaryKey) throws IOException {
 		FileOriginQueryDto fileOriginQueryDto = fileOriginService.findById(primaryKey);
 		fileOriginService.deleteById(primaryKey);
+		return WebResultUtil.success(fileOriginQueryDto);
+	}
+
+	@ApiOperation(value = "删除文件资源管理", notes = "通过文件资源管理工号或者学号删除文件资源管理")
+	@ApiImplicitParam(name = "primaryKey", value = "文件资源管理工号或者学号", required = true, paramType = "body", dataType = "String")
+	@RequestMapping(value = "/download", produces = { "application/json; charset=UTF-8" }, method = {
+			RequestMethod.POST, RequestMethod.GET })
+	// @RequiresPermissions("File:delete") // 权限管理;
+	public @ResponseBody WebResult<FileOriginQueryDto> download(//
+			@RequestParam(value = "primaryKey", required = true) Integer primaryKey, //
+			HttpServletRequest request, //
+			HttpServletResponse response) throws Exception {
+		FileOriginQueryDto fileOriginQueryDto = fileOriginService.findById(primaryKey);
+		if (fileOriginQueryDto == null) {
+			return WebResultUtil.fail();
+		}
+
+		byte[] resultByte = fileOriginService.getFileByte(primaryKey);
+		String fileName = fileOriginQueryDto.getName();
+		FileDownloadUtil.readFileToResponse(response, request, resultByte, fileName);
 		return WebResultUtil.success(fileOriginQueryDto);
 	}
 

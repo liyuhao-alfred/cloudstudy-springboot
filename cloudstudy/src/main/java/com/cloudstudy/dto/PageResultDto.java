@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * @author alfred
  *
  */
+@SuppressWarnings("unused")
 public class PageResultDto<T> {
 
 	/**

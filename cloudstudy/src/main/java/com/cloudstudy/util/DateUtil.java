@@ -211,6 +211,16 @@ public class DateUtil {
 			SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z");
 			date = f.parse(sDate);
 		} catch (Exception e) {
+			try {
+				SimpleDateFormat f = new SimpleDateFormat(formatDateTimeStr);
+				date = f.parse(sDate);
+			} catch (Exception e2) {
+				try {
+					SimpleDateFormat f = new SimpleDateFormat(formatDateStr);
+					date = f.parse(sDate);
+				} catch (Exception e3) {
+				}
+			}
 		}
 		return date;
 	}

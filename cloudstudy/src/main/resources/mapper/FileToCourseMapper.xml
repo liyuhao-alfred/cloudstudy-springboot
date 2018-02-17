@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.cloudstudy.bo.FileToCourse">
     <result column="file_id" jdbcType="INTEGER" property="fileId" />
     <result column="course_id" jdbcType="INTEGER" property="courseId" />
+    <result column="uploaderNo" jdbcType="VARCHAR" property="uploaderno" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -64,7 +65,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    file_id, course_id
+    file_id, course_id, uploaderNo
   </sql>
   <select id="selectByExample" parameterType="com.cloudstudy.bo.FileToCourseExample" resultMap="BaseResultMap">
     select
@@ -88,8 +89,10 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.cloudstudy.bo.FileToCourse">
-    insert into tbfilerelcourse (file_id, course_id)
-    values (#{fileId,jdbcType=INTEGER}, #{courseId,jdbcType=INTEGER})
+    insert into tbfilerelcourse (file_id, course_id, uploaderNo
+      )
+    values (#{fileId,jdbcType=INTEGER}, #{courseId,jdbcType=INTEGER}, #{uploaderno,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.cloudstudy.bo.FileToCourse">
     insert into tbfilerelcourse
@@ -100,6 +103,9 @@
       <if test="courseId != null">
         course_id,
       </if>
+      <if test="uploaderno != null">
+        uploaderNo,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="fileId != null">
@@ -107,6 +113,9 @@
       </if>
       <if test="courseId != null">
         #{courseId,jdbcType=INTEGER},
+      </if>
+      <if test="uploaderno != null">
+        #{uploaderno,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -125,6 +134,9 @@
       <if test="record.courseId != null">
         course_id = #{record.courseId,jdbcType=INTEGER},
       </if>
+      <if test="record.uploaderno != null">
+        uploaderNo = #{record.uploaderno,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -133,7 +145,8 @@
   <update id="updateByExample" parameterType="map">
     update tbfilerelcourse
     set file_id = #{record.fileId,jdbcType=INTEGER},
-      course_id = #{record.courseId,jdbcType=INTEGER}
+      course_id = #{record.courseId,jdbcType=INTEGER},
+      uploaderNo = #{record.uploaderno,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>

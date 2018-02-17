@@ -29,17 +29,11 @@ import io.swagger.annotations.ApiParam;
 @Api(value = "登录模块")
 @RestController
 @CrossOrigin
+@SuppressWarnings("unused")
 public class LoginController {
 	@Autowired
 	private UserService userService;
 
-	/**
-	 * 登录
-	 * 
-	 * @param account
-	 * @param password
-	 * @return
-	 */
 	@ApiOperation(value = "登入", notes = "使用账号和密码进行登录")
 	@RequestMapping(value = "/login", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })
@@ -58,13 +52,6 @@ public class LoginController {
 		return WebResultUtil.success(subject.getPrincipal());
 	}
 
-	/**
-	 * 登录
-	 * 
-	 * @param account
-	 * @param password
-	 * @return
-	 */
 	@ApiOperation(value = "获取信息", notes = "使用账号获取信息")
 	@RequestMapping(value = "/getUserInfo", produces = { "application/json; charset=UTF-8" }, method = {
 			RequestMethod.POST, RequestMethod.GET })
@@ -75,13 +62,6 @@ public class LoginController {
 		return WebResultUtil.success(userDto);
 	}
 
-	/**
-	 * 登出
-	 * 
-	 * @param account
-	 * @param password
-	 * @return
-	 */
 	@ApiOperation(value = "登出", notes = "进行登出")
 	@RequestMapping(value = "/logout", produces = { "application/json; charset=UTF-8" }, method = { RequestMethod.POST,
 			RequestMethod.GET })

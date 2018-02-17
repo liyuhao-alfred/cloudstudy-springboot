@@ -18,9 +18,9 @@ import org.springframework.stereotype.Service;
 import com.cloudstudy.bo.Course;
 import com.cloudstudy.bo.User;
 import com.cloudstudy.bo.GradeExample;
-import com.cloudstudy.bo.Job;
 import com.cloudstudy.bo.Course;
-import com.cloudstudy.bo.Task;
+import com.cloudstudy.bo.Homework;
+import com.cloudstudy.bo.HomeworkExample;
 import com.cloudstudy.bo.CourseExample;
 import com.cloudstudy.bo.FileOrigin;
 import com.cloudstudy.bo.FileToCourse;
@@ -28,25 +28,33 @@ import com.cloudstudy.bo.FileToCourseExample;
 import com.cloudstudy.bo.Grade;
 import com.cloudstudy.bo.UserExample;
 import com.cloudstudy.bo.UserExample.Criteria;
-import com.cloudstudy.constant.SearchType;
+import com.cloudstudy.constant.RoleConstant;
 import com.cloudstudy.dto.CourseDto;
+import com.cloudstudy.dto.CourseQueryDto;
 import com.cloudstudy.dto.CourseQueryParamDto;
-import com.cloudstudy.dto.FileOriginDto;
+import com.cloudstudy.dto.CourseStudentDto;
+import com.cloudstudy.dto.FileOriginQueryDto;
+import com.cloudstudy.dto.FileOriginQueryParamDto;
+import com.cloudstudy.dto.GradeDto;
+import com.cloudstudy.dto.GradeQueryDto;
+import com.cloudstudy.dto.PageResultDto;
+import com.cloudstudy.dto.RoleDto;
+import com.cloudstudy.dto.HomeworkDto;
+import com.cloudstudy.dto.HomeworkQueryDto;
 import com.cloudstudy.dto.UserDto;
+import com.cloudstudy.dto.UserQueryDto;
 import com.cloudstudy.exception.CloudStudyException;
 import com.cloudstudy.mapper.GradeMapper;
-import com.cloudstudy.mapper.JobMapper;
-import com.cloudstudy.mapper.TaskMapper;
+import com.cloudstudy.mapper.HomeworkMapper;
 import com.cloudstudy.mapper.CourseMapper;
 import com.cloudstudy.mapper.FileOriginMapper;
 import com.cloudstudy.mapper.FileToCourseMapper;
-import com.cloudstudy.mapper.FileToJobMapper;
-import com.cloudstudy.mapper.FileToTaskMapper;
+import com.cloudstudy.mapper.FileToHomeworkMapper;
 import com.cloudstudy.mapper.UserMapper;
 import com.cloudstudy.service.CourseService;
 import com.cloudstudy.service.FileOriginService;
-import com.cloudstudy.service.JobService;
-import com.cloudstudy.service.TaskService;
+import com.cloudstudy.service.GradeService;
+import com.cloudstudy.service.HomeworkService;
 import com.cloudstudy.service.UserService;
 import com.cloudstudy.util.DateUtil;
 import com.cloudstudy.util.Util;
@@ -57,330 +65,432 @@ import com.github.pagehelper.PageHelper;
 public class CourseServiceImpl implements CourseService {
 
 	@Autowired
-	private CourseMapper courseMapper;
+	private CourseMapper CourseMapper;
 	@Autowired
 	private GradeMapper gradeMapper;
 	@Autowired
 	private UserMapper userMapper;
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private GradeService gradeService;
 	@Autowired
 	private FileOriginService fileOriginService;
 	@Autowired
-	private TaskMapper taskMapper;
-	@Autowired
-	private JobMapper jobMapper;
+	private HomeworkMapper homeworkMapper;
 	@Autowired
 	private FileOriginMapper fileOriginMapper;
 	@Autowired
 	private FileToCourseMapper fileToCourseMapper;
 	@Autowired
-	private FileToTaskMapper fileToTaskMapper;
+	private FileToHomeworkMapper fileToHomeworkMapper;
 	@Autowired
-	private FileToJobMapper fileToJobMapper;
-	@Autowired
-	private TaskService taskService;
-	@Autowired
-	private JobService jobService;
+	private HomeworkService HomeworkService;
 
 	@Value("${web.upload-path}")
 	private String filePath;
 
 	@Override
-	public CourseDto declare(CourseDto courseDto) throws IOException {
+	public CourseDto declare(CourseDto CourseDto) throws IOException {
 
-		Course course = generate(courseDto);
-		courseMapper.insert(course);
+		Course Course = generate(CourseDto);
+		CourseMapper.insert(Course);
+		return CourseDto;
+	}
 
-		ArrayList<String> studyFileList = courseDto.getStudyFileList();
-		if (studyFileList != null && !studyFileList.isEmpty()) {
-			for (String fileId : studyFileList) {
-				FileToCourse fileToCourse = new FileToCourse();
-				fileToCourse.setCourseId(course.getId());
-				fileToCourse.setFileId(Integer.valueOf(fileId));
-				fileOriginService.add(fileToCourse);
+	private void deleteFileByCourse(Integer CourseId) throws IOException {
+		ArrayList<Integer> courseIdList = new ArrayList<Integer>();
+		courseIdList.add(CourseId);
+
+		FileOriginQueryParamDto FileOriginQueryParamDto = new FileOriginQueryParamDto();
+		FileOriginQueryParamDto.setPageDto(null);
+		FileOriginQueryParamDto.setCourseId(courseIdList);
+
+		PageResultDto<List<FileOriginQueryDto>> FileOriginQueryPageResultDto = fileOriginService
+				.find(FileOriginQueryParamDto);
+		List<FileOriginQueryDto> content = FileOriginQueryPageResultDto.getContent();
+		if (content != null && !content.isEmpty()) {
+			for (FileOriginQueryDto fileOriginQueryDto : content) {
+				fileOriginService.deleteById(fileOriginQueryDto.getId());
 			}
 		}
-		return courseDto;
 	}
 
 	@Override
-	public void delete(Integer courseId) throws IOException {
+	public void delete(Integer CourseId) throws IOException {
 
-		Course course = courseMapper.selectByPrimaryKey(courseId);
-		if (course == null) {
+		Course Course = CourseMapper.selectByPrimaryKey(CourseId);
+		if (Course == null) {
 			return;
 		}
 
-		List<FileOriginDto> FileOriginDtoList = fileOriginService.findByCourseId(courseId, true);
+		deleteFileByCourse(CourseId);
 
-		List<Integer> primaryKeyList = new ArrayList<Integer>();
-		if (FileOriginDtoList != null && !FileOriginDtoList.isEmpty()) {
-			for (FileOriginDto fileOriginDto : FileOriginDtoList) {
-				primaryKeyList.add(fileOriginDto.getId());
-			}
-		}
-
-		fileOriginService.deleteByIdList(primaryKeyList);
-
-		courseMapper.deleteByPrimaryKey(courseId);
+		CourseMapper.deleteByPrimaryKey(CourseId);
 	}
 
 	@Override
-	public CourseDto update(CourseDto courseDto) throws IOException {
-		ArrayList<String> studyFileList = courseDto.getStudyFileList();
-		if (studyFileList != null && !studyFileList.isEmpty()) {
-			List<FileOriginDto> fileOriginDtoList = fileOriginService.findByCourseId(courseDto.getId(), false);
-			if (fileOriginDtoList != null && !fileOriginDtoList.isEmpty()) {
-				List<Integer> primaryKeyList = new ArrayList<Integer>();
-				for (FileOriginDto fileOriginDto : fileOriginDtoList) {
-					primaryKeyList.add(fileOriginDto.getId());
-				}
-				fileOriginService.deleteByIdList(primaryKeyList);
-			}
+	public CourseDto update(CourseDto CourseDto) throws IOException {
+		userService.findUserByNo(CourseDto.getTeacherNo());
+		Course Course = generate(CourseDto);
+		CourseMapper.updateByPrimaryKeyWithBLOBs(Course);
 
-			for (String fileId : studyFileList) {
-				FileToCourse fileToCourse = new FileToCourse();
-				fileToCourse.setCourseId(courseDto.getId());
-				fileToCourse.setFileId(Integer.valueOf(fileId));
-				fileOriginService.add(fileToCourse);
-			}
-		}
-
-		userService.findTeacherByNo(courseDto.getTeacherNo());
-		Course course = generate(courseDto);
-		courseMapper.updateByPrimaryKeyWithBLOBs(course);
-
-		return courseDto;
+		return CourseDto;
 	}
 
 	@Override
 	public CourseDto findById(Integer primaryKey) {
-		Course course = courseMapper.selectByPrimaryKey(primaryKey);
-		if (course == null) {
+		Course Course = CourseMapper.selectByPrimaryKey(primaryKey);
+		if (Course == null) {
 			return null;
 		}
-		CourseDto courseDto = new CourseDto();
-		BeanUtils.copyProperties(course, courseDto);
-		return courseDto;
+		CourseDto CourseDto = generateDto(Course);
+		return CourseDto;
 	}
 
 	@Override
-	public List<CourseDto> find(CourseQueryParamDto courseQueryDto) {
+	public PageResultDto<List<CourseQueryDto>> find(CourseQueryParamDto CourseQueryParamDto) {
 
-		CourseExample courseExample = new CourseExample();
-		com.cloudstudy.bo.CourseExample.Criteria criteria = courseExample.createCriteria();
+		CourseExample CourseExample = new CourseExample();
+		CourseExample.Criteria CourseExampleCriteria = CourseExample.createCriteria();
 
-		String keyword = courseQueryDto.getKeyword();
-		Integer searchType = courseQueryDto.getSearchType();
-		if (!StringUtils.isEmpty(keyword)) {
-			if (searchType == SearchType.teacherName.getCode()) {
+		HashSet<Integer> courseIdSet = new HashSet<Integer>();
+		String keyword = CourseQueryParamDto.getKeyword();
+		if (keyword != null && !keyword.isEmpty()) {
+			keyword = "%" + keyword + "%";
+			CourseExampleCriteria.andNameLike(keyword);
 
-				UserExample userExample = new UserExample();
-				Criteria criteria1 = userExample.createCriteria();
-				criteria1.andNameLike("%" + keyword + "%");
-
-				Integer page = courseQueryDto.getPageDto().getCurrent();
-				Integer rows = courseQueryDto.getPageDto().getSize();
-				PageHelper.startPage(page, rows);
-
-				List<User> userList = userMapper.selectByExample(userExample);
-				if (userList == null || userList.isEmpty()) {
-					return null;
-				}
-
-				HashSet<String> valuesSet = new HashSet<String>();
+			UserExample UserExample = new UserExample();
+			UserExample.Criteria UserExamplecriteria = UserExample.createCriteria();
+			UserExamplecriteria.andNameLike(keyword);
+			List<User> userList = userMapper.selectByExample(UserExample);
+			ArrayList<String> userNoList = new ArrayList<String>();
+			if (userList != null && !userList.isEmpty()) {
 				for (User user : userList) {
-					valuesSet.add(user.getNo());
+					userNoList.add(user.getNo());
 				}
-				criteria.andTeacherNoIn(new ArrayList<String>(valuesSet));
-			} else if (searchType == SearchType.courseName.getCode()) {
-				criteria.andNameLike("%" + keyword + "%");
+
+				CourseExample CourseExample11 = new CourseExample();
+				CourseExample.Criteria CourseExamplecriteria11 = CourseExample.createCriteria();
+				CourseExamplecriteria11.andTeacherNoIn(userNoList);
+				List<Course> CourseList11 = CourseMapper.selectByExample(CourseExample11);
+				if (CourseList11 != null && !CourseList11.isEmpty()) {
+					for (Course course : CourseList11) {
+						courseIdSet.add(course.getId());
+					}
+				}
 			}
 		}
 
-		if (!StringUtils.isEmpty(courseQueryDto.getFromTime()) && !StringUtils.isEmpty(courseQueryDto.getToTime())) {
-			criteria.andLastModifyTimeBetween(DateUtil.stringToDate(courseQueryDto.getFromTime()),
-					DateUtil.stringToDate(courseQueryDto.getToTime()));
-
+		ArrayList<String> teacherNoList = CourseQueryParamDto.getTeacherNo();
+		if (teacherNoList != null && !teacherNoList.isEmpty()) {
+			CourseExample CourseExample22 = new CourseExample();
+			CourseExample.Criteria Criteria22 = CourseExample22.createCriteria();
+			Criteria22.andTeacherNoIn(teacherNoList);
+			List<Course> CourseList22 = CourseMapper.selectByExample(CourseExample22);
+			if (CourseList22 != null && !CourseList22.isEmpty()) {
+				ArrayList<Integer> courseIdList22 = new ArrayList<Integer>();
+				for (Course Course : CourseList22) {
+					courseIdSet.add(Course.getId());
+				}
+			}
 		}
 
-		Integer page = courseQueryDto.getPageDto().getCurrent();
-		Integer rows = courseQueryDto.getPageDto().getSize();
-		PageHelper.startPage(page, rows);
+		ArrayList<String> studentNoList = CourseQueryParamDto.getStudentNo();
+		if (studentNoList != null && !studentNoList.isEmpty()) {
+			GradeExample GradeExample = new GradeExample();
+			GradeExample.Criteria Criteria = GradeExample.createCriteria();
+			Criteria.andStudentNoIn(studentNoList);
+			List<Grade> GeadeList = gradeMapper.selectByExample(GradeExample);
 
-		List<Course> courseList = courseMapper.selectByExample(courseExample);
-		if (courseList == null || courseList.isEmpty()) {
+			if (GeadeList != null && !GeadeList.isEmpty()) {
+				ArrayList<Integer> courseIdList33 = new ArrayList<Integer>();
+				for (Grade grade : GeadeList) {
+					courseIdSet.add(grade.getCourseId());
+				}
+			}
+		}
+
+		if (courseIdSet != null && !courseIdSet.isEmpty()) {
+			CourseExampleCriteria.andIdIn(new ArrayList<Integer>(courseIdSet));
+		} else if (teacherNoList != null && !teacherNoList.isEmpty()) {
+			return new PageResultDto<List<CourseQueryDto>>((long) 0, new ArrayList<CourseQueryDto>());
+		} else if (studentNoList != null && !studentNoList.isEmpty()) {
+			return new PageResultDto<List<CourseQueryDto>>((long) 0, new ArrayList<CourseQueryDto>());
+		}
+
+		long total = CourseMapper.countByExample(CourseExample);
+
+		if (CourseQueryParamDto.getPageDto() != null) {
+			Integer page = CourseQueryParamDto.getPageDto().getCurrent();
+			Integer rows = CourseQueryParamDto.getPageDto().getSize();
+			PageHelper.startPage(page, rows);
+		}
+
+		List<Course> CourseList = CourseMapper.selectByExample(CourseExample);
+		if (CourseList == null || CourseList.isEmpty()) {
+			return new PageResultDto<List<CourseQueryDto>>((long) 0, new ArrayList<CourseQueryDto>());
+		}
+		List<CourseQueryDto> CourseQueryDtoList = new ArrayList<CourseQueryDto>();
+		for (Course Course : CourseList) {
+			CourseQueryDto CourseQueryDto2 = generateQueryDto(Course);
+			CourseQueryDtoList.add(CourseQueryDto2);
+		}
+		return new PageResultDto<List<CourseQueryDto>>(total, CourseQueryDtoList);
+	}
+
+	@Override
+	public PageResultDto<List<CourseStudentDto>> findForStudent(CourseQueryParamDto CourseQueryParamDto) {
+
+		CourseExample CourseExample = new CourseExample();
+		com.cloudstudy.bo.CourseExample.Criteria CourseExamplecriteria = CourseExample.createCriteria();
+
+		HashSet<Integer> courseIdSet = new HashSet<Integer>();
+		String keyword = CourseQueryParamDto.getKeyword();
+		if (keyword != null && !keyword.isEmpty()) {
+			keyword = "%" + keyword + "%";
+			CourseExamplecriteria.andNameLike(keyword);
+
+			UserExample UserExample = new UserExample();
+			com.cloudstudy.bo.UserExample.Criteria UserExamplecriteria = UserExample.createCriteria();
+			UserExamplecriteria.andNameLike(keyword);
+
+			List<User> userList = userMapper.selectByExample(UserExample);
+			ArrayList<String> userNoList = new ArrayList<String>();
+			if (userList != null && !userList.isEmpty()) {
+				for (User user : userList) {
+					userNoList.add(user.getNo());
+				}
+
+				CourseExample CourseExample11 = new CourseExample();
+				CourseExample.Criteria CourseExamplecriteria11 = CourseExample.createCriteria();
+				CourseExamplecriteria11.andTeacherNoIn(userNoList);
+				List<Course> CourseList11 = CourseMapper.selectByExample(CourseExample11);
+				if (CourseList11 != null && !CourseList11.isEmpty()) {
+					for (Course course : CourseList11) {
+						courseIdSet.add(course.getId());
+					}
+				}
+			}
+			if (courseIdSet != null && !courseIdSet.isEmpty()) {
+				CourseExamplecriteria.andIdIn(new ArrayList<Integer>(courseIdSet));
+			}
+		}
+
+		long total = CourseMapper.countByExample(CourseExample);
+
+		if (CourseQueryParamDto.getPageDto() != null) {
+			Integer page = CourseQueryParamDto.getPageDto().getCurrent();
+			Integer rows = CourseQueryParamDto.getPageDto().getSize();
+			PageHelper.startPage(page, rows);
+		}
+
+		List<Course> CourseList = CourseMapper.selectByExample(CourseExample);
+		if (CourseList == null || CourseList.isEmpty()) {
 			return null;
 		}
-
-		List<CourseDto> courseDtoList = new ArrayList<CourseDto>();
-		for (Course course : courseList) {
-			CourseDto courseDto = new CourseDto();
-			BeanUtils.copyProperties(course, courseDto);
-			courseDtoList.add(courseDto);
+		List<CourseStudentDto> CourseQueryDtoList = new ArrayList<CourseStudentDto>();
+		for (Course Course : CourseList) {
+			CourseStudentDto CourseQueryDto2 = generateCourseStudentDto(Course, CourseQueryParamDto.getStudentNo());
+			CourseQueryDtoList.add(CourseQueryDto2);
 		}
-		return courseDtoList;
+		return new PageResultDto<List<CourseStudentDto>>(total, CourseQueryDtoList);
 	}
 
-	@Override
-	public CourseDto findByTaskId(Integer taskId) {
-		Task task = taskMapper.selectByPrimaryKey(taskId);
-		Course course = courseMapper.selectByPrimaryKey(task.getCourseId());
-		CourseDto courseDto = generateDto(course);
-		return courseDto;
-	}
+	private CourseStudentDto generateCourseStudentDto(Course Course, ArrayList<String> studentNo) {
+		if (Course == null) {
+			throw new CloudStudyException();
+		}
+		CourseStudentDto CourseStudentDto = new CourseStudentDto();
+		BeanUtils.copyProperties(Course, CourseStudentDto);
 
-	@Override
-	public CourseDto findByJobId(Integer jobId) {
-		Job job = jobMapper.selectByPrimaryKey(jobId);
-		Task task = taskMapper.selectByPrimaryKey(job.getTaskId());
-		Course course = courseMapper.selectByPrimaryKey(task.getCourseId());
-		CourseDto courseDto = generateDto(course);
-		return courseDto;
-	}
+		if (Course.getStatus().equals(0)) {
+			CourseStudentDto.setStatus(true);
+			CourseStudentDto.setStatusMemo("进行中");
+		} else {
+			CourseStudentDto.setStatus(false);
+			CourseStudentDto.setStatusMemo("已结束");
+		}
 
-	@Override
-	public List<CourseDto> findByStudentNo(String studentNo) {
+		UserDto teacher = userService.findUserByNo(CourseStudentDto.getTeacherNo());
+		CourseStudentDto.setTeacher(teacher);
+
+		String beginTime;
+		try {
+			beginTime = DateUtil.dateToString(Course.getBeginTime());
+		} catch (Exception e) {
+			beginTime = DateUtil.getNowDateAsString();
+		}
+		CourseStudentDto.setBeginTime(beginTime);
+
+		String endTime;
+		try {
+			endTime = DateUtil.dateToString(Course.getEndTime());
+		} catch (Exception e) {
+			endTime = DateUtil.getNowDateAsString();
+		}
+		CourseStudentDto.setBeginTime(endTime);
+
+		String createTime;
+		try {
+			createTime = DateUtil.dateToString(Course.getCreateTime());
+		} catch (Exception e) {
+			createTime = DateUtil.getNowDateAsString();
+		}
+		CourseStudentDto.setCreateTime(createTime);
+
+		String lastModifyTime;
+		try {
+			lastModifyTime = DateUtil.dateToString(Course.getLastModifyTime());
+		} catch (Exception e) {
+			lastModifyTime = DateUtil.getNowDateAsString();
+		}
+		CourseStudentDto.setLastModifyTime(lastModifyTime);
+
+		if (CourseStudentDto.getDescription() == null || CourseStudentDto.getDescription().isEmpty()) {
+			CourseStudentDto.setDescription("暂无个人介绍...");
+		}
+
 		com.cloudstudy.bo.GradeExample GradeExample = new com.cloudstudy.bo.GradeExample();
 		com.cloudstudy.bo.GradeExample.Criteria criteria3 = GradeExample.createCriteria();
-		criteria3.andStudentNoEqualTo(studentNo);
-
-		List<Grade> GradeList = gradeMapper.selectByExample(GradeExample);
-
-		List<Integer> courseIdList = new ArrayList<Integer>();
-		for (Grade grade : GradeList) {
-			courseIdList.add(grade.getCourseId());
+		criteria3.andStudentNoIn(studentNo);
+		criteria3.andCourseIdEqualTo(CourseStudentDto.getId());
+		Long count = gradeMapper.countByExample(GradeExample);
+		if (count == null || count == 0) {
+			CourseStudentDto.setIsCommit(false);
+		} else {
+			CourseStudentDto.setIsCommit(true);
 		}
 
-		com.cloudstudy.bo.CourseExample CourseExample = new com.cloudstudy.bo.CourseExample();
-		com.cloudstudy.bo.CourseExample.Criteria criteria4 = CourseExample.createCriteria();
-		criteria4.andIdIn(courseIdList);
+		return CourseStudentDto;
 
-		List<Course> CourseList = courseMapper.selectByExample(CourseExample);
-		List<CourseDto> CourseDtoList = generateDto(CourseList);
-
-		return CourseDtoList;
 	}
 
-	@Override
-	public List<CourseDto> findByTeacherNo(String teacherNo) {
-		com.cloudstudy.bo.CourseExample CourseExample = new com.cloudstudy.bo.CourseExample();
-		com.cloudstudy.bo.CourseExample.Criteria criteria3 = CourseExample.createCriteria();
-		criteria3.andTeacherNoEqualTo(teacherNo);
-		List<Course> CourseList = courseMapper.selectByExample(CourseExample);
-
-		List<CourseDto> CourseDtoList = generateDto(CourseList);
-
-		return CourseDtoList;
-	}
-
-	private List<Integer> getPrimaryKeyList(List<Course> courseList) {
-		if (courseList == null || courseList.isEmpty()) {
-			return new ArrayList<Integer>();
-		}
-		List<Integer> primaryKeyList = new ArrayList<Integer>();
-		for (Course course : courseList) {
-			primaryKeyList.add(course.getId());
-		}
-		return primaryKeyList;
-	}
-
-	public List<CourseDto> generateDto(List<Course> courseList) {
-		if (courseList == null || courseList.isEmpty()) {
-			return new ArrayList<CourseDto>();
-		}
-		List<CourseDto> CourseDtoList = new ArrayList<CourseDto>();
-		for (Course course : courseList) {
-			CourseDto courseDto = generateDto(course);
-			CourseDtoList.add(courseDto);
-		}
-		return CourseDtoList;
-	}
-
-	private List<Course> generate(List<CourseDto> courseDtoList) {
-		if (courseDtoList == null || courseDtoList.isEmpty()) {
-			return new ArrayList<Course>();
-		}
-		List<Course> CourseList = new ArrayList<Course>();
-		for (CourseDto courseDto : courseDtoList) {
-			Course course = generate(courseDto);
-			CourseList.add(course);
-		}
-		return CourseList;
-	}
-
-	private CourseDto generateDto(Course course) {
-		if (course == null) {
+	private CourseQueryDto generateQueryDto(Course Course) {
+		if (Course == null) {
 			throw new CloudStudyException();
 		}
-		CourseDto courseDto = new CourseDto();
-		BeanUtils.copyProperties(course, courseDto);
-		return courseDto;
+		CourseQueryDto CourseQueryDto = new CourseQueryDto();
+		BeanUtils.copyProperties(Course, CourseQueryDto);
+
+		if (Course.getStatus().equals(0)) {
+			CourseQueryDto.setStatus(true);
+			CourseQueryDto.setStatusMemo("进行中");
+		} else {
+			CourseQueryDto.setStatus(false);
+			CourseQueryDto.setStatusMemo("已结束");
+		}
+
+		UserDto teacher = userService.findUserByNo(CourseQueryDto.getTeacherNo());
+		CourseQueryDto.setTeacher(teacher);
+
+		String beginTime;
+		try {
+			beginTime = DateUtil.dateToString(Course.getBeginTime());
+		} catch (Exception e) {
+			beginTime = DateUtil.getNowDateAsString();
+		}
+		CourseQueryDto.setBeginTime(beginTime);
+
+		String endTime;
+		try {
+			endTime = DateUtil.dateToString(Course.getEndTime());
+		} catch (Exception e) {
+			endTime = DateUtil.getNowDateAsString();
+		}
+		CourseQueryDto.setBeginTime(endTime);
+
+		String createTime;
+		try {
+			createTime = DateUtil.dateToString(Course.getCreateTime());
+		} catch (Exception e) {
+			createTime = DateUtil.getNowDateAsString();
+		}
+		CourseQueryDto.setCreateTime(createTime);
+
+		String lastModifyTime;
+		try {
+			lastModifyTime = DateUtil.dateToString(Course.getLastModifyTime());
+		} catch (Exception e) {
+			lastModifyTime = DateUtil.getNowDateAsString();
+		}
+		CourseQueryDto.setLastModifyTime(lastModifyTime);
+
+		if (CourseQueryDto.getDescription() == null || CourseQueryDto.getDescription().isEmpty()) {
+			CourseQueryDto.setDescription("暂无个人介绍...");
+		}
+
+		return CourseQueryDto;
 	}
 
-	private Course generate(CourseDto courseDto) {
-		if (courseDto == null) {
+	private CourseDto generateDto(Course Course) {
+		if (Course == null) {
+			throw new CloudStudyException();
+		}
+		CourseDto CourseDto = new CourseDto();
+		BeanUtils.copyProperties(Course, CourseDto);
+
+		if (Course.getStatus() == 0) {
+			CourseDto.setStatus(true);
+		} else {
+			CourseDto.setStatus(false);
+		}
+
+		CourseDto.setCreateTime(DateUtil.dateToString(Course.getCreateTime()));
+		CourseDto.setLastModifyTime(DateUtil.dateToString(Course.getLastModifyTime()));
+
+		ArrayList<String> dateRangement = new ArrayList<String>();
+		dateRangement.add(DateUtil.dateToString(Course.getBeginTime()));
+		dateRangement.add(DateUtil.dateToString(Course.getEndTime()));
+		CourseDto.setDateRangement(dateRangement);
+
+		return CourseDto;
+	}
+
+	private Course generate(CourseDto CourseDto) {
+		if (CourseDto == null) {
 			throw new CloudStudyException();
 		}
 
-		Course dbCourse = null;
-		Course course = new Course();
-		boolean isExist = false;
-		if (courseDto.getId() != null) {
-			dbCourse = courseMapper.selectByPrimaryKey(courseDto.getId());
-			if (dbCourse != null) {
-				isExist = true;
+		Course Course = new Course();
+		if (CourseDto.getId() != null) {
+			Course dbCourse = CourseMapper.selectByPrimaryKey(CourseDto.getId());
+			if (dbCourse == null) {
+				throw new CloudStudyException();
 			}
 		}
 
-		BeanUtils.copyProperties(courseDto, course);
+		BeanUtils.copyProperties(CourseDto, Course);
 
-		if (courseDto.getStatus()) {// 状态
-			course.setStatus(0);
+		if (CourseDto.getStatus()) {// 状态
+			Course.setStatus(0);
 		} else {
-			course.setStatus(1);
+			Course.setStatus(1);
 		}
 
-		course.setLastModifyTime(new Date());
+		Course.setLastModifyTime(new Date());
 
-		if (courseDto.getDateRangement() != null && courseDto.getDateRangement().size() == 2) {
-			course.setBeginTime(DateUtil.stringToDateSpecial(courseDto.getDateRangement().get(0)));
-			course.setEndTime(DateUtil.stringToDateSpecial(courseDto.getDateRangement().get(1)));
+		if (CourseDto.getDateRangement() != null && CourseDto.getDateRangement().size() == 2) {
+			Course.setBeginTime(DateUtil.stringToDateSpecial(CourseDto.getDateRangement().get(0)));
+			Course.setEndTime(DateUtil.stringToDateSpecial(CourseDto.getDateRangement().get(1)));
 		} else {
-			course.setBeginTime(new Date());
-			course.setEndTime(DateUtil.dateAddMonth(new Date(), 3));
+			Course.setBeginTime(new Date());
+			Course.setEndTime(DateUtil.dateAddMonth(new Date(), 3));
 		}
 
-		if (isExist) {
-			return course;
+		if (CourseDto.getCreateTime() == null) {
+			Course.setCreateTime(new Date());
 		} else {
-			course.setCreateTime(new Date());
-			course.setAcceptNum(0);
-
-			return course;
+			Course.setCreateTime(DateUtil.stringToDateSpecial(CourseDto.getCreateTime()));
 		}
+
+		if (Course.getAcceptNum() == null) {
+			Course.setAcceptNum(0);
+		}
+
+		return Course;
+
 	}
 
-	@Override
-	public CourseDto findByFileOriginId(Integer fileOriginId) {
-
-		FileToCourseExample fileToCourseExample = new FileToCourseExample();// 设置课程信息
-		FileToCourseExample.Criteria fileToCourseCriteria = fileToCourseExample.createCriteria();
-		fileToCourseCriteria.andFileIdEqualTo(fileOriginId);
-		List<FileToCourse> fileToCourseList = fileToCourseMapper.selectByExample(fileToCourseExample);
-		if (fileToCourseList != null && !fileToCourseList.isEmpty()) {
-			ArrayList<Integer> idList = new ArrayList<Integer>();
-			for (FileToCourse fileToCourse : fileToCourseList) {
-				idList.add(fileToCourse.getCourseId());
-			}
-
-			CourseExample courseExample = new CourseExample();
-			CourseExample.Criteria criteria = courseExample.createCriteria();
-			criteria.andIdIn(idList);
-			List<Course> courseList = courseMapper.selectByExample(courseExample);
-			return generateDto(courseList).get(0);
-		}
-		return null;
-	}
 }

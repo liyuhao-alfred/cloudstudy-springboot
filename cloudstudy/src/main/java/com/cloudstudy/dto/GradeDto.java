@@ -1,7 +1,5 @@
 package com.cloudstudy.dto;
 
-import java.util.Date;
-
 public class GradeDto {
 	private Integer id;
 
@@ -11,13 +9,13 @@ public class GradeDto {
 
 	private Integer grade;
 
-	private Integer taskDeclareNum;
+	private Integer homeworkDeclareNum;
 
-	private Integer taskAcceptNum;
+	private Integer homeworkAcceptNum;
 
-	private Date createTime;
+	private String createTime;
 
-	private Date lastModifyTime;
+	private String lastModifyTime;
 
 	private Integer status;
 
@@ -53,35 +51,35 @@ public class GradeDto {
 		this.grade = grade;
 	}
 
-	public Integer getTaskDeclareNum() {
-		return taskDeclareNum;
+	public Integer getHomeworkDeclareNum() {
+		return homeworkDeclareNum;
 	}
 
-	public void setTaskDeclareNum(Integer taskDeclareNum) {
-		this.taskDeclareNum = taskDeclareNum;
+	public void setHomeworkDeclareNum(Integer HomeworkDeclareNum) {
+		this.homeworkDeclareNum = HomeworkDeclareNum;
 	}
 
-	public Integer getTaskAcceptNum() {
-		return taskAcceptNum;
+	public Integer getHomeworkAcceptNum() {
+		return homeworkAcceptNum;
 	}
 
-	public void setTaskAcceptNum(Integer taskAcceptNum) {
-		this.taskAcceptNum = taskAcceptNum;
+	public void setHomeworkAcceptNum(Integer HomeworkAcceptNum) {
+		this.homeworkAcceptNum = HomeworkAcceptNum;
 	}
 
-	public Date getCreateTime() {
+	public String getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(Date createTime) {
+	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
 	}
 
-	public Date getLastModifyTime() {
+	public String getLastModifyTime() {
 		return lastModifyTime;
 	}
 
-	public void setLastModifyTime(Date lastModifyTime) {
+	public void setLastModifyTime(String lastModifyTime) {
 		this.lastModifyTime = lastModifyTime;
 	}
 

@@ -1,95 +1,129 @@
 package com.cloudstudy.dto;
 
+import java.io.File;
+import java.util.Date;
 import java.util.HashSet;
-
-import com.cloudstudy.constant.SearchType;
 
 @SuppressWarnings("unused")
 public class HomeworkQueryDto {
+	private Integer id;
 
-	private HashSet<SearchType> searchTypeSet = new HashSet<SearchType>() {
-		private static final long serialVersionUID = 1L;
-		{
-			searchTypeSet.add(SearchType.teacherName);
-			searchTypeSet.add(SearchType.studentName);
-			searchTypeSet.add(SearchType.courseName);
-			searchTypeSet.add(SearchType.homeworkName);
-			searchTypeSet.add(SearchType.no);
-			searchTypeSet.add(SearchType.account);
-			searchTypeSet.add(SearchType.fileName);
+	private String title;
 
-			searchTypeSet.add(SearchType.courseId);
-			searchTypeSet.add(SearchType.taskId);
-			searchTypeSet.add(SearchType.jobId);
-			searchTypeSet.add(SearchType.teacherNo);
-			searchTypeSet.add(SearchType.studentno);
+	private String deadLine;
 
-		}
-	};
-	private Integer searchType;
+	private String content;
 
-	/**
-	 * 时间开始
-	 */
-	private String fromTime;
+	private Integer courseId;
 
-	/**
-	 * 时间结束
-	 */
-	private String toTime;
+	private String courseName;
 
-	/**
-	 * 关键字
-	 */
-	private String keyword;
+	private String teacherNo;
 
-	private PageDto pageDto;
+	private String teacherName;
 
-	public HashSet<SearchType> getSearchTypeSet() {
-		return searchTypeSet;
+	private String createTime;
+
+	private String lastModifyTime;
+
+	private Boolean status;
+
+	private String statusMemo;
+
+	public Integer getId() {
+		return id;
 	}
 
-	public void setSearchTypeSet(HashSet<SearchType> searchTypeSet) {
-		this.searchTypeSet = searchTypeSet;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
-	public Integer getSearchType() {
-		return searchType;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setSearchType(Integer searchType) {
-		this.searchType = searchType;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
-	public String getFromTime() {
-		return fromTime;
+	public String getDeadLine() {
+		return deadLine;
 	}
 
-	public void setFromTime(String fromTime) {
-		this.fromTime = fromTime;
+	public void setDeadLine(String deadLine) {
+		this.deadLine = deadLine;
 	}
 
-	public String getToTime() {
-		return toTime;
+	public Integer getCourseId() {
+		return courseId;
 	}
 
-	public void setToTime(String toTime) {
-		this.toTime = toTime;
+	public void setCourseId(Integer courseId) {
+		this.courseId = courseId;
 	}
 
-	public String getKeyword() {
-		return keyword;
+	public String getCourseName() {
+		return courseName;
 	}
 
-	public void setKeyword(String keyword) {
-		this.keyword = keyword;
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
 	}
 
-	public PageDto getPageDto() {
-		return pageDto;
+	public String getTeacherNo() {
+		return teacherNo;
 	}
 
-	public void setPageDto(PageDto pageDto) {
-		this.pageDto = pageDto;
+	public void setTeacherNo(String teacherNo) {
+		this.teacherNo = teacherNo;
 	}
+
+	public String getTeacherName() {
+		return teacherName;
+	}
+
+	public void setTeacherName(String teacherName) {
+		this.teacherName = teacherName;
+	}
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public String getLastModifyTime() {
+		return lastModifyTime;
+	}
+
+	public void setLastModifyTime(String lastModifyTime) {
+		this.lastModifyTime = lastModifyTime;
+	}
+
+	public Boolean getStatus() {
+		return status;
+	}
+
+	public void setStatus(Boolean status) {
+		this.status = status;
+	}
+
+	public String getStatusMemo() {
+		return statusMemo;
+	}
+
+	public void setStatusMemo(String statusMemo) {
+		this.statusMemo = statusMemo;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
 }

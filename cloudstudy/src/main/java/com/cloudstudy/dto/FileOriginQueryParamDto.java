@@ -2,40 +2,19 @@ package com.cloudstudy.dto;
 
 import java.util.ArrayList;
 
-import org.springframework.data.annotation.Transient;
-
 public class FileOriginQueryParamDto {
 
-	/**
-	 * 文件大小
-	 */
-	private ArrayList<String> fileSizeRangement;
-
-	/**
-	 * 时间范围
-	 */
 	private ArrayList<String> dateRangement;
 
-	/**
-	 * 关键字
-	 */
 	private String keyword;
 
-	/**
-	 * 排序
-	 */
-	@Transient
-	private String orderBy;
+	private ArrayList<String> userNo;
 
-	private PageDto pageDto = new PageDto();
+	private ArrayList<Integer> courseId;
 
-	public ArrayList<String> getFileSizeRangement() {
-		return fileSizeRangement;
-	}
+	private ArrayList<Integer> homeworkId;
 
-	public void setFileSizeRangement(ArrayList<String> fileSizeRangement) {
-		this.fileSizeRangement = fileSizeRangement;
-	}
+	private PageDto pageDto;
 
 	public String getKeyword() {
 		return keyword;
@@ -43,14 +22,6 @@ public class FileOriginQueryParamDto {
 
 	public void setKeyword(String keyword) {
 		this.keyword = keyword;
-	}
-
-	public String getOrderBy() {
-		return orderBy;
-	}
-
-	public void setOrderBy(String orderBy) {
-		this.orderBy = orderBy;
 	}
 
 	public PageDto getPageDto() {
@@ -67,6 +38,30 @@ public class FileOriginQueryParamDto {
 
 	public void setDateRangement(ArrayList<String> dateRangement) {
 		this.dateRangement = dateRangement;
+	}
+
+	public ArrayList<String> getUserNo() {
+		return userNo;
+	}
+
+	public void setUserNo(ArrayList<String> userNo) {
+		this.userNo = userNo;
+	}
+
+	public ArrayList<Integer> getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(ArrayList<Integer> courseId) {
+		this.courseId = courseId;
+	}
+
+	public ArrayList<Integer> getHomeworkId() {
+		return homeworkId;
+	}
+
+	public void setHomeworkId(ArrayList<Integer> homeworkId) {
+		this.homeworkId = homeworkId;
 	}
 
 }
